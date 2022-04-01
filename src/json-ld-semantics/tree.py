@@ -1,4 +1,6 @@
+import json
 from typing import Optional
+
 
 class Root:
     def __str__(self):
@@ -100,3 +102,25 @@ class NodeDict(Node):
     def __init__(self, fieldName, contains, parent, process_traversal, process_children):
         super().__init__(fieldName, contains, parent=parent, process_traversal=process_traversal,
                          process_children=process_children)
+
+
+def get_extended_traversal(tree_traversal, raw=False):
+    def recur(inner_tree_traversal):
+        tmp = []
+
+        for key, node in inner_tree_traversal.items():
+            if isinstance(node, NodeList):
+                tmp.append(node.get_frame(contains="[" + recur(node.traversal) + "]"))
+            else:
+                if node.traversal:
+                    tmp.append(node.get_frame(contains="[" + recur(node.traversal) + "]"))
+                else:
+                    tmp.append(node.get_frame())
+
+        tmp = ','.join(tmp).replace("\\", "")
+        return tmp
+
+    if raw:
+        return recur(tree_traversal)
+    else:
+        return json.loads(recur(tree_traversal))
