@@ -1,31 +1,7 @@
 import json
 from typing import Optional
 from deepdiff import DeepDiff
-from helpers import get_json_traversal, get_extended_traversal
-
-FRAME_TEMPLATE = '''
-"fieldName": "{fieldname}",
-"fieldPath": "{fieldpath}",
-"foundType": "{foundtype}",
-"descriptiveType": "{descriptivetype}",
-"unique": {unique},
-"default": "{default}",
-"description": "{description}",
-"exampleData": [{exampledata}],
-"regex": "{regex}",
-"contains": {contains}
-'''
-
-SAMPLE_TEMPLATE = '''
-"fieldName": "{fieldname}",
-"contains": {contains}
-'''
-
-SAMPLE_TEMPLATE_WITH_PATHS = '''
-"fieldName": "{fieldname}",
-"fieldPath": "{fieldpath}",
-"contains": {contains}
-'''
+from .semantics import Tree
 
 
 class Model:
@@ -34,11 +10,12 @@ class Model:
     Internal: Python Dict.
     External: Either JSon or a String.
     """
+
     def __init__(self, context=None, filenames=None, traversal=None, frame=None, multiple=True):
         if context:
             self.context = context
         else:
-            self.context = DEFAULT_CONTEXT
+            self.context = None  # DEFAULT_CONTEXT
 
         if filenames:
             self.filenames = filenames
@@ -82,7 +59,7 @@ class Model:
 
         return len(self.filenames)
 
-    def process_files(self, apply=True) -> list[tuple[str, dict]]:
+    def process_files(self, apply=True) -> list:
         if apply:
             full_traversal = self.traversal
         else:
@@ -93,14 +70,59 @@ class Model:
             with open(filename, "r") as f:
                 json_data = json.load(f)
 
-            traversal = get_json_traversal(json_data)
-            changes.append((filename, DeepDiff(traversal, traversal)))
+            traversal = Tree(json_data).export_traversal()
+            changes.append((filename, DeepDiff(full_traversal, traversal)))
             full_traversal.update(traversal)
 
         return changes
 
-    def apply_self_traversal(self):
-        self.frame = get_extended_traversal(traversal=self.traversal)
+    def get_paths(self) -> set:
+        def recur(traversal):
+            for key, info in traversal.items():
+                yield info["path"]
+                yield from recur(info["traversal"])
+
+        return set(recur(self.traversal))
+
+    def to_list(self, headers=True) -> list:
+        rtn = []
+        if headers:
+            rtn.append(
+                [
+                    "path",
+                    "foundType",
+                    "descriptiveType",
+                    "unique",
+                    "default",
+                    "description",
+                    "example",
+                    "regex"
+                ]
+            )
+
+        def recur(traversal):
+            for key, info in traversal.items():
+                yield [
+                    info["path"],
+                    info["foundType"],
+                    info["descriptiveType"],
+                    info["unique"],
+                    info["default"],
+                    info["description"],
+                    info["example"],
+                    info["regex"],
+                ]
+                yield from recur(info["traversal"])
+
+        rtn.append(list(recur(self.traversal)))
+
+        return rtn
+
+    def set_attribute(self, path, **kwargs):
+        pass
+
+    # def apply_self_traversal(self):
+    #     self.frame = get_extended_traversal(traversal=self.traversal)
 
     def _frame_and_context(self) -> dict:
         frame_and_context = self.context.copy()

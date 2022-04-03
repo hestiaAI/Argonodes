@@ -8,16 +8,16 @@ class Root:
 
 
 class Node:
-    def __init__(self, fieldName, data, parent=None, process_traversal=True, process_children=True):
+    def __init__(self, data, fieldName, parent=None, process_traversal=True, process_children=True):
         self.fieldName = fieldName
         self.data = data
         self.foundType = Root if self.fieldName == "$" else type(data)
-        self.descriptiveType = None
-        self.unique = None
-        self.default = None
-        self.description = None
-        self.example = None
-        self.regex = None
+        # self.descriptiveType = None
+        # self.unique = None
+        # self.default = None
+        # self.description = None
+        # self.example = None
+        # self.regex = None
         self.parent = parent
         self.traversal = {}
         self.children = []
@@ -29,12 +29,19 @@ class Node:
         return repr(self)
 
     def __repr__(self) -> str:
-        rep = f"{type(self).__name__} '{self.fieldName}' with {len(self.children)} children{'s' if len(self.children) != 1 else ''}\n"
+        rep = f"{type(self).__name__} '{self.fieldName}'"
+        if self.children:
+            rep += f" with {len(self.children)} children{'s' if len(self.children) != 1 else ''}"
+        if self.children and self.traversal:
+            rep += " and"
+        if self.traversal:
+            rep += f" with {len(self.get_paths())} path{'s' if len(self.get_paths()) != 1 else ''}"
+        rep += "\n"
         for attr in self.get_attributes():
             if attr in ["data", "children"]:
                 rep += f"- {attr}: Length of {len(getattr(self, attr))}\n"
             elif attr in ["traversal"]:
-                continue
+                rep += f"- {attr}: {len(self.get_paths())} path{'s' if len(self.get_paths()) != 1 else ''}\n"
             elif attr in ["foundType"]:
                 rep += f"- {attr}: {getattr(self, attr).__name__}\n"
             elif attr in ["parent"]:
@@ -49,22 +56,32 @@ class Node:
         name = f".{self.fieldName}" if self.fieldName != "[*]" else self.fieldName
         return self.parent.path + name
 
-    def get_all_paths(self, level=0) -> str:
+    def get_paths(self) -> set:
+        def recur(inner):
+            yield inner.path
+            if inner.traversal:
+                for key, children in inner.traversal.items():
+                    yield from (path for path in recur(children))
+
+        return set(recur(self))
+
+    def get_paths_fancy(self, level=0) -> str:
         ret = "  " * level + self.path + "\n"
         if self.traversal:
             for key, children in self.traversal.items():
-                ret += children.get_all_paths(level + 1)
+                ret += children.get_paths_fancy(level + 1)
         return ret
 
     def process(self, traversal, children) -> None:
         if isinstance(self.data, dict):
             for key, children in self.data.items():
                 if traversal:
-                    self.traversal[key] = NodeDict(key, children, parent=self, process_traversal=traversal,
+                    self.traversal[key] = NodeDict(children, fieldName=key, parent=self, process_traversal=traversal,
                                                    process_children=children)
                 if children:
                     self.children.append(
-                        NodeDict(key, children, parent=self, process_traversal=traversal, process_children=children))
+                        NodeDict(children, fieldName=key, parent=self, process_traversal=traversal,
+                                 process_children=children))
         elif isinstance(self.data, list):
             for i, children in enumerate(self.data):
                 if traversal:
@@ -76,10 +93,45 @@ class Node:
         else:
             return
 
+    def export_traversal(self, with_root=True):
+        def treeify(inner_traversal, root="$"):
+            data = {}
+            for key, node in inner_traversal.items():
+                data.update({key: {
+                    "path": f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}",
+                    "foundType": node.foundType,
+                    "descriptiveType": None,
+                    "unique": None,
+                    "default": None,
+                    "description": None,
+                    "example": None,
+                    "regex": None,
+                    "traversal": treeify(node.traversal,
+                                         root=f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}")
+                }})
+
+            return data
+
+        if with_root:
+            return {"$": {
+                "path": "$",
+                "foundType": Root,
+                "descriptiveType": None,
+                "unique": None,
+                "default": None,
+                "description": None,
+                "example": None,
+                "regex": None,
+                "traversal": treeify(self.traversal)
+                }
+            }
+        else:
+            return treeify(self.traversal)
+
     def get_attributes(self) -> list:
         return list(self.__dict__.keys())
 
-    def get_children_from_path(self, path) -> Optional[Node]:
+    def get_children_from_path(self, path) -> Optional:
         if not self.children:
             return None
         if self.path not in path:
@@ -92,15 +144,21 @@ class Node:
                     return children.get_children_from_path(path)
 
 
+class Tree(Node):
+    def __init__(self, data):
+        super().__init__(data, fieldName="$")
+
+
 class NodeList(Node):
     def __init__(self, contains, parent, process_traversal, process_children, i=None):
-        super().__init__(f"[{i}]" if i != None else "[*]", contains, parent=parent, process_traversal=process_traversal,
+        super().__init__(contains, fieldName=f"[{i}]" if i is not None else "[*]", parent=parent,
+                         process_traversal=process_traversal,
                          process_children=process_children)
 
 
 class NodeDict(Node):
-    def __init__(self, fieldName, contains, parent, process_traversal, process_children):
-        super().__init__(fieldName, contains, parent=parent, process_traversal=process_traversal,
+    def __init__(self, contains, fieldName, parent, process_traversal, process_children):
+        super().__init__(contains, fieldName=fieldName, parent=parent, process_traversal=process_traversal,
                          process_children=process_children)
 
 
