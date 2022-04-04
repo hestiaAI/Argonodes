@@ -2,6 +2,11 @@ import json
 from typing import Optional
 from deepdiff import DeepDiff
 from .semantics import Tree
+import re
+
+
+def parse_path(path):
+    return [r for r in re.split("\.|(\[\*\])", path) if r]
 
 
 class Model:
@@ -84,6 +89,22 @@ class Model:
 
         return set(recur(self.traversal))
 
+    def find_info(self, path):
+        def recur(traversal, liste):
+            if not liste:
+                return None
+            for key, info in traversal.items():
+                if len(liste) == 1:
+                    return info
+                if key == liste[0]:
+                    if info["traversal"]:
+                        return recur(info["traversal"], liste[1:])
+                    else:
+                        return info
+            return None
+
+        return recur(self.traversal, parse_path(path))
+
     def to_list(self, headers=True) -> list:
         rtn = []
         if headers:
@@ -118,8 +139,10 @@ class Model:
 
         return rtn
 
-    def set_attribute(self, path, **kwargs):
-        pass
+    def set_attribute(self, path, **kwargs) -> None:
+        info = self.find_info(path)
+        for k, v in kwargs.items():
+            info[k] = v
 
     # def apply_self_traversal(self):
     #     self.frame = get_extended_traversal(traversal=self.traversal)
