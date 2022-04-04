@@ -90,14 +90,15 @@ class Model:
         return set(recur(self.traversal))
 
     def find_info(self, path):
+        """
+        Returns the given path, or the latest found element within the path.
+        :param path: String, a JSON path.
+        :return: The corresponding linked information in the traversal.
+        """
         def recur(traversal, liste):
-            if not liste:
-                return None
             for key, info in traversal.items():
-                if len(liste) == 1:
-                    return info
                 if key == liste[0]:
-                    if info["traversal"]:
+                    if info["traversal"] and liste[1:]:
                         return recur(info["traversal"], liste[1:])
                     else:
                         return info
