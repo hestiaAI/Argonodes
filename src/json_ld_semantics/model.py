@@ -109,7 +109,7 @@ class Model:
     def get_paths(self) -> set:
         """
         Returns the set of avalaible paths.
-        :return: Set[String], set of paths avalaible.
+        :return: Set[String], set of avalaible paths.
         """
 
         def recur(traversal):
