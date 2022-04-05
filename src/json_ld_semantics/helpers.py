@@ -1,19 +1,18 @@
-from typing import Union, Any
+from typing import Any, Optional, Union
 import json
-from typing import Optional
 
 
 def get_paths(d, root="$", with_root=True, full=True) -> set:
     def recur(d):
         if isinstance(d, dict):
             for key, value in d.items():
-                yield f'.{key}'
-                yield from (f'.{key}{p}' for p in recur(value))
+                yield f".{key}"
+                yield from (f".{key}{p}" for p in recur(value))
 
         elif isinstance(d, list):
             for i, value in enumerate(d):
-                yield f'[*]'
-                yield from (f'[*]{p}' for p in recur(value))
+                yield f"[*]"
+                yield from (f"[*]{p}" for p in recur(value))
 
     result = set(root + p for p in recur(d))
 
@@ -29,17 +28,22 @@ def get_paths(d, root="$", with_root=True, full=True) -> set:
 def get_json_traversal(data) -> Optional[dict]:
     def treeify(inner_data, root="$") -> Optional[dict]:
         if isinstance(inner_data, dict):
-            return {key: (f"{root}.{key}", type(children).__name__, treeify(children, root=f"{root}.{key}")) for
-                    key, children in inner_data.items()}
+            return {
+                key: (f"{root}.{key}", type(children).__name__, treeify(children, root=f"{root}.{key}"))
+                for key, children in inner_data.items()
+            }
         elif isinstance(inner_data, list):
-            return {"*": (f"{root}[*]", type(inner_data).__name__, treeify(children, root=f"{root}[*]")) for children in inner_data}
+            return {
+                "*": (f"{root}[*]", type(inner_data).__name__, treeify(children, root=f"{root}[*]"))
+                for children in inner_data
+            }
         else:
             return None
 
     return treeify(data)
 
 
-FRAME_TEMPLATE = '''
+FRAME_TEMPLATE = """
 "fieldName": "{fieldname}",
 "fieldPath": "{fieldpath}",
 "foundType": {foundtype},
@@ -50,7 +54,7 @@ FRAME_TEMPLATE = '''
 "exampleData": [{exampledata}],
 "regex": "{regex}",
 "contains": {contains}
-'''
+"""
 
 
 def format_template(template=FRAME_TEMPLATE, **kwargs) -> str:
@@ -60,8 +64,13 @@ def format_template(template=FRAME_TEMPLATE, **kwargs) -> str:
     :param kwargs: Elements to go in the placeholders.
     :return: Formatted string.
     """
-    return template.format(**kwargs).replace("\n", "").replace("False", "false").replace("True", "true").replace("None",
-                                                                                                                 "null")
+    return (
+        template.format(**kwargs)
+        .replace("\n", "")
+        .replace("False", "false")
+        .replace("True", "true")
+        .replace("None", "null")
+    )
 
 
 def get_extended_traversal(json_data=None, traversal=None, raw=False) -> Union[str, Any]:
@@ -78,27 +87,14 @@ def get_extended_traversal(json_data=None, traversal=None, raw=False) -> Union[s
             if typ == "NoneType":
                 typ = "null"
             else:
-                typ = f"\"{typ}\""
+                typ = f'"{typ}"'
 
             if key == "*":
-                tmp.append("{" + format_template(
-                    FRAME_TEMPLATE,
-                    fieldname="<unnamed list>",
-                    fieldpath=path,
-                    foundtype=typ,
-                    descriptivetype=None,
-                    unique=False,
-                    default=None,
-                    description=None,
-                    exampledata=None,
-                    regex=None,
-                    contains="[" + recur(contains) + "]",
-                ) + "}")
-            else:
-                if contains:
-                    tmp.append("{" + format_template(
+                tmp.append(
+                    "{"
+                    + format_template(
                         FRAME_TEMPLATE,
-                        fieldname=key,
+                        fieldname="<unnamed list>",
                         fieldpath=path,
                         foundtype=typ,
                         descriptivetype=None,
@@ -108,23 +104,48 @@ def get_extended_traversal(json_data=None, traversal=None, raw=False) -> Union[s
                         exampledata=None,
                         regex=None,
                         contains="[" + recur(contains) + "]",
-                    ) + "}")
+                    )
+                    + "}"
+                )
+            else:
+                if contains:
+                    tmp.append(
+                        "{"
+                        + format_template(
+                            FRAME_TEMPLATE,
+                            fieldname=key,
+                            fieldpath=path,
+                            foundtype=typ,
+                            descriptivetype=None,
+                            unique=False,
+                            default=None,
+                            description=None,
+                            exampledata=None,
+                            regex=None,
+                            contains="[" + recur(contains) + "]",
+                        )
+                        + "}"
+                    )
                 else:
-                    tmp.append("{" + format_template(
-                        FRAME_TEMPLATE,
-                        fieldname=key,
-                        fieldpath=path,
-                        foundtype=typ,
-                        descriptivetype=None,
-                        unique=False,
-                        default=None,
-                        description=None,
-                        exampledata=None,
-                        regex=None,
-                        contains="null",
-                    ) + "}")
+                    tmp.append(
+                        "{"
+                        + format_template(
+                            FRAME_TEMPLATE,
+                            fieldname=key,
+                            fieldpath=path,
+                            foundtype=typ,
+                            descriptivetype=None,
+                            unique=False,
+                            default=None,
+                            description=None,
+                            exampledata=None,
+                            regex=None,
+                            contains="null",
+                        )
+                        + "}"
+                    )
 
-        tmp = ','.join(tmp).replace("\\", "")
+        tmp = ",".join(tmp).replace("\\", "")
         return tmp
 
     if raw:

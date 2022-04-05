@@ -1,8 +1,12 @@
-import json
 from typing import Optional
-from deepdiff import DeepDiff
-from .semantics import Tree
+import json
 import re
+
+
+from deepdiff import DeepDiff
+
+
+from .semantics import Tree
 
 
 def parse_path(path):
@@ -95,6 +99,7 @@ class Model:
         :param path: String, a JSON path.
         :return: The corresponding linked information in the traversal.
         """
+
         def recur(traversal, liste):
             for key, info in traversal.items():
                 if key == liste[0]:
@@ -109,18 +114,7 @@ class Model:
     def to_list(self, headers=True) -> list:
         rtn = []
         if headers:
-            rtn.append(
-                [
-                    "path",
-                    "foundType",
-                    "descriptiveType",
-                    "unique",
-                    "default",
-                    "description",
-                    "example",
-                    "regex"
-                ]
-            )
+            rtn.append(["path", "foundType", "descriptiveType", "unique", "default", "description", "example", "regex"])
 
         def recur(traversal):
             for key, info in traversal.items():

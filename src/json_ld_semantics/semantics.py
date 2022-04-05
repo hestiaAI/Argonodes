@@ -1,5 +1,5 @@
-import json
 from typing import Optional
+import json
 
 
 class Root:
@@ -76,20 +76,25 @@ class Node:
         if isinstance(self.data, dict):
             for key, children in self.data.items():
                 if traversal:
-                    self.traversal[key] = NodeDict(children, fieldName=key, parent=self, process_traversal=traversal,
-                                                   process_children=children)
+                    self.traversal[key] = NodeDict(
+                        children, fieldName=key, parent=self, process_traversal=traversal, process_children=children
+                    )
                 if children:
                     self.children.append(
-                        NodeDict(children, fieldName=key, parent=self, process_traversal=traversal,
-                                 process_children=children))
+                        NodeDict(
+                            children, fieldName=key, parent=self, process_traversal=traversal, process_children=children
+                        )
+                    )
         elif isinstance(self.data, list):
             for i, children in enumerate(self.data):
                 if traversal:
-                    self.traversal["[*]"] = NodeList(children, parent=self, process_traversal=traversal,
-                                                     process_children=children)
+                    self.traversal["[*]"] = NodeList(
+                        children, parent=self, process_traversal=traversal, process_children=children
+                    )
                 if children:
                     self.children.append(
-                        NodeList(children, i=i, parent=self, process_traversal=traversal, process_children=children))
+                        NodeList(children, i=i, parent=self, process_traversal=traversal, process_children=children)
+                    )
         else:
             return
 
@@ -97,32 +102,38 @@ class Node:
         def treeify(inner_traversal, root="$"):
             data = {}
             for key, node in inner_traversal.items():
-                data.update({key: {
-                    "path": f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}",
-                    "foundType": node.foundType,
+                data.update(
+                    {
+                        key: {
+                            "path": f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}",
+                            "foundType": node.foundType,
+                            "descriptiveType": None,
+                            "unique": None,
+                            "default": None,
+                            "description": None,
+                            "example": None,
+                            "regex": None,
+                            "traversal": treeify(
+                                node.traversal, root=f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}"
+                            ),
+                        }
+                    }
+                )
+
+            return data
+
+        if with_root:
+            return {
+                "$": {
+                    "path": "$",
+                    "foundType": Root,
                     "descriptiveType": None,
                     "unique": None,
                     "default": None,
                     "description": None,
                     "example": None,
                     "regex": None,
-                    "traversal": treeify(node.traversal,
-                                         root=f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}")
-                }})
-
-            return data
-
-        if with_root:
-            return {"$": {
-                "path": "$",
-                "foundType": Root,
-                "descriptiveType": None,
-                "unique": None,
-                "default": None,
-                "description": None,
-                "example": None,
-                "regex": None,
-                "traversal": treeify(self.traversal)
+                    "traversal": treeify(self.traversal),
                 }
             }
         else:
@@ -151,15 +162,24 @@ class Tree(Node):
 
 class NodeList(Node):
     def __init__(self, contains, parent, process_traversal, process_children, i=None):
-        super().__init__(contains, fieldName=f"[{i}]" if i is not None else "[*]", parent=parent,
-                         process_traversal=process_traversal,
-                         process_children=process_children)
+        super().__init__(
+            contains,
+            fieldName=f"[{i}]" if i is not None else "[*]",
+            parent=parent,
+            process_traversal=process_traversal,
+            process_children=process_children,
+        )
 
 
 class NodeDict(Node):
     def __init__(self, contains, fieldName, parent, process_traversal, process_children):
-        super().__init__(contains, fieldName=fieldName, parent=parent, process_traversal=process_traversal,
-                         process_children=process_children)
+        super().__init__(
+            contains,
+            fieldName=fieldName,
+            parent=parent,
+            process_traversal=process_traversal,
+            process_children=process_children,
+        )
 
 
 def get_extended_traversal(tree_traversal, raw=False):
@@ -175,7 +195,7 @@ def get_extended_traversal(tree_traversal, raw=False):
                 else:
                     tmp.append(node.get_frame())
 
-        tmp = ','.join(tmp).replace("\\", "")
+        tmp = ",".join(tmp).replace("\\", "")
         return tmp
 
     if raw:
