@@ -3,6 +3,10 @@ semantics.py is everything linked to a single file.
 """
 from typing import Optional
 import json
+import re
+
+
+REGEX_PATH = re.compile(r"\[\d+\]")
 
 
 class Root:
@@ -14,12 +18,39 @@ class Root:
         return "RootNode"
 
 
+def make_traversal(node):
+    void = {}
+
+    def recur(node, void):
+        path = REGEX_PATH.sub("[*]", node.path)
+        if path not in void:
+            void[path] = {}
+        if node.children:
+            for children in node.children:
+                recur(children, void[path])
+        else:
+            return
+
+    recur(node, void)
+    return void
+
+
+def flatten_traversal(traversal):
+    def recur(traversal):
+        for k, v in traversal.items():
+            yield k
+            if v:
+                yield from (r for r in recur(v))
+
+    return set(recur(traversal))
+
+
 class Node:
     """
     A Node is a specific part of the JSON Tree.
     """
 
-    def __init__(self, data, fieldName, parent=None, process_traversal=True, process_children=True):
+    def __init__(self, data, fieldName, parent=None, process_traversal=True):
         self.fieldName = fieldName
         self.data = data
         self.foundType = Root if self.fieldName == "$" else type(data)
@@ -34,7 +65,7 @@ class Node:
         self.children = []
         self.path = self._set_path()
 
-        self._process(traversal=process_traversal, children=process_children)
+        self._process(process_traversal=process_traversal)
 
     def __str__(self) -> str:
         return repr(self)
@@ -77,11 +108,11 @@ class Node:
         :return: Set[String], set of avalaible paths.
         """
 
-        def recur(inner):
-            yield inner.path
-            if inner.traversal:
-                for key, children in inner.traversal.items():
-                    yield from (path for path in recur(children))
+        def recur(node):
+            yield REGEX_PATH.sub("[*]", node.path)
+            if node.children:
+                for children in node.children:
+                    yield from (r for r in recur(children))
 
         return set(recur(self))
 
@@ -91,44 +122,38 @@ class Node:
         :param level: Used for recursion.
         :return: String, fancy paths list.
         """
-        ret = "  " * level + self.path + "\n"
-        if self.traversal:
-            for key, children in self.traversal.items():
-                ret += children.get_paths_fancy(level + 1)
-        return ret
 
-    def _process(self, traversal, children) -> None:
+        def recur(node, align=0):
+            yield " " * align + REGEX_PATH.sub("[*]", node.path)
+            if node.children:
+                for children in node.children:
+                    yield from (r for r in recur(children, align=align + 1))
+
+        "\n".join(sorted(set(r for r in recur(self)), key=lambda x: x.strip()))
+
+    def _process(self, process_traversal) -> None:
         """
         Internal, create the hierarchy for that Node.
         It can either be used for the whole data, or for the structure only.
-        :param traversal: Boolean, should the Node process its traversal.
-        :param children: Boolean, should the Node process its children.
+        :param process_traversal: Boolean, should the Node process its traversal.
+        :param process_children: Boolean, should the Node process its children.
         :return: None.
         """
         if isinstance(self.data, dict):
             for key, children in self.data.items():
-                if traversal:
-                    self.traversal[key] = NodeDict(
-                        children, fieldName=key, parent=self, process_traversal=traversal, process_children=children
-                    )
-                if children:
-                    self.children.append(
-                        NodeDict(
-                            children, fieldName=key, parent=self, process_traversal=traversal, process_children=children
-                        )
-                    )
+                self.children.append(
+                    NodeDict(children, fieldName=key, parent=self, process_traversal=process_traversal)
+                )
         elif isinstance(self.data, list):
             for i, children in enumerate(self.data):
-                if traversal:
-                    self.traversal["[*]"] = NodeList(
-                        children, parent=self, process_traversal=traversal, process_children=children
-                    )
-                if children:
-                    self.children.append(
-                        NodeList(children, i=i, parent=self, process_traversal=traversal, process_children=children)
-                    )
+                self.children.append(NodeList(children, i=i, parent=self, process_traversal=process_traversal))
         else:
             return
+
+        if process_traversal:
+            self.traversal = make_traversal(self)
+
+            assert flatten_traversal(self.traversal) == self.get_paths()
 
     def export_traversal(self, with_root=True) -> dict:
         """
@@ -211,13 +236,12 @@ class NodeList(Node):
     A NodeList is a special Node that contains data in a list.
     """
 
-    def __init__(self, contains, parent, process_traversal, process_children, i=None):
+    def __init__(self, contains, parent, process_traversal, i=None):
         super().__init__(
             contains,
             fieldName=f"[{i}]" if i is not None else "[*]",
             parent=parent,
             process_traversal=process_traversal,
-            process_children=process_children,
         )
 
 
@@ -226,13 +250,12 @@ class NodeDict(Node):
     A NodeDict is a special Node that contains data in a dict.
     """
 
-    def __init__(self, contains, fieldName, parent, process_traversal, process_children):
+    def __init__(self, contains, fieldName, parent, process_traversal):
         super().__init__(
             contains,
             fieldName=fieldName,
             parent=parent,
             process_traversal=process_traversal,
-            process_children=process_children,
         )
 
 
