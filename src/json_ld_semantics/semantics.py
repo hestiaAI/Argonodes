@@ -54,12 +54,12 @@ class Node:
         self.fieldName = fieldName
         self.data = data
         self.foundType = Root if self.fieldName == "$" else type(data)
-        # self.descriptiveType = None
-        # self.unique = None
-        # self.default = None
-        # self.description = None
-        # self.example = None
-        # self.regex = None
+        self.descriptiveType = None
+        self.unique = None
+        self.default = None
+        self.description = None
+        self.example = None
+        self.regex = None
         self.parent = parent
         self.traversal = {}
         self.children = []
@@ -99,7 +99,7 @@ class Node:
         """
         if not self.parent:
             return self.fieldName
-        name = f".{self.fieldName}" if self.fieldName != "[*]" else self.fieldName
+        name = f".{self.fieldName}" if not REGEX_PATH.match(self.fieldName) else self.fieldName
         return self.parent.path + name
 
     def get_paths(self) -> set:
@@ -116,10 +116,9 @@ class Node:
 
         return set(recur(self))
 
-    def get_paths_fancy(self, level=0) -> str:
+    def get_paths_fancy(self) -> str:
         """
         A printable and formated list of Paths.
-        :param level: Used for recursion.
         :return: String, fancy paths list.
         """
 
@@ -129,7 +128,7 @@ class Node:
                 for children in node.children:
                     yield from (r for r in recur(children, align=align + 1))
 
-        "\n".join(sorted(set(r for r in recur(self)), key=lambda x: x.strip()))
+        return "\n".join(sorted(set(r for r in recur(self)), key=lambda x: x.strip()))
 
     def _process(self, process_traversal) -> None:
         """
@@ -170,12 +169,12 @@ class Node:
                         key: {
                             "path": f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}",
                             "foundType": node.foundType,
-                            "descriptiveType": None,
-                            "unique": None,
-                            "default": None,
-                            "description": None,
-                            "example": None,
-                            "regex": None,
+                            "descriptiveType": self.descriptiveType,
+                            "unique": self.unique,
+                            "default": self.default,
+                            "description": self.description,
+                            "example": self.example,
+                            "regex": self.regex,
                             "traversal": treeify(
                                 node.traversal, root=f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}"
                             ),
@@ -210,16 +209,26 @@ class Node:
         return list(self.__dict__.keys())
 
     def get_children_from_path(self, path) -> Optional:
-        if not self.children:
-            return None
-        if self.path not in path:
-            return None
+        print(self.path + " vs " + path)
         if self.path == path:
             return self
-        else:
+        if self.children:
             for children in self.children:
                 if children.path in path:
-                    return children.get_children_from_path(path)
+                    print(children.path)
+                    potential = children.get_children_from_path(path)
+                    print(potential)
+
+        # if not self.children:
+        #     return None
+        # if self.path not in path:
+        #     return None
+        # if self.path == path:
+        #     return self
+        # else:
+        #     for children in self.children:
+        #         if children.path in path:
+        #             return children.get_children_from_path(path)
 
 
 class Tree(Node):
