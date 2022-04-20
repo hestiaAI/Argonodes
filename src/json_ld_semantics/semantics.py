@@ -80,10 +80,11 @@ class Node:
             rep += f" with {len(self.get_paths())} path{'s' if len(self.get_paths()) != 1 else ''}"
         rep += "\n"
         for attr in self.get_attributes():
-            if attr in ["data", "children"]:
-                rep += f"- {attr}: Length of {len(getattr(self, attr))}\n"
-            elif attr in ["traversal"]:
-                rep += f"- {attr}: {len(self.get_paths())} path{'s' if len(self.get_paths()) != 1 else ''}\n"
+            if attr in ["children", "traversal"]:
+                # Skip
+                continue
+            elif attr in ["data"]:
+                rep += f"- {attr}: Length of {len(str(getattr(self, attr)))}\n"
             elif attr in ["foundType"]:
                 rep += f"- {attr}: {getattr(self, attr).__name__}\n"
             elif attr in ["parent"]:
@@ -208,27 +209,21 @@ class Node:
         """
         return list(self.__dict__.keys())
 
-    def get_children_from_path(self, path) -> Optional:
-        print(self.path + " vs " + path)
-        if self.path == path:
-            return self
-        if self.children:
-            for children in self.children:
-                if children.path in path:
-                    print(children.path)
-                    potential = children.get_children_from_path(path)
-                    print(potential)
+    def get_children_from_path(self, path) -> list:
+        regex = re.compile(
+            r"^"
+            + path.replace("$", "\$").replace(".", "\.").replace("[", "\[").replace("]", "\]").replace("*", ".*")
+            + r"$"
+        )
 
-        # if not self.children:
-        #     return None
-        # if self.path not in path:
-        #     return None
-        # if self.path == path:
-        #     return self
-        # else:
-        #     for children in self.children:
-        #         if children.path in path:
-        #             return children.get_children_from_path(path)
+        def recur(path):
+            if regex.match(self.path):
+                yield self
+            if self.children:
+                for children in self.children:
+                    yield from (r for r in children.get_children_from_path(path))
+
+        return list(recur(path))
 
 
 class Tree(Node):
