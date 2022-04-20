@@ -113,8 +113,8 @@ class Model:
         """
 
         def recur(traversal):
-            for _, info in traversal.items():
-                yield info["path"]
+            for path, info in traversal.items():
+                yield path
                 yield from recur(info["traversal"])
 
         return set(recur(self.traversal))
@@ -127,8 +127,8 @@ class Model:
         """
 
         def recur(traversal, liste):
-            for key, info in traversal.items():
-                if key == liste[0]:
+            for path, info in traversal.items():
+                if path == liste[0]:
                     if info["traversal"] and liste[1:]:
                         return recur(info["traversal"], liste[1:])
                     else:
@@ -148,9 +148,9 @@ class Model:
             rtn.append(["path", "foundType", "descriptiveType", "unique", "default", "description", "example", "regex"])
 
         def recur(traversal):
-            for _, info in traversal.items():
+            for path, info in traversal.items():
                 yield [
-                    info["path"],
+                    path,
                     info["foundType"],
                     info["descriptiveType"],
                     info["unique"],
@@ -161,7 +161,7 @@ class Model:
                 ]
                 yield from recur(info["traversal"])
 
-        rtn.append(list(recur(self.traversal)))
+        rtn += [r for r in recur(self.traversal)]
 
         return rtn
 

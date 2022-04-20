@@ -18,16 +18,25 @@ class Root:
         return "RootNode"
 
 
-def make_traversal(node):
+def make_traversal(node) -> dict:
     void = {}
 
-    def recur(node, void):
+    def recur(node, void) -> None:
         path = REGEX_PATH.sub("[*]", node.path)
         if path not in void:
-            void[path] = {}
+            void[path] = {
+                "foundType": node.foundType,
+                "descriptiveType": node.descriptiveType,
+                "unique": node.unique,
+                "default": node.default,
+                "description": node.description,
+                "example": node.example,
+                "regex": node.regex,
+                "traversal": {},
+            }
         if node.children:
             for children in node.children:
-                recur(children, void[path])
+                recur(children, void[path]["traversal"])
         else:
             return
 
@@ -40,7 +49,7 @@ def flatten_traversal(traversal):
         for k, v in traversal.items():
             yield k
             if v:
-                yield from (r for r in recur(v))
+                yield from (r for r in recur(v["traversal"]))
 
     return set(recur(traversal))
 
@@ -50,7 +59,7 @@ class Node:
     A Node is a specific part of the JSON Tree.
     """
 
-    def __init__(self, data, fieldName, parent=None, process_traversal=True):
+    def __init__(self, data, fieldName, parent=None, process_traversal=False):
         self.fieldName = fieldName
         self.data = data
         self.foundType = Root if self.fieldName == "$" else type(data)
@@ -155,52 +164,17 @@ class Node:
 
             assert flatten_traversal(self.traversal) == self.get_paths()
 
-    def export_traversal(self, with_root=True) -> dict:
+    def export_traversal(self) -> dict:
         """
         Export the created traversal, if it exists.
-        :param with_root: If True, add the root at the begining.
         :return: Dict, the traversal.
         """
+        if not self.traversal:
+            self.traversal = make_traversal(self)
 
-        def treeify(inner_traversal, root="$"):
-            data = {}
-            for key, node in inner_traversal.items():
-                data.update(
-                    {
-                        key: {
-                            "path": f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}",
-                            "foundType": node.foundType,
-                            "descriptiveType": self.descriptiveType,
-                            "unique": self.unique,
-                            "default": self.default,
-                            "description": self.description,
-                            "example": self.example,
-                            "regex": self.regex,
-                            "traversal": treeify(
-                                node.traversal, root=f"{root}{'.' if isinstance(node, NodeDict) else ''}{key}"
-                            ),
-                        }
-                    }
-                )
+            assert flatten_traversal(self.traversal) == self.get_paths()
 
-            return data
-
-        if with_root:
-            return {
-                "$": {
-                    "path": "$",
-                    "foundType": Root,
-                    "descriptiveType": None,
-                    "unique": None,
-                    "default": None,
-                    "description": None,
-                    "example": None,
-                    "regex": None,
-                    "traversal": treeify(self.traversal),
-                }
-            }
-        else:
-            return treeify(self.traversal)
+        return self.traversal
 
     def get_attributes(self) -> list:
         """
