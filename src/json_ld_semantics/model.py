@@ -126,15 +126,25 @@ class Model:
         :return: Dict, the corresponding linked information in the traversal.
         """
 
-        def recur(traversal, target) -> Optional[dict]:
+        def recur(target, traversal):
             for path, info in traversal.items():
                 if path == target:
-                    return info
-                else:
-                    return recur(info["traversal"], target)
-            return None
+                    yield info
+                if info:
+                    yield from (r for r in recur(target, info["traversal"]))
 
-        return recur(self.traversal, target)
+        return next(recur(target, self.traversal))
+
+        # def recur(traversal, target) -> Optional[dict]:
+        #     for path, info in traversal.items():
+        #         print(path)
+        #         if path == target:
+        #             return info
+        #         else:
+        #             return recur(info["traversal"], target)
+        #     return None
+        #
+        # return recur(self.traversal, target)
 
     def to_list(self, headers=True) -> list:
         """
@@ -177,9 +187,6 @@ class Model:
                 info[attr] = value
             return True
         return False
-
-    # def apply_self_traversal(self):
-    #     self.frame = get_extended_traversal(traversal=self.traversal)
 
     def _frame_and_context(self) -> dict:
         frame_and_context = self.context.copy()
