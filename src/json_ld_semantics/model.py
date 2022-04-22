@@ -10,6 +10,7 @@ import re
 from deepdiff import DeepDiff
 
 
+from .default_context import DEFAULT_CONTEXT
 from .semantics import Tree
 
 
@@ -29,27 +30,18 @@ class Model:
     External: Either JSON or a String.
     """
 
-    def __init__(self, context=None, filenames=None, traversal=None, frame=None):
-        if context:
-            self.context = context
-        else:
-            with open("./default_context.json", "r") as contextfile:
-                self.context = json.load(contextfile)
+    def __init__(self, name=None, context=None, filenames=None, traversal=None, frame=None):
+        self.name = name
+        self.context = context or DEFAULT_CONTEXT
+        self.filenames = filenames or []
+        self.traversal = traversal or {}
+        self.frame = frame or {}
 
-        if filenames:
-            self.filenames = filenames
-        else:
-            self.filenames = []
+    def __str__(self) -> str:
+        return str(repr(self))
 
-        if traversal:
-            self.traversal = traversal
-        else:
-            self.traversal = {}
-
-        if frame:
-            self.frame = frame
-        else:
-            self.frame = {}
+    def __repr__(self) -> dict:
+        return self.traversal
 
     def add_files(self, filenames) -> int:
         """
@@ -179,9 +171,44 @@ class Model:
             return True
         return False
 
-    def dump_traversal(self, filename):
-        with open(filename, "wb") as file:
-            pickle.dump(self.traversal, file)
+    def dump_traversal(self, filename=None, format="pickle"):
+        # Formats: pickle, json, markdown
+        if format == "pickle":
+            if not filename:
+                raise ValueError("filename is missing.")
+            with open(filename, "wb") as file:
+                pickle.dump(self.traversal, file)
+        elif format == "json":
+            if filename:
+                with open(filename, "w") as file:
+                    json.dump(self.traversal, file, indent=2, default=str)
+            else:
+                print(json.dumps(self.traversal, indent=2, default=str))
+        elif format == "markdown":
+            headers, *liste = self.to_list()
+            to_keep = ["path", "foundType", "descriptiveType", "description"]
+            indexes = [headers.index(keep) for keep in to_keep]
+
+            temp = []
+            for l in liste:
+                tmp = [l[index] for index in indexes]
+                temp.append(f"| {' | '.join([f'`{tmp[0]}`', tmp[1].__name__, tmp[2] or '/', tmp[3] or '/'])} |")
+
+            markdown = (
+                [f"## {self.name or 'Exported Model'}", ""]
+                + [f"| {' | '.join(to_keep)} |"]
+                + [f"{'|---' * len(to_keep)}|"]
+                + temp
+            )
+
+            if filename:
+                with open(filename, "w") as file:
+                    for m in markdown:
+                        file.write(f"{m}\n")
+            else:
+                print("\n".join(markdown))
+        else:
+            raise ValueError("Incorrect format, please use 'pickle', 'json', 'markdown'.")
 
     def load_traversal(self, filename):
         with open(filename, "rb") as file:
