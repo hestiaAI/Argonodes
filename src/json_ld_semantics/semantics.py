@@ -199,6 +199,10 @@ class Node:
 
         return list(recur(path))
 
+    # def apply_model(self, model) -> bool:
+    #     def recur(node):
+    #         pass
+
 
 class Tree(Node):
     """

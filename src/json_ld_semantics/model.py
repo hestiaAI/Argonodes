@@ -3,6 +3,7 @@ model.py is everything linked to a model or abstraction of one or multiple files
 """
 from typing import Optional
 import json
+import pickle
 import re
 
 
@@ -32,7 +33,8 @@ class Model:
         if context:
             self.context = context
         else:
-            self.context = None  # DEFAULT_CONTEXT
+            with open("./default_context.json", "r") as contextfile:
+                self.context = json.load(contextfile)
 
         if filenames:
             self.filenames = filenames
@@ -135,17 +137,6 @@ class Model:
 
         return next(recur(target, self.traversal))
 
-        # def recur(traversal, target) -> Optional[dict]:
-        #     for path, info in traversal.items():
-        #         print(path)
-        #         if path == target:
-        #             return info
-        #         else:
-        #             return recur(info["traversal"], target)
-        #     return None
-        #
-        # return recur(self.traversal, target)
-
     def to_list(self, headers=True) -> list:
         """
         Returns the model in the form of a list.
@@ -188,16 +179,24 @@ class Model:
             return True
         return False
 
-    def _frame_and_context(self) -> dict:
-        frame_and_context = self.context.copy()
-        frame_and_context.update(self.frame)
+    def dump_traversal(self, filename):
+        with open(filename, "wb") as file:
+            pickle.dump(self.traversal, file)
 
-        return frame_and_context
+    def load_traversal(self, filename):
+        with open(filename, "rb") as file:
+            self.traversal = pickle.load(file)
 
-    def export_model(self, text=True, filename=None) -> Optional[str]:
-        if text:
-            return json.dumps(self._frame_and_context())
-        elif filename:
-            with open(filename, "w", encoding="utf-8") as file:
-                json.dump(self._frame_and_context(), file, indent=4)
-            return
+    # def _frame_and_context(self) -> dict:
+    #     frame_and_context = self.context.copy()
+    #     frame_and_context.update(self.frame)
+    #
+    #     return frame_and_context
+    #
+    # def export_model(self, text=True, filename=None) -> Optional[str]:
+    #     if text:
+    #         return json.dumps(self._frame_and_context())
+    #     elif filename:
+    #         with open(filename, "w", encoding="utf-8") as file:
+    #             json.dump(self._frame_and_context(), file, indent=4)
+    #         return
