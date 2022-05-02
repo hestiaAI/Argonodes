@@ -199,9 +199,36 @@ class Node:
 
         return list(recur(path))
 
-    # def apply_model(self, model) -> bool:
-    #     def recur(node):
-    #         pass
+    def apply(self, item) -> bool:
+        if not self.traversal:
+            if not self.traversal:
+                self.traversal = make_traversal(self)
+        from .filters import Filter  # Local scope
+        from .model import Model  # Local scope
+
+        if isinstance(item, Model):
+            flat = item.flatten()
+
+            def recur(node):
+                path = REGEX_PATH.sub("[*]", node.path)
+                info = flat[path]
+                node.descriptiveType = info["descriptiveType"]
+                node.unique = info["unique"]
+                node.default = info["default"]
+                node.description = info["description"]
+                node.example = info["example"]
+                node.regex = info["regex"]
+                if node.children:
+                    for children in node.children:
+                        recur(children)
+
+            recur(self)
+
+            return True
+        elif isinstance(item, Filter):
+            pass
+        else:
+            raise ValueError("`item` should be either a Model or a Filter.")
 
 
 class Tree(Node):

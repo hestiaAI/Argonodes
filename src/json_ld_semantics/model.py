@@ -11,6 +11,8 @@ from deepdiff import DeepDiff
 
 
 from .default_context import DEFAULT_CONTEXT
+
+# from .filters import parse_op
 from .semantics import Tree
 
 
@@ -30,18 +32,17 @@ class Model:
     External: Either JSON or a String.
     """
 
-    def __init__(self, name=None, context=None, filenames=None, traversal=None, frame=None):
+    def __init__(self, name=None, context=None, filenames=None, traversal=None):
         self.name = name
         self.context = context or DEFAULT_CONTEXT
         self.filenames = filenames or []
         self.traversal = traversal or {}
-        self.frame = frame or {}
 
     def __str__(self) -> str:
-        return str(repr(self))
+        return repr(self)
 
-    def __repr__(self) -> dict:
-        return self.traversal
+    def __repr__(self) -> str:
+        return str(self.traversal)
 
     def add_files(self, filenames) -> int:
         """
@@ -157,6 +158,28 @@ class Model:
 
         return rtn
 
+    def flatten(self) -> dict:
+        ret = {}
+
+        def recur(traversal):
+            for path, info in traversal.items():
+                yield {
+                    path: {
+                        "foundType": info["foundType"],
+                        "descriptiveType": info["descriptiveType"],
+                        "unique": info["unique"],
+                        "default": info["default"],
+                        "description": info["description"],
+                        "example": info["example"],
+                        "regex": info["regex"],
+                    }
+                }
+                yield from recur(info["traversal"])
+
+        for r in recur(self.traversal):
+            ret.update(r)
+        return ret
+
     def set_attribute(self, path, **kwargs) -> bool:
         """
         Given a specific path, add more context to that path.
@@ -213,6 +236,25 @@ class Model:
     def load_traversal(self, filename):
         with open(filename, "rb") as file:
             self.traversal = pickle.load(file)
+
+    # def filter(self, **kwargs):
+    #     if not kwargs:
+    #         return self
+    #     def recur(traversal, filtr):
+    #         attr, op, value = filtr
+    #         for path, info in traversal.items():
+    #             if info["traversal"]:
+    #                 recur(info["traversal"], filtr)
+    #             if attr == "path":
+    #                 if not op(path, value):
+    #                     traversal.pop(path)
+    #             else:
+    #                 if hasattr(info, attr) and not op(info[attr], value):
+    #                     traversal.pop(path)
+    #     for attr_op, value in kwargs.items():
+    #         filtr = parse_op(attr_op), value
+    #         recur(self.traversal, filtr)
+    #     return self
 
     # def _frame_and_context(self) -> dict:
     #     frame_and_context = self.context.copy()
