@@ -6,6 +6,9 @@ import json
 import re
 
 
+from src.json_ld_semantics.abstract import Protected
+
+
 REGEX_PATH = re.compile(r"\[\d+\]")
 
 
@@ -58,6 +61,8 @@ class Node:
     """
     A Node is a specific part of the JSON Tree.
     """
+
+    __metaclass__ = Protected
 
     def __init__(self, data, fieldName, parent=None, process_traversal=False):
         self.fieldName = fieldName

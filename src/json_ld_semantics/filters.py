@@ -5,28 +5,6 @@ from re import match
 from .semantics import Node
 
 
-class Filter:
-    def __init__(self, model, filters=None):
-        self.model = model
-        self.filters = filters or []
-
-    def __repr__(self) -> list:
-        return self.filters
-
-    def filter(self, filters):
-        self.add(filters)
-
-    def add(self, filters):
-        if isinstance(filters, list):
-            self.filters += filters
-        else:
-            self.filters.append(filters)
-
-    def __call__(self, node):
-        if not isinstance(node, Node):
-            raise ValueError("")
-
-
 LIST_ATTRIBUTES = [
     "path",
     "data",
@@ -66,12 +44,42 @@ def parse_op(string):
         raise ValueError("Usage: parse_op('left__op').")
 
     if attribute not in LIST_ATTRIBUTES:
-        raise ValueError(f"Attribute {attribute} is not supported.")
+        raise ValueError(f"Attribute `{attribute}` is not supported.")
 
     if op not in LIST_OP.keys():
-        raise ValueError(f"Operation {op} is not supported.")
+        raise ValueError(f"Operation `{op}` is not supported.")
 
     if ATTRIBUTES_VS_OP[attribute] and op not in ATTRIBUTES_VS_OP[attribute]:
-        raise ValueError(f"Operation {op} is not supported for attribute {attribute}.")
+        raise ValueError(f"Operation `{op}` is not supported for attribute `{attribute}`.")
 
     return attribute, LIST_OP[op]
+
+
+def get_filters_from_kwargs(kwargs) -> list:
+    rtn = []
+    for attr_op, value in kwargs.items():
+        rtn.append((*parse_op(attr_op), value))
+    return rtn
+
+
+class Filter:
+    def __init__(self, model, **kwargs):
+        self.model = model
+        self.filters = get_filters_from_kwargs(kwargs) or []
+
+    def __repr__(self) -> list:
+        return self.filters
+
+    def filter(self, **kwargs):
+        self.add(**kwargs)
+
+    def add(self, **kwargs):
+        self.filters += get_filters_from_kwargs(kwargs)
+
+    def __call__(self, node):
+        if not isinstance(node, Node):
+            raise ValueError("Should use type node.")
+
+        node.apply(self)
+
+        return node

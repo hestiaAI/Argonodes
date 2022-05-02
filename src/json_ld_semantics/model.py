@@ -1,6 +1,9 @@
 """
 model.py is everything linked to a model or abstraction of one or multiple files.
 """
+from __future__ import annotations
+
+
 from typing import Optional
 import json
 import pickle
@@ -44,11 +47,11 @@ class Model:
     def __repr__(self) -> str:
         return str(self.traversal)
 
-    def add_files(self, filenames) -> int:
+    def add_files(self, filenames) -> Model:
         """
         Add files to parse into the model.
         :param filenames: String or List[String], file paths.
-        :return: Number of files effectively added.
+        :return: Self, for chaining.
         """
         if not isinstance(filenames, list):
             filenames = [filenames]
@@ -60,9 +63,9 @@ class Model:
             except FileNotFoundError:
                 print(f"Warning: {filename} could not be opened.")
 
-        return len(self.filenames)
+        return self
 
-    def remove_files(self, filenames) -> int:
+    def remove_files(self, filenames) -> Model:
         """
         Remove files to parse into the model.
         :param filenames: String or List[String], file paths.
@@ -77,7 +80,7 @@ class Model:
             except ValueError:
                 print(f"Warning: {filename} was not found in the list.")
 
-        return len(self.filenames)
+        return self
 
     def process_files(self, apply=True) -> list:
         """
