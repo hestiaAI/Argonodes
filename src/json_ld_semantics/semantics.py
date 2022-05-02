@@ -231,7 +231,20 @@ class Node:
 
             return True
         elif isinstance(item, Filter):
-            pass
+            if item.paths:
+                pass  # TODO
+            if item.filters:
+
+                def recur(traversal, filtr):
+                    attr, op, value = filtr
+                    for path, info in traversal.items():
+                        if info["traversal"]:
+                            recur(info["traversal"], filtr)
+                        if hasattr(info, attr) and not op(info[attr], value):
+                            traversal.pop(path)
+
+                for filtr in item.filters:
+                    recur(self.traversal, filtr)
         else:
             raise ValueError("`item` should be either a Model or a Filter.")
 

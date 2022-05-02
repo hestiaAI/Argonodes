@@ -1,5 +1,6 @@
 from operator import contains, eq, ge, gt, le, lt, ne
 from re import match
+from typing import Union
 
 
 from .semantics import Node
@@ -41,7 +42,7 @@ def parse_op(string):
     try:
         attribute, op = string.split("__")
     except ValueError:
-        raise ValueError("Usage: parse_op('left__op').")
+        raise ValueError("Usage: `parse_op('left__op')` or `parse_op('left__in__op')`.")
 
     if attribute not in LIST_ATTRIBUTES:
         raise ValueError(f"Attribute `{attribute}` is not supported.")
@@ -63,12 +64,26 @@ def get_filters_from_kwargs(kwargs) -> list:
 
 
 class Filter:
-    def __init__(self, model, **kwargs):
+    def __init__(self, model, params=None, paths=None, **kwargs):
         self.model = model
+        self.params = params or []
+        self.paths = paths or []
         self.filters = get_filters_from_kwargs(kwargs) or []
 
     def __repr__(self) -> list:
         return self.filters
+
+    def select(self, paths):
+        self.add_paths(paths)
+
+    def add_paths(self, paths):
+        if not isinstance(paths, list):
+            paths = [paths]
+        model_paths = self.model.get_paths()
+        for path in paths:
+            if path not in model_paths:
+                raise ValueError(f"Path `{path}` not found in that model.")
+            self.paths.append(path)
 
     def filter(self, **kwargs):
         self.add(**kwargs)
@@ -83,3 +98,10 @@ class Filter:
         node.apply(self)
 
         return node
+
+    def import_filter(self, dct):
+        self.paths = dct["paths"]
+        self.filters = dct["filters"]
+
+    def export_filter(self) -> dict:
+        return {"paths": self.paths, "filters": self.filters}
