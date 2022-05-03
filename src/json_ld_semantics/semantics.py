@@ -6,7 +6,7 @@ import json
 import re
 
 
-from src.json_ld_semantics.abstract import Protected
+from .abstract import Protected
 
 
 REGEX_PATH = re.compile(r"\[\d+\]")
@@ -191,7 +191,7 @@ class Node:
     def get_children_from_path(self, path) -> list:
         regex = re.compile(
             r"^"
-            + path.replace("$", "\$").replace(".", "\.").replace("[", "\[").replace("]", "\]").replace("*", ".*")
+            + path.replace("$", r"\$").replace(".", r"\.").replace("[", r"\[").replace("]", r"\]").replace("*", r".*")
             + r"$"
         )
 
