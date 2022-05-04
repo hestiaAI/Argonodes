@@ -1,5 +1,7 @@
 # json-ld-semantics
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/hestiaAI/json-ld-semantics/HEAD?labpath=examples%2Fnotebook%2FExample.ipynb)
+
 ## Cleaning
 After activating your venv, in `src/`:
 
