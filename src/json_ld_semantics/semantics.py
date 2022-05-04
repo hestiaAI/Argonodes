@@ -1,6 +1,9 @@
 """
 semantics.py is everything linked to a single file.
 """
+from __future__ import annotations
+
+
 from typing import Optional
 import json
 import re
@@ -9,7 +12,35 @@ import re
 from .abstract import Protected
 
 
+MAX_DATA = 128
 REGEX_PATH = re.compile(r"\[\d+\]")
+REGEX_SEARCH = lambda path: re.compile(
+    r"^"
+    + path.replace("$", r"\$").replace(".", r"\.").replace("[", r"\[").replace("]", r"\]").replace("*", r".*")
+    + r"$"
+)
+
+
+def get_extended_traversal(tree_traversal, raw=False):
+    def recur(inner_tree_traversal):
+        tmp = []
+
+        for key, node in inner_tree_traversal.items():
+            if isinstance(node, NodeList):
+                tmp.append(node.get_frame(contains="[" + recur(node.traversal) + "]"))
+            else:
+                if node.traversal:
+                    tmp.append(node.get_frame(contains="[" + recur(node.traversal) + "]"))
+                else:
+                    tmp.append(node.get_frame())
+
+        tmp = ",".join(tmp).replace("\\", "")
+        return tmp
+
+    if raw:
+        return recur(tree_traversal)
+    else:
+        return json.loads(recur(tree_traversal))
 
 
 class Root:
@@ -66,7 +97,7 @@ class Node:
 
     def __init__(self, data, fieldName, parent=None, process_traversal=False):
         self.fieldName = fieldName
-        self.data = data
+        self.data = None  # Defined in _process()
         self.foundType = Root if self.fieldName == "$" else type(data)
         self.descriptiveType = None
         self.unique = None
@@ -79,7 +110,7 @@ class Node:
         self.children = []
         self.path = self._set_path()
 
-        self._process(process_traversal=process_traversal)
+        self._process(data, process_traversal=process_traversal)
 
     def __str__(self) -> str:
         return repr(self)
@@ -97,8 +128,8 @@ class Node:
             if attr in ["children", "traversal"]:
                 # Skip
                 continue
-            elif attr in ["data"]:
-                rep += f"- {attr}: Length of {len(str(getattr(self, attr)))}\n"
+            elif attr in ["data"] and getattr(self, attr):
+                rep += f"- {attr}: \"{str(getattr(self, attr))[:MAX_DATA]}{'...' if len(str(getattr(self, attr))) > MAX_DATA else ''}\" (length of {len(str(getattr(self, attr)))})\n"
             elif attr in ["foundType"]:
                 rep += f"- {attr}: {getattr(self, attr).__name__}\n"
             elif attr in ["parent"]:
@@ -145,7 +176,7 @@ class Node:
 
         return "\n".join(sorted(set(r for r in recur(self)), key=lambda x: x.strip()))
 
-    def _process(self, process_traversal) -> None:
+    def _process(self, data, process_traversal) -> None:
         """
         Internal, create the hierarchy for that Node.
         It can either be used for the whole data, or for the structure only.
@@ -153,16 +184,16 @@ class Node:
         :param process_children: Boolean, should the Node process its children.
         :return: None.
         """
-        if isinstance(self.data, dict):
-            for key, children in self.data.items():
+        if isinstance(data, dict):
+            for key, children in data.items():
                 self.children.append(
                     NodeDict(children, fieldName=key, parent=self, process_traversal=process_traversal)
                 )
-        elif isinstance(self.data, list):
-            for i, children in enumerate(self.data):
+        elif isinstance(data, list):
+            for i, children in enumerate(data):
                 self.children.append(NodeList(children, i=i, parent=self, process_traversal=process_traversal))
         else:
-            return
+            self.data = data
 
         if process_traversal:
             self.traversal = make_traversal(self)
@@ -189,22 +220,16 @@ class Node:
         return list(self.__dict__.keys())
 
     def get_children_from_path(self, path) -> list:
-        regex = re.compile(
-            r"^"
-            + path.replace("$", r"\$").replace(".", r"\.").replace("[", r"\[").replace("]", r"\]").replace("*", r".*")
-            + r"$"
-        )
-
-        def recur(path):
-            if regex.match(self.path):
+        def recur(target):
+            if REGEX_SEARCH(target).match(self.path):
                 yield self
             if self.children:
                 for children in self.children:
-                    yield from (r for r in children.get_children_from_path(path))
+                    yield from (r for r in children.get_children_from_path(target))
 
         return list(recur(path))
 
-    def apply(self, item) -> bool:
+    def apply(self, item) -> Node:
         if not self.traversal:
             if not self.traversal:
                 self.traversal = make_traversal(self)
@@ -229,10 +254,27 @@ class Node:
 
             recur(self)
 
-            return True
+            return self
         elif isinstance(item, Filter):
+            new_tree = Tree(None)
             if item.paths:
-                pass  # TODO
+
+                def recur(node, target):
+                    if node.children:
+                        for children in node.children:
+                            recur(children, target)
+                    print(node.path)
+                    if not REGEX_SEARCH(target).match(node.path):
+                        pass  # TODO
+
+                    for path, info in traversal.items():
+                        if info["traversal"]:
+                            recur(info["traversal"], target)
+                        if REGEX_SEARCH(target).match(path):
+                            new_traversal.pop(path)
+
+                for path in item.paths:
+                    recur(self.traversal, path)
             if item.filters:
 
                 def recur(traversal, filtr):
@@ -241,10 +283,12 @@ class Node:
                         if info["traversal"]:
                             recur(info["traversal"], filtr)
                         if hasattr(info, attr) and not op(info[attr], value):
-                            traversal.pop(path)
+                            new_traversal.pop(path)
 
                 for filtr in item.filters:
                     recur(self.traversal, filtr)
+
+            return
         else:
             raise ValueError("`item` should be either a Model or a Filter.")
 
@@ -284,25 +328,3 @@ class NodeDict(Node):
             parent=parent,
             process_traversal=process_traversal,
         )
-
-
-def get_extended_traversal(tree_traversal, raw=False):
-    def recur(inner_tree_traversal):
-        tmp = []
-
-        for key, node in inner_tree_traversal.items():
-            if isinstance(node, NodeList):
-                tmp.append(node.get_frame(contains="[" + recur(node.traversal) + "]"))
-            else:
-                if node.traversal:
-                    tmp.append(node.get_frame(contains="[" + recur(node.traversal) + "]"))
-                else:
-                    tmp.append(node.get_frame())
-
-        tmp = ",".join(tmp).replace("\\", "")
-        return tmp
-
-    if raw:
-        return recur(tree_traversal)
-    else:
-        return json.loads(recur(tree_traversal))
