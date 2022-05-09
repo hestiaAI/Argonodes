@@ -1,6 +1,5 @@
 from operator import contains, eq, ge, gt, le, lt, ne
 from re import match
-from typing import Union
 
 
 from .semantics import Node

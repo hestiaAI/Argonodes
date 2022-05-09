@@ -7,25 +7,14 @@ from __future__ import annotations
 from typing import Optional
 import json
 import pickle
-import re
 
 
 from deepdiff import DeepDiff
 
 
 from .default_context import DEFAULT_CONTEXT
-
-# from .filters import parse_op
+from .helpers import apply_model, flatten
 from .semantics import Tree
-
-
-def parse_path(path):
-    """
-    Parse a JSON path into a list.
-    :param path: String, a JSON path.
-    :return: List, parsed JSON path.
-    """
-    return [r for r in re.split("\.|(\[\*\])", path) if r]
 
 
 class Model:
@@ -46,6 +35,10 @@ class Model:
 
     def __repr__(self) -> str:
         return str(self.traversal)
+
+    def __call__(self, node):
+        # This will probably get me in purgatory or something.
+        node.apply(apply_model, self)
 
     def add_files(self, filenames) -> Model:
         """
@@ -162,26 +155,11 @@ class Model:
         return rtn
 
     def flatten(self) -> dict:
-        ret = {}
-
-        def recur(traversal):
-            for path, info in traversal.items():
-                yield {
-                    path: {
-                        "foundType": info["foundType"],
-                        "descriptiveType": info["descriptiveType"],
-                        "unique": info["unique"],
-                        "default": info["default"],
-                        "description": info["description"],
-                        "example": info["example"],
-                        "regex": info["regex"],
-                    }
-                }
-                yield from recur(info["traversal"])
-
-        for r in recur(self.traversal):
-            ret.update(r)
-        return ret
+        """
+        Returns a flattened version of the model.
+        :return: A dict of the model.
+        """
+        return flatten(self.traversal, keys_only=False)
 
     def set_attribute(self, path, **kwargs) -> bool:
         """
@@ -197,20 +175,24 @@ class Model:
             return True
         return False
 
-    def dump_traversal(self, filename=None, format="pickle"):
-        # Formats: pickle, json, markdown
-        if format == "pickle":
+    def dump_traversal(self, filename=None, scheme="pickle") -> None:
+        """
+        Dump the traversal in different format.
+        :param filename: If None, will print in the given format.
+        :param scheme: Can be either `pickle`, `json`, `markdown`.
+        """
+        if scheme == "pickle":
             if not filename:
                 raise ValueError("filename is missing.")
             with open(filename, "wb") as file:
                 pickle.dump(self.traversal, file)
-        elif format == "json":
+        elif scheme == "json":
             if filename:
                 with open(filename, "w") as file:
                     json.dump(self.traversal, file, indent=2, default=str)
             else:
                 print(json.dumps(self.traversal, indent=2, default=str))
-        elif format == "markdown":
+        elif scheme == "markdown":
             headers, *liste = self.to_list()
             to_keep = ["path", "foundType", "descriptiveType", "description"]
             indexes = [headers.index(keep) for keep in to_keep]
@@ -236,7 +218,11 @@ class Model:
         else:
             raise ValueError("Incorrect format, please use 'pickle', 'json', 'markdown'.")
 
-    def load_traversal(self, filename):
+    def load_traversal(self, filename) -> None:
+        """
+        Load a format from a pickle.
+        :param filename: Path to a pickled format.
+        """
         with open(filename, "rb") as file:
             self.traversal = pickle.load(file)
 
