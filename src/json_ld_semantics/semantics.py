@@ -7,11 +7,11 @@ from __future__ import annotations
 from typing import Union
 
 
-from .abstract import Protected
 from .helpers import make_traversal, REGEX_PATH, REGEX_SEARCH
 
 
 MAX_DATA = 128
+PROTECTED_ATTRS = ["fieldName", "data", "foundType", "parent", "children", "path"]
 
 
 class Root:
@@ -28,11 +28,8 @@ class Node:
     A Node is a specific part of the JSON Tree.
     """
 
-    __metaclass__ = Protected
-
     def __init__(self, data, fieldName, parent=None, process_traversal=False) -> None:
         self.fieldName = fieldName
-        self.data = None  # Defined in _process()
         self.foundType = Root if self.fieldName == "$" else type(data)
         self.descriptiveType = None
         self.unique = None
@@ -72,6 +69,18 @@ class Node:
             else:
                 rep += f"- {attr}: {getattr(self, attr)}\n"
         return rep
+
+    def __setattr__(self, key, value):
+        if key in PROTECTED_ATTRS and hasattr(self, key):
+            raise AttributeError(f"Cannot modify `{key}`.")
+        else:
+            return super().__setattr__(key, value)
+
+    def __delattr__(self, item):
+        if item in PROTECTED_ATTRS:
+            raise AttributeError(f"Cannot delete `{item}`.")
+        else:
+            return super().__delattr__(item)
 
     def _set_path(self) -> str:
         """
