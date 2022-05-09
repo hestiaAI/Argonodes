@@ -8,7 +8,7 @@ from typing import Union
 
 
 from .abstract import Protected
-from .helpers import flatten, make_traversal, REGEX_PATH, REGEX_SEARCH
+from .helpers import make_traversal, REGEX_PATH, REGEX_SEARCH
 
 
 MAX_DATA = 128
