@@ -4,43 +4,14 @@ semantics.py is everything linked to a single file.
 from __future__ import annotations
 
 
-from typing import Optional
-import json
-import re
+from typing import Union
 
 
 from .abstract import Protected
+from .helpers import flatten, make_traversal, REGEX_PATH, REGEX_SEARCH
 
 
 MAX_DATA = 128
-REGEX_PATH = re.compile(r"\[\d+\]")
-REGEX_SEARCH = lambda path: re.compile(
-    r"^"
-    + path.replace("$", r"\$").replace(".", r"\.").replace("[", r"\[").replace("]", r"\]").replace("*", r".*")
-    + r"$"
-)
-
-
-def get_extended_traversal(tree_traversal, raw=False):
-    def recur(inner_tree_traversal):
-        tmp = []
-
-        for key, node in inner_tree_traversal.items():
-            if isinstance(node, NodeList):
-                tmp.append(node.get_frame(contains="[" + recur(node.traversal) + "]"))
-            else:
-                if node.traversal:
-                    tmp.append(node.get_frame(contains="[" + recur(node.traversal) + "]"))
-                else:
-                    tmp.append(node.get_frame())
-
-        tmp = ",".join(tmp).replace("\\", "")
-        return tmp
-
-    if raw:
-        return recur(tree_traversal)
-    else:
-        return json.loads(recur(tree_traversal))
 
 
 class Root:
@@ -52,42 +23,6 @@ class Root:
         return "RootNode"
 
 
-def make_traversal(node) -> dict:
-    void = {}
-
-    def recur(node, void) -> None:
-        path = REGEX_PATH.sub("[*]", node.path)
-        if path not in void:
-            void[path] = {
-                "foundType": node.foundType,
-                "descriptiveType": node.descriptiveType,
-                "unique": node.unique,
-                "default": node.default,
-                "description": node.description,
-                "example": node.example,
-                "regex": node.regex,
-                "traversal": {},
-            }
-        if node.children:
-            for children in node.children:
-                recur(children, void[path]["traversal"])
-        else:
-            return
-
-    recur(node, void)
-    return void
-
-
-def flatten_traversal(traversal):
-    def recur(traversal):
-        for k, v in traversal.items():
-            yield k
-            if v:
-                yield from (r for r in recur(v["traversal"]))
-
-    return set(recur(traversal))
-
-
 class Node:
     """
     A Node is a specific part of the JSON Tree.
@@ -95,7 +30,7 @@ class Node:
 
     __metaclass__ = Protected
 
-    def __init__(self, data, fieldName, parent=None, process_traversal=False):
+    def __init__(self, data, fieldName, parent=None, process_traversal=False) -> None:
         self.fieldName = fieldName
         self.data = None  # Defined in _process()
         self.foundType = Root if self.fieldName == "$" else type(data)
@@ -164,7 +99,7 @@ class Node:
 
     def get_paths_fancy(self) -> str:
         """
-        A printable and formated list of Paths.
+        A printable and formatted list of Paths.
         :return: String, fancy paths list.
         """
 
@@ -181,7 +116,6 @@ class Node:
         Internal, create the hierarchy for that Node.
         It can either be used for the whole data, or for the structure only.
         :param process_traversal: Boolean, should the Node process its traversal.
-        :param process_children: Boolean, should the Node process its children.
         :return: None.
         """
         if isinstance(data, dict):
@@ -196,9 +130,7 @@ class Node:
             self.data = data
 
         if process_traversal:
-            self.traversal = make_traversal(self)
-
-            assert flatten_traversal(self.traversal) == self.get_paths()
+            self.apply(make_traversal)
 
     def export_traversal(self) -> dict:
         """
@@ -206,9 +138,7 @@ class Node:
         :return: Dict, the traversal.
         """
         if not self.traversal:
-            self.traversal = make_traversal(self)
-
-            assert flatten_traversal(self.traversal) == self.get_paths()
+            self.apply(make_traversal)
 
         return self.traversal
 
@@ -229,34 +159,13 @@ class Node:
 
         return list(recur(path))
 
-    def apply(self, item) -> Node:
-        if not self.traversal:
-            if not self.traversal:
-                self.traversal = make_traversal(self)
-        from .filters import Filter  # Local scope
-        from .model import Model  # Local scope
-
-        if isinstance(item, Model):
-            flat = item.flatten()
-
-            def recur(node):
-                path = REGEX_PATH.sub("[*]", node.path)
-                info = flat[path]
-                node.descriptiveType = info["descriptiveType"]
-                node.unique = info["unique"]
-                node.default = info["default"]
-                node.description = info["description"]
-                node.example = info["example"]
-                node.regex = info["regex"]
-                if node.children:
-                    for children in node.children:
-                        recur(children)
-
-            recur(self)
-
-            return self
-        else:
-            raise ValueError("`item` should be either a Model.")
+    def apply(self, fun, *args, **kwargs) -> Union[Node, object]:
+        """
+        Takes a function that will be applied to the node and/or children, and potential arguments.
+        :param fun:
+        :return: Self if the function does not return anything, else whatever the function returns.
+        """
+        return fun(self, *args, **kwargs) or self
 
 
 class Tree(Node):
