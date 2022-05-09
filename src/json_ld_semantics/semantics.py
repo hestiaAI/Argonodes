@@ -255,42 +255,8 @@ class Node:
             recur(self)
 
             return self
-        elif isinstance(item, Filter):
-            new_tree = Tree(None)
-            if item.paths:
-
-                def recur(node, target):
-                    if node.children:
-                        for children in node.children:
-                            recur(children, target)
-                    print(node.path)
-                    if not REGEX_SEARCH(target).match(node.path):
-                        pass  # TODO
-
-                    for path, info in traversal.items():
-                        if info["traversal"]:
-                            recur(info["traversal"], target)
-                        if REGEX_SEARCH(target).match(path):
-                            new_traversal.pop(path)
-
-                for path in item.paths:
-                    recur(self.traversal, path)
-            if item.filters:
-
-                def recur(traversal, filtr):
-                    attr, op, value = filtr
-                    for path, info in traversal.items():
-                        if info["traversal"]:
-                            recur(info["traversal"], filtr)
-                        if hasattr(info, attr) and not op(info[attr], value):
-                            new_traversal.pop(path)
-
-                for filtr in item.filters:
-                    recur(self.traversal, filtr)
-
-            return
         else:
-            raise ValueError("`item` should be either a Model or a Filter.")
+            raise ValueError("`item` should be either a Model.")
 
 
 class Tree(Node):
