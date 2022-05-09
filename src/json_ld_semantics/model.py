@@ -13,7 +13,7 @@ from deepdiff import DeepDiff
 
 
 from .default_context import DEFAULT_CONTEXT
-from .helpers import flatten
+from .helpers import apply_model, flatten
 from .semantics import Tree
 
 
@@ -35,6 +35,10 @@ class Model:
 
     def __repr__(self) -> str:
         return str(self.traversal)
+
+    def __call__(self, node):
+        # This will probably get me in purgatory or something.
+        node.apply(apply_model, self)
 
     def add_files(self, filenames) -> Model:
         """
