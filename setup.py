@@ -5,16 +5,16 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="json-ld-semantics",
-    version="0.0.1",
+    name="argonodes",
+    version="0.1.1",
     author="Hugo 'Stache' Hueber",
     author_email="hugo.hueber@hestia.ai",
     description="JSON-LD semantics helper for model generation and usage.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/hestiaAI/json-ld-semantics",
+    url="https://github.com/hestiaAI/Argonodes",
     project_urls={
-        "Bug Tracker": "https://github.com/hestiaAI/json-ld-semantics/issues",
+        "Bug Tracker": "https://github.com/hestiaAI/Argonodes/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -1,6 +1,6 @@
 # Argonodes
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/hestiaAI/json-ld-semantics/HEAD?labpath=examples%2Fnotebook%2FExample.ipynb) ![example workflow](https://github.com/hestiaAI/Argonodes/actions/workflows/python-package.yml/badge.svg)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/hestiaAI/Argonodes/HEAD?labpath=examples%2Fnotebook%2FExample.ipynb) ![example workflow](https://github.com/hestiaAI/Argonodes/actions/workflows/python-package.yml/badge.svg)
 
 ## Introduction
 
@@ -58,7 +58,6 @@ Example:
 - Export to JSON.
    
    ```json
-   ...
    {'$.url': {'foundType': str,
       'descriptiveType': "https://schema.org/url",
       'unique': false,
@@ -68,7 +67,6 @@ Example:
       'regex': "https:\/\/domain\.com/[a-z]+",
       'traversal': {}
    },
-   ...
    ```
 - Export to JSON-LD frame (Soon ™️).
 - Export to Markdown.
@@ -99,3 +97,7 @@ We are in need of tests! Write them under the [`tests`](./tests/) folder.
 #### JSON & JSON paths
 - You can check that the JSON is valid by using [https://jsonformatter.curiousconcept.com/](https://jsonformatter.curiousconcept.com/).
 - You can check that the JSON paths are correct by using [https://jsonpathfinder.com/](https://jsonpathfinder.com/).
+
+### Example
+
+If you are changing one of the [examples](./examples/), and want to keep track of the change: `git update-index --no-assume-unchanged ./examples/name_of_the_file`. Else, please use `git update-index --assume-unchanged ./examples/`.
