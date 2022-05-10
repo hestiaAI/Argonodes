@@ -4,7 +4,7 @@ import json
 import pytest
 
 
-from json_ld_semantics.semantics import Tree
+from argonodes.semantics import Tree
 
 
 @pytest.fixture
