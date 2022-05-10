@@ -2,7 +2,7 @@ from operator import contains, eq, ge, gt, le, lt, ne
 from re import match
 
 
-from .semantics import Node
+from .nodes import Node
 
 
 LIST_ATTRIBUTES = [

@@ -14,7 +14,7 @@ from deepdiff import DeepDiff
 
 from .default_context import DEFAULT_CONTEXT
 from .helpers import apply_model, flatten
-from .semantics import Tree
+from .nodes import Tree
 
 
 class Model:

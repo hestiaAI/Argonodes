@@ -4,7 +4,7 @@ import json
 import pytest
 
 
-from argonodes.semantics import Tree
+from argonodes.nodes import Tree
 
 
 @pytest.fixture
