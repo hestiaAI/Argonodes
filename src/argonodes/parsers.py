@@ -29,3 +29,15 @@ class CSVParser(Parser):
             reader = csv.DictReader(data_in, **kwargs)
 
         return [dict(row) for row in reader]
+
+
+class SGMLParser(Parser):
+    pass
+
+
+class XMLParser(SGMLParser):
+    pass
+
+
+class HTMLParser(SGMLParser):
+    pass
