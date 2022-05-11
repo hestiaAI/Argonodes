@@ -12,8 +12,9 @@ import pickle
 from deepdiff import DeepDiff
 
 
+from .applies import apply_model
 from .default_context import DEFAULT_CONTEXT
-from .helpers import apply_model, flatten
+from .helpers import flatten
 from .nodes import Tree
 
 

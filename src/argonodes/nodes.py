@@ -7,7 +7,8 @@ from __future__ import annotations
 from typing import Union
 
 
-from .helpers import make_traversal, REGEX_PATH, REGEX_SEARCH
+from .applies import make_traversal
+from .helpers import REGEX_PATH, REGEX_SEARCH
 
 
 MAX_DATA = 128
@@ -168,13 +169,14 @@ class Node:
 
         return list(recur(path))
 
-    def apply(self, fun, *args, **kwargs) -> Union[Node, object]:
+    def apply(self, fun, rec=True, *args, **kwargs) -> Union[Node, object]:
         """
         Takes a function that will be applied to the node and/or children, and potential arguments.
-        :param fun:
+        :param fun: A Node function
+        :param rec: Should the function be applied recursively (all children) or not.
         :return: Self if the function does not return anything, else whatever the function returns.
         """
-        return fun(self, *args, **kwargs) or self
+        return fun(self, rec, *args, **kwargs) or self
 
 
 class Tree(Node):

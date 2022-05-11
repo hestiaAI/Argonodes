@@ -17,38 +17,6 @@ REGEX_SEARCH = lambda path: re.compile(
 )
 
 
-def make_traversal(node) -> None:
-    """
-    Create the base traversal of a Node, usually a Tree.
-    :param node: A given Node, usually a Tree.
-    """
-    void = {}
-
-    def recur(node, void) -> None:
-        path = REGEX_PATH.sub("[*]", node.path)
-        if path not in void:
-            void[path] = {
-                "foundType": node.foundType,
-                "descriptiveType": node.descriptiveType,
-                "unique": node.unique,
-                "default": node.default,
-                "description": node.description,
-                "example": node.example,
-                "regex": node.regex,
-                "traversal": {},
-            }
-        if node.children:
-            for children in node.children:
-                recur(children, void[path]["traversal"])
-        else:
-            return
-
-    recur(node, void)
-    node.traversal = void
-
-    assert flatten(node.traversal) == node.get_paths()  # Move to testing in next iteration
-
-
 def flatten(traversal, keys_only=True) -> Union[set, dict]:
     """
     :param traversal: A given traversal, whether Node or Model.
@@ -107,30 +75,6 @@ def flatten(traversal, keys_only=True) -> Union[set, dict]:
 #         return recur(tree_traversal)
 #     else:
 #         return json.loads(recur(tree_traversal))
-
-
-def apply_model(node, model) -> None:
-    """
-    Apply a Model back to a Node, usually a Tree.
-    :param node: A Node, usually a Tree.
-    :param model: The Model to be applied.
-    """
-    flat = model.flatten()
-
-    def recur(node):
-        path = REGEX_PATH.sub("[*]", node.path)
-        info = flat[path]
-        node.descriptiveType = info["descriptiveType"]
-        node.unique = info["unique"]
-        node.default = info["default"]
-        node.description = info["description"]
-        node.example = info["example"]
-        node.regex = info["regex"]
-        if node.children:
-            for children in node.children:
-                recur(children)
-
-    recur(node)
 
 
 def parse_path(path):
