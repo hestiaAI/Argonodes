@@ -129,11 +129,13 @@ class Node:
         :return: None.
         """
         if isinstance(data, dict):
+            self.data = None
             for key, children in data.items():
                 self.children.append(
                     NodeDict(children, fieldName=key, parent=self, process_traversal=process_traversal)
                 )
         elif isinstance(data, list):
+            self.data = None
             for i, children in enumerate(data):
                 self.children.append(NodeList(children, i=i, parent=self, process_traversal=process_traversal))
         else:
