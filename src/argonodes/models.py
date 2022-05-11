@@ -14,7 +14,7 @@ from deepdiff import DeepDiff
 
 from .applies import apply_model
 from .default_context import DEFAULT_CONTEXT
-from .helpers import flatten
+from .helpers import flatten, REGEX_PATH
 from .nodes import Tree
 
 
@@ -37,9 +37,37 @@ class Model:
     def __repr__(self) -> str:
         return str(self.traversal)
 
-    def __call__(self, node):
+    def __call__(self, node, rec=True):
         # This will probably get me in purgatory or something.
-        node.apply(apply_model, self)
+        # node.apply(apply_model, self)
+        """
+        Apply a Model back to a Node, usually a Tree.
+        :param rec: If False, only current node is modified.
+        :param node: A Node, usually a Tree.
+        :param model: The Model to be applied.
+        """
+        flat = self.flatten()
+
+        def apply_to(node):
+            path = REGEX_PATH.sub("[*]", node.path)
+            info = flat[path]
+            node.descriptiveType = info["descriptiveType"]
+            node.unique = info["unique"]
+            node.default = info["default"]
+            node.description = info["description"]
+            node.choices = info["choices"]
+            node.regex = info["regex"]
+
+        def recur(node):
+            apply_to(node)
+            if node.children:
+                for children in node.children:
+                    recur(children)
+
+        if rec:
+            recur(node)
+        else:
+            apply_to(node)
 
     def add_files(self, filenames) -> Model:
         """

@@ -70,61 +70,30 @@ def make_traversal(node, rec=True) -> None:
     assert flatten(node.traversal) == node.get_paths()  # Move to testing in next iteration
 
 
-def apply_model(node, rec, model) -> None:
-    """
-    Apply a Model back to a Node, usually a Tree.
-    :param rec: If False, only current node is modified.
-    :param node: A Node, usually a Tree.
-    :param model: The Model to be applied.
-    """
-    flat = model.flatten()
+class DistinctValues:
+    def __init__(self):
+        self.data = defaultdict(Counter)
 
-    def apply_to(node):
-        path = REGEX_PATH.sub("[*]", node.path)
-        info = flat[path]
-        node.descriptiveType = info["descriptiveType"]
-        node.unique = info["unique"]
-        node.default = info["default"]
-        node.description = info["description"]
-        node.choices = info["choices"]
-        node.regex = info["regex"]
+    def __call__(self, node, rec=True) -> None:
+        if not rec:
+            raise AssertionError("Distinct values on a single Node are not useful.")
 
-    def recur(node):
-        apply_to(node)
-        if node.children:
-            for children in node.children:
-                recur(children)
+        def recur(node):
+            path = REGEX_PATH.sub("[*]", node.path)
 
-    if rec:
+            if hasattr(node, "data"):
+                if node.data:
+                    self.data[path][node.data] += 1
+            else:
+                self.data[path] = Counter()
+
+            if node.children:
+                for children in node.children:
+                    children_path = REGEX_PATH.sub("[*]", children.path)
+                    self.data[node.fieldName][0][f"children: {children_path}"] += 1
+                    recur(children)
+
         recur(node)
-    else:
-        apply_to(node)
 
-
-# def find_distinct_values(node, rec=True, result=None) -> None:
-#     if not rec:
-#         raise AssertionError("Distinct values on single node not useful.")
-#
-#     result = defaultdict(Counter)
-#
-#     def recur(node):
-#         path = REGEX_PATH.sub("[*]", node.path)
-#
-#         if hasattr(node, "data") and node.data:
-#             result[path][node.data] += 1
-#
-#         if node.children:
-#             for children in node.children:
-#                 children_path = REGEX_PATH.sub("[*]", children.path)
-#                 result[node.fieldName][f"children: {children_path}"] += 1
-#                 recur(children)
-#
-#     recur(node)
-#
-#     for k, v in result.items():
-#         print(k)
-#         print(v)
-#         break
-#     return
-#
-#     print(result)
+    # def get_recurring_only(self):
+    #     return {k: v for k, v in self.data.items() if v.most_common()}
