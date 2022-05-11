@@ -36,7 +36,7 @@ class Node:
         self.unique = None
         self.default = None
         self.description = None
-        self.example = None
+        self.choices = None  # If None, means there is no preset values.
         self.regex = None
         self.parent = parent
         self.traversal = {}
@@ -176,7 +176,11 @@ class Node:
         :param rec: Should the function be applied recursively (all children) or not.
         :return: Self if the function does not return anything, else whatever the function returns.
         """
-        return fun(self, rec, *args, **kwargs) or self
+        rtr = fun(self, rec, *args, **kwargs)
+        if rtr:
+            return rtr
+        else:
+            return self
 
 
 class Tree(Node):

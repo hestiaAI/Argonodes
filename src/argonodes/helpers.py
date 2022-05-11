@@ -44,7 +44,7 @@ def flatten(traversal, keys_only=True) -> Union[set, dict]:
                         "unique": info["unique"],
                         "default": info["default"],
                         "description": info["description"],
-                        "example": info["example"],
+                        "choices": info["choices"],
                         "regex": info["regex"],
                     }
                 }

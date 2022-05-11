@@ -1,21 +1,22 @@
 from __future__ import annotations
 
 
-from collections import Counter
+from collections import Counter, defaultdict
 from typing import Any, Union
 
 
 from .helpers import flatten, REGEX_PATH
+from .nodes import NodeDict, NodeList, Tree
 
 
-def base_apply(node, rec=True, *args, **kwargs) -> Union[None, Any]:
+def base_apply(node, rec=True, *args, **kwargs) -> None:
     """
     This base method is an example and should not be used.
     :param node: A given Node, usually a Tree.
     :param rec: If True, the function shall be applied on all children.
     :param args: Add. args.
     :param kwargs: Add. kwargs.
-    :return: Either nothing, or whatever makes sense.
+    :return: Nothing, because applies should be chained.
     """
 
     def apply_to(node):
@@ -55,7 +56,7 @@ def make_traversal(node, rec=True) -> None:
                 "unique": node.unique,
                 "default": node.default,
                 "description": node.description,
-                "example": node.example,
+                "choices": node.choices,
                 "regex": node.regex,
                 "traversal": {},
             }
@@ -87,7 +88,7 @@ def apply_model(node, rec, model) -> None:
         node.unique = info["unique"]
         node.default = info["default"]
         node.description = info["description"]
-        node.example = info["example"]
+        node.choices = info["choices"]
         node.regex = info["regex"]
 
     def recur(node):
@@ -100,3 +101,32 @@ def apply_model(node, rec, model) -> None:
         recur(node)
     else:
         apply_to(node)
+
+
+# def find_distinct_values(node, rec=True, result=None) -> None:
+#     if not rec:
+#         raise AssertionError("Distinct values on single node not useful.")
+#
+#     result = defaultdict(Counter)
+#
+#     def recur(node):
+#         path = REGEX_PATH.sub("[*]", node.path)
+#
+#         if hasattr(node, "data") and node.data:
+#             result[path][node.data] += 1
+#
+#         if node.children:
+#             for children in node.children:
+#                 children_path = REGEX_PATH.sub("[*]", children.path)
+#                 result[node.fieldName][f"children: {children_path}"] += 1
+#                 recur(children)
+#
+#     recur(node)
+#
+#     for k, v in result.items():
+#         print(k)
+#         print(v)
+#         break
+#     return
+#
+#     print(result)

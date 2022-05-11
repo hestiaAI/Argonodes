@@ -135,7 +135,7 @@ class Model:
         """
         rtn = []
         if headers:
-            rtn.append(["path", "foundType", "descriptiveType", "unique", "default", "description", "example", "regex"])
+            rtn.append(["path", "foundType", "descriptiveType", "unique", "default", "description", "choices", "regex"])
 
         def recur(traversal):
             for path, info in traversal.items():
@@ -146,7 +146,7 @@ class Model:
                     info["unique"],
                     info["default"],
                     info["description"],
-                    info["example"],
+                    info["choices"],
                     info["regex"],
                 ]
                 yield from recur(info["traversal"])
