@@ -2,11 +2,9 @@ from __future__ import annotations
 
 
 from collections import Counter, defaultdict
-from typing import Any, Union
 
 
 from .helpers import flatten, REGEX_PATH
-from .nodes import NodeDict, NodeList, Tree
 
 
 def base_apply(node, rec=True, *args, **kwargs) -> None:
