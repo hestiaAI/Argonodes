@@ -71,8 +71,12 @@ def make_traversal(node, rec=True) -> None:
 
 
 class DistinctValues:
-    def __init__(self):
+    def __init__(self, sort="count", reverse=None):
         self._data = defaultdict(lambda: {"children": Counter(), "data": Counter()})
+        if sort not in ["key", "count"]:
+            raise ValueError("`sort` can be either `key` or `count`.")
+        self.sort = sort
+        self.reverse = reverse
 
     def __call__(self, node, rec=True) -> None:
         if not rec:
@@ -95,11 +99,25 @@ class DistinctValues:
 
     @property
     def data(self):
-        return {k: {"children": dict(v["children"]), "data": dict(v["data"])} for k, v in self._data.items()}
+        srt = 1 if self.sort == "count" else 0
+        rvrs = self.reverse or True if self.sort == "count" else False
+
+        return {
+            k: {
+                "children": dict(sorted(v["children"].items(), key=lambda item: item[srt], reverse=rvrs)),
+                "data": dict(sorted(v["data"].items(), key=lambda item: item[srt], reverse=rvrs)),
+            }
+            for k, v in self._data.items()
+        }
 
     @data.setter
     def data(self, value):
         raise AttributeError("Cannot set `data`.")
+
+    def sort(self, sort):
+        if sort not in ["key", "count"]:
+            raise ValueError("`sort` can be either `key` or `count`.")
+        self.sort = sort
 
     def get_found_values(self):
         return {k: dict(v["data"]) for k, v in self.data.items()}
