@@ -1,0 +1,6 @@
+-r ./argonodes.txt
+black
+isort
+pre-commit
+pre-commit-hooks
+pylint
