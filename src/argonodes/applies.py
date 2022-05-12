@@ -72,7 +72,7 @@ def make_traversal(node, rec=True) -> None:
 
 class DistinctValues:
     def __init__(self, sort="count", reverse=None):
-        self._data = defaultdict(lambda: {"children": Counter(), "data": Counter()})
+        self._data = defaultdict(lambda: {"description": "", "children": Counter(), "data": Counter()})
         if sort not in ["key", "count"]:
             raise ValueError("`sort` can be either `key` or `count`.")
         self.sort = sort
@@ -104,6 +104,7 @@ class DistinctValues:
 
         return {
             k: {
+                "description": v["description"],
                 "children": dict(sorted(v["children"].items(), key=lambda item: item[srt], reverse=rvrs)),
                 "data": dict(sorted(v["data"].items(), key=lambda item: item[srt], reverse=rvrs)),
             }
@@ -124,3 +125,8 @@ class DistinctValues:
 
     def get_recurring_values(self, threshold=2):
         return {k: {k2: v2 for k2, v2 in dict(v["data"]).items() if v2 >= threshold} for k, v in self.data.items()}
+
+    def to_list(self, selection=None) -> list:
+        return [["path", "description", "possible_children", "possible_values"]] + [
+            [k, v["description"], list(set(v["children"])), list(set(v["data"]))] for k, v in self.data.items()
+        ]
