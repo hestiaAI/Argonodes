@@ -126,7 +126,7 @@ class DistinctValues:
     def get_recurring_values(self, threshold=2):
         return {k: {k2: v2 for k2, v2 in dict(v["data"]).items() if v2 >= threshold} for k, v in self.data.items()}
 
-    def to_list(self, selection=None) -> list:
+    def to_list(self) -> list:
         return [["path", "description", "possible_children", "possible_values"]] + [
             [k, v["description"], list(set(v["children"])), list(set(v["data"]))] for k, v in self.data.items()
         ]
