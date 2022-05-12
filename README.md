@@ -83,13 +83,17 @@ Example:
 
 To contribute, fork the project, and open a PR.
 
-### Cleaning
-After activating your venv, in `src/`:
+### Environment
 
-1. Install dev requirements: `pip install -U black isort pre-commit pre-commit-hooks pylint`.
-2. Activate `pre-commit`: `pre-commit install`.
-    - You can also run `pre-commit` independently: `pre-commit run --all-files`.
-3. Check the code: `python3 -m pylint *.py`.
+1. First, activate your venv, as explained in [Usage](#usage).
+2. Install dev requirements: `pip install -r requirements/dev.txt`.
+3. Activate `pre-commit`: `pre-commit install`.
+
+Notes:
+
+- You can run `pre-commit` independently: `pre-commit run --all-files`.
+- If, for some reason, you need to commit without a check, use ` git commit --no-verify [...]`.
+- You can check you code using `python3 -m pylint *.py`.
 
 ### Testing
 
@@ -98,6 +102,11 @@ We are in need of tests! Write them under the [`tests`](./tests/) folder.
 - You can check that the JSON is valid by using [https://jsonformatter.curiousconcept.com/](https://jsonformatter.curiousconcept.com/).
 - You can check that the JSON paths are correct by using [https://jsonpathfinder.com/](https://jsonpathfinder.com/).
 
-### Example
+### Examples
 
-If you are changing one of the [examples](./examples/), and want to keep track of the change: `git update-index --no-assume-unchanged ./examples/name_of_the_file`. Else, please use `git update-index --assume-unchanged ./examples/`.
+1. First, activate your venv, as explained in [Usage](#usage).
+2. Install examples requirements: `pip install -r requirements/examples.txt`.
+
+Notes:
+- If you are changing one of the [examples](./examples/), and want to keep track of the change: `git update-index --no-assume-unchanged ./examples/name_of_the_file`.
+- Else, please use `git update-index --assume-unchanged ./examples/`.
