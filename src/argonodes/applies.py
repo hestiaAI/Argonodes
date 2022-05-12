@@ -72,7 +72,7 @@ def make_traversal(node, rec=True) -> None:
 
 class DistinctValues:
     def __init__(self):
-        self.data = defaultdict(Counter)
+        self._data = defaultdict(lambda: {"children": Counter(), "data": Counter()})
 
     def __call__(self, node, rec=True) -> None:
         if not rec:
@@ -83,17 +83,26 @@ class DistinctValues:
 
             if hasattr(node, "data"):
                 if node.data:
-                    self.data[path][node.data] += 1
-            else:
-                self.data[path] = Counter()
+                    self._data[path]["data"][node.data] += 1
 
             if node.children:
                 for children in node.children:
                     children_path = REGEX_PATH.sub("[*]", children.path)
-                    self.data[node.fieldName][0][f"children: {children_path}"] += 1
+                    self._data[path]["children"][children_path] += 1
                     recur(children)
 
         recur(node)
 
-    # def get_recurring_only(self):
-    #     return {k: v for k, v in self.data.items() if v.most_common()}
+    @property
+    def data(self):
+        return {k: {"children": dict(v["children"]), "data": dict(v["data"])} for k, v in self._data.items()}
+
+    @data.setter
+    def data(self, value):
+        raise AttributeError("Cannot set `data`.")
+
+    def get_found_values(self):
+        return {k: dict(v["data"]) for k, v in self.data.items()}
+
+    def get_recurring_values(self, threshold=2):
+        return {k: {k2: v2 for k2, v2 in dict(v["data"]).items() if v2 >= threshold} for k, v in self.data.items()}
