@@ -1,5 +1,7 @@
 """
-semantics.py is everything linked to a single file.
+Nodes are the building block of the whole pipeline to augment data with semantics.
+
+With Nodes, data can be passed in JSON, which can be explored, described, and tagged, and the nodes can then be used to build data models.
 """
 from __future__ import annotations
 
