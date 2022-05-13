@@ -26,14 +26,14 @@ class Model:
     Internal: Python Dict.
     External: Either JSON or a String.
 
-    :param name:
-    :type name:
-    :param context:
-    :type context:
-    :param filenames:
-    :type filenames:
-    :param traversal:
-    :type traversal:
+    :param name: Name of the Model.
+    :type name: str, default None.
+    :param context: Context for the JSON-LD export.
+    :type context: dict, default None.
+    :param filenames: Filenames to be processed by the Model.
+    :type filenames: str or list[str], default None.
+    :param traversal: A potential existing traversal.
+    :type traversal: dict, default None.
     """
 
     def __init__(self, name=None, context=None, filenames=None, traversal=None):
