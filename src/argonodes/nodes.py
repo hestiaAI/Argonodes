@@ -27,6 +27,12 @@ class Root:
 class Node:
     """
     A Node is a specific part of the JSON Tree.
+
+    :param data: 1
+    :type data: test
+    :param fieldName: 2
+    :param parent: 3
+    :param process_traversal: 4
     """
 
     def __init__(self, data, fieldName, parent=None, process_traversal=False) -> None:
@@ -86,6 +92,7 @@ class Node:
     def _set_path(self) -> str:
         """
         Internal, set the path for that Node.
+
         :return: String, path for that Node.
         """
         if not self.parent:
@@ -96,6 +103,7 @@ class Node:
     def get_paths(self) -> set:
         """
         All paths linked to that Node.
+
         :return: Set[String], set of avalaible paths.
         """
 
@@ -110,6 +118,7 @@ class Node:
     def get_paths_fancy(self) -> str:
         """
         A printable and formatted list of Paths.
+
         :return: String, fancy paths list.
         """
 
@@ -124,7 +133,9 @@ class Node:
     def _process(self, data, process_traversal) -> None:
         """
         Internal, create the hierarchy for that Node.
+
         It can either be used for the whole data, or for the structure only.
+
         :param process_traversal: Boolean, should the Node process its traversal.
         :return: None.
         """
@@ -147,6 +158,7 @@ class Node:
     def export_traversal(self) -> dict:
         """
         Export the created traversal, if it exists.
+
         :return: Dict, the traversal.
         """
         if not self.traversal:
@@ -157,6 +169,7 @@ class Node:
     def get_attributes(self) -> list:
         """
         List of all attributes available.
+
         :return: List of all attributes available.
         """
         return list(self.__dict__.keys())
@@ -174,6 +187,7 @@ class Node:
     def apply(self, fun, rec=True, *args, **kwargs) -> Union[Node, object]:
         """
         Takes a function that will be applied to the node and/or children, and potential arguments.
+
         :param fun: A Node function
         :param rec: Should the function be applied recursively (all children) or not.
         :return: Self if the function does not return anything, else whatever the function returns.
