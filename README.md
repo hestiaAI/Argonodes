@@ -102,6 +102,12 @@ We are in need of tests! Write them under the [`tests`](./tests/) folder.
 - You can check that the JSON is valid by using [https://jsonformatter.curiousconcept.com/](https://jsonformatter.curiousconcept.com/).
 - You can check that the JSON paths are correct by using [https://jsonpathfinder.com/](https://jsonpathfinder.com/).
 
+### Documentation
+
+1. `cd docs/`
+2. `sphinx-apidoc -o source/ ../src/`
+3. `make html`
+
 ### Examples
 
 1. First, activate your venv, as explained in [Usage](#usage).
