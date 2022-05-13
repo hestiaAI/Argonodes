@@ -12,7 +12,6 @@ import pickle
 from deepdiff import DeepDiff
 
 
-from .applies import apply_model
 from .default_context import DEFAULT_CONTEXT
 from .helpers import flatten, REGEX_PATH
 from .nodes import Tree
