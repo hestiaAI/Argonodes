@@ -28,11 +28,14 @@ class Node:
     """
     A Node is a specific part of the JSON Tree.
 
-    :param data: 1
-    :type data: test
-    :param fieldName: 2
-    :param parent: 3
-    :param process_traversal: 4
+    :param data: Whichever raw data the Node should contains.
+    :type data: Any
+    :param fieldName: The field name for that Node in the raw JSON data.
+    :type fieldName: String
+    :param parent: Facultative, parent for that Node.
+    :type parent: Node, default None.
+    :param process_traversal: Facultative, whether a traversal should be processed already or not.
+    :type process_traversal: bool, default False.
     """
 
     def __init__(self, data, fieldName, parent=None, process_traversal=False) -> None:
@@ -93,7 +96,8 @@ class Node:
         """
         Internal, set the path for that Node.
 
-        :return: String, path for that Node.
+        :return: Path for that Node.
+        :rtype: str
         """
         if not self.parent:
             return self.fieldName
@@ -104,7 +108,8 @@ class Node:
         """
         All paths linked to that Node.
 
-        :return: Set[String], set of avalaible paths.
+        :return: Set of avalaible paths.
+        :rtype: set[str]
         """
 
         def recur(node):
@@ -119,7 +124,8 @@ class Node:
         """
         A printable and formatted list of Paths.
 
-        :return: String, fancy paths list.
+        :return: Fancy paths list.
+        :rtype: str
         """
 
         def recur(node, align=0):
@@ -136,8 +142,8 @@ class Node:
 
         It can either be used for the whole data, or for the structure only.
 
-        :param process_traversal: Boolean, should the Node process its traversal.
-        :return: None.
+        :param process_traversal: Should the Node process its traversal.
+        :type process_traversal: bool
         """
         if isinstance(data, dict):
             self.data = None
@@ -157,9 +163,12 @@ class Node:
 
     def export_traversal(self) -> dict:
         """
-        Export the created traversal, if it exists.
+        Export the created traversal.
 
-        :return: Dict, the traversal.
+        If the traversal does not exist, it is created.
+
+        :return: The returned traversal.
+        :rtype: dict
         """
         if not self.traversal:
             self.apply(make_traversal)
@@ -171,26 +180,44 @@ class Node:
         List of all attributes available.
 
         :return: List of all attributes available.
+        :rtype: list
         """
         return list(self.__dict__.keys())
 
-    def get_children_from_path(self, path) -> list:
-        def recur(target):
-            if REGEX_SEARCH(target).match(self.path):
-                yield self
-            if self.children:
-                for children in self.children:
-                    yield from (r for r in children.get_children_from_path(target))
+    def get_children_from_path(self, paths) -> list:
+        """
+        Get all children for a given path.
 
-        return list(recur(path))
+        The path can either be a specific path, or use wildcards.
+
+        :param paths: A single JSONPath or a list of JSONPaths.
+        :rtype paths: list[str] or [str]
+        :return: The list of all children for the paths.
+        :rtype: list[Node]
+        """
+        if not isinstance(paths, list):
+            paths = [paths]
+
+        def recur(targets):
+            for target in targets:
+                if REGEX_SEARCH(target).match(self.path):
+                    yield self
+                if self.children:
+                    for children in self.children:
+                        yield from (r for r in children.get_children_from_path(targets))
+
+        return list(recur(paths))
 
     def apply(self, fun, rec=True, *args, **kwargs) -> Union[Node, object]:
         """
         Takes a function that will be applied to the node and/or children, and potential arguments.
 
         :param fun: A Node function
+        :type fun: A function taking into parameters at least the `node` and the `rec` parameters.
         :param rec: Should the function be applied recursively (all children) or not.
+        :type rec: bool, default True.
         :return: Self if the function does not return anything, else whatever the function returns.
+        :rtype: Node or None.
         """
         rtr = fun(self, rec, *args, **kwargs)
         if rtr:
