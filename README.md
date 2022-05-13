@@ -49,24 +49,31 @@ model = Model(name="My model").add_files(filename).process_files()
 Example:
 ```json
 {
-   "url": "https://example.com/me",
-   "user": "Jean-Michel",
-   "age": "42"
+   "url":"https://example.com/me",
+   "user":"Jean-Michel",
+   "age":"42"
 }
 ```
 - Pickle the model for archive.
 - Export to JSON.
    
    ```json
-   {'$.url': {'foundType': str,
-      'descriptiveType': "https://schema.org/url",
-      'unique': false,
-      'default': None,
-      'description': "URL to the personal page of the person.",
-      'example': ["https://domain.com/me"],
-      'regex': "https:\/\/domain\.com/[a-z]+",
-      'traversal': {}
-   },
+   {
+      "$.url":{
+         "foundType":"str",
+         "descriptiveType":"https://schema.org/url",
+         "unique":false,
+         "default":"None",
+         "description":"URL to the personal page of the person.",
+         "example":[
+            "https://domain.com/me"
+         ],
+         "regex":"https:\/\/domain\\.com/[a-z]+",
+         "traversal":{
+            
+         }
+      }
+   }
    ```
 - Export to JSON-LD frame (Soon ™️).
 - Export to Markdown.
