@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Union
 import csv
+import json
 
 
 class Parser(ABC):
@@ -11,8 +12,22 @@ class Parser(ABC):
         return self.__class__.__name__
 
     @abstractmethod
-    def __call__(self, data_in, *args, **kwargs) -> Union[dict, list]:
+    def __call__(self, data_in) -> Union[dict, list]:
         pass
+
+
+class JSONParser(Parser):
+    def __call__(self, data_in):
+        if isinstance(data_in, str):
+            try:
+                return json.loads(data_in)
+            except ValueError:
+                raise ValueError("This is not a correct JSON string.")
+        else:
+            try:
+                return json.load(data_in)
+            except ValueError:
+                raise ValueError("This is not a correct JSON file.")
 
 
 class InferParser(Parser):
