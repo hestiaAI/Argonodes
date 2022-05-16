@@ -1,0 +1,3 @@
+-r ./argonodes.txt
+sphinx
+sphinx_rtd_theme
