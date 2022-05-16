@@ -4,3 +4,5 @@ isort
 pre-commit
 pre-commit-hooks
 pylint
+sphinx
+sphinx_rtd_theme

@@ -1,5 +1,7 @@
 """
-model.py is everything linked to a model or abstraction of one or multiple files.
+Models are an abstraction of data sources.
+
+They aim to describe, complete, and enhance the information of unknown data, so that the information related to the data can be re-applied to new data.
 """
 from __future__ import annotations
 
@@ -23,6 +25,15 @@ class Model:
     Model for a specific type of data.
     Internal: Python Dict.
     External: Either JSON or a String.
+
+    :param name: Name of the Model.
+    :type name: str, default None.
+    :param context: Context for the JSON-LD export.
+    :type context: dict, default None.
+    :param filenames: Filenames to be processed by the Model.
+    :type filenames: str or list[str], default None.
+    :param traversal: A potential existing traversal.
+    :type traversal: dict, default None.
     """
 
     def __init__(self, name=None, context=None, filenames=None, traversal=None):
@@ -44,8 +55,11 @@ class Model:
     def add_files(self, filenames) -> Model:
         """
         Add files to parse into the model.
-        :param filenames: String or List[String], file paths.
+
+        :param filenames: File paths to add.
+        :type filenames: str or list[str]
         :return: Self, for chaining.
+        :rtype: Model
         """
         if not isinstance(filenames, list):
             filenames = [filenames]
@@ -62,8 +76,11 @@ class Model:
     def remove_files(self, filenames) -> Model:
         """
         Remove files to parse into the model.
-        :param filenames: String or List[String], file paths.
-        :return: Number of files still remaining.
+
+        :param filenames: File paths to remove.
+        :type filenames: str or list[str]
+        :return: Self, for chaining.
+        :rtype: Model
         """
         if not isinstance(filenames, list):
             filenames = [filenames]
@@ -79,8 +96,11 @@ class Model:
     def process_files(self, apply=True) -> list:
         """
         Process each file and add to the model traversal.
+
         :param apply: If True, changes are directly applied to the model; else, changes are not applied.
+        :rtype apply: bool, default True.
         :return: List of changes.
+        :rtype: list[str, dict]
         """
         if apply:
             full_traversal = self.traversal
@@ -101,7 +121,9 @@ class Model:
     def get_paths(self) -> set:
         """
         Returns the set of avalaible paths.
-        :return: Set[String], set of avalaible paths.
+
+        :return: Set of avalaible paths.
+        :rtype: set[str]
         """
 
         def recur(traversal):
@@ -114,8 +136,11 @@ class Model:
     def find_info(self, target) -> Optional[dict]:
         """
         Returns the given path, or the latest found element within the path.
-        :param path: String, a JSON path.
-        :return: Dict, the corresponding linked information in the traversal.
+
+        :param path: A JSON path.
+        :rtype path: str
+        :return: The corresponding linked information in the traversal.
+        :rtype: dict
         """
 
         def recur(target, traversal):
@@ -130,8 +155,11 @@ class Model:
     def to_list(self, headers=True) -> list:
         """
         Returns the model in the form of a list.
+
         :param headers: If the first line should be the headers.
-        :return: List[List].
+        :type headers: bool, default True.
+        :return: A nice little list representing the Model.
+        :rtype: list[list]
         """
         rtn = []
         if headers:
@@ -158,16 +186,22 @@ class Model:
     def flatten(self) -> dict:
         """
         Returns a flattened version of the model.
+
         :return: A dict of the model.
+        :rtype: dict
         """
         return flatten(self.traversal, keys_only=False)
 
     def set_attribute(self, path, **kwargs) -> bool:
         """
         Given a specific path, add more context to that path.
-        :param path: String, a valide path.
-        :param kwargs:
+
+        :param path: A valid path.
+        :type path: str
+        :param kwargs: The different information to add to that path.
+        :type kwargs: Keyworded, variable-length argument list.
         :return: True if the path was found and info added; False otherwise.
+        :rtype: bool
         """
         info = self.find_info(path)
         if info:
@@ -179,8 +213,11 @@ class Model:
     def dump_traversal(self, filename=None, scheme="pickle") -> None:
         """
         Dump the traversal in different format.
+
         :param filename: If None, will print in the given format.
+        :type filename: str, default None.
         :param scheme: Can be either `pickle`, `json`, `markdown`.
+        :type scheme: str, default "pickle".
         """
         if scheme == "pickle":
             if not filename:
@@ -222,7 +259,9 @@ class Model:
     def load_traversal(self, filename) -> None:
         """
         Load a format from a pickle.
+
         :param filename: Path to a pickled format.
+        :type filename: str
         """
         with open(filename, "rb") as file:
             self.traversal = pickle.load(file)

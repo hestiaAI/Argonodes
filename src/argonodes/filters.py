@@ -1,3 +1,9 @@
+"""
+Filters are elements to be applied on models or on Nodes to do a preliminary sorting.
+
+Filters can be used to sort on paths directly, or in a more granular way on the elements of each Node separately.
+"""
+
 from operator import contains, eq, ge, gt, le, lt, ne
 from re import match
 
@@ -38,6 +44,14 @@ ATTRIBUTES_VS_OP = {
 
 
 def parse_op(string):
+    """
+    Parse an operation into the correct sub elements.
+
+    :param string:
+    :type string:
+    :return: Couple attribute, function.
+    :rtype: tuple(str, fun)
+    """
     try:
         attribute, op = string.split("__")
     except ValueError:
@@ -56,6 +70,13 @@ def parse_op(string):
 
 
 def get_filters_from_kwargs(kwargs) -> list:
+    """
+    Doc TODO
+
+    :param kwargs:
+    :return:
+    :rtype: list
+    """
     rtn = []
     for attr_op, value in kwargs.items():
         rtn.append((*parse_op(attr_op), value))
@@ -63,6 +84,19 @@ def get_filters_from_kwargs(kwargs) -> list:
 
 
 class Filter:
+    """
+    Doc TODO
+
+    :param model:
+    :type model:
+    :param params:
+    :type params:
+    :param paths:
+    :type paths:
+    :param filters:
+    :type filters:
+    """
+
     def __init__(self, model, params=None, paths=None, **kwargs):
         self.model = model
         self.params = params or []
@@ -73,9 +107,21 @@ class Filter:
         return self.filters
 
     def select(self, paths):
+        """
+        Doc TODO
+
+        :param paths:
+        :type paths:
+        """
         self.add_paths(paths)
 
     def add_paths(self, paths):
+        """
+        Doc TODO
+
+        :param paths:
+        :type paths:
+        """
         if not isinstance(paths, list):
             paths = [paths]
         model_paths = self.model.get_paths()
@@ -85,9 +131,21 @@ class Filter:
             self.paths.append(path)
 
     def filter(self, **kwargs):
+        """
+        Doc TODO
+
+        :param kwargs:
+        :type kwargs:
+        """
         self.add(**kwargs)
 
     def add(self, **kwargs):
+        """
+        Doc TODO
+
+        :param kwargs:
+        :type kwargs:
+        """
         self.filters += get_filters_from_kwargs(kwargs)
 
     def __call__(self, node):
@@ -99,8 +157,20 @@ class Filter:
         return node
 
     def import_filter(self, dct):
+        """
+        Doc TODO
+
+        :param dct:
+        :type dict:
+        """
         self.paths = dct["paths"]
         self.filters = dct["filters"]
 
     def export_filter(self) -> dict:
+        """
+        Doc TODO
+
+        :return:
+        :rtype: dict
+        """
         return {"paths": self.paths, "filters": self.filters}
