@@ -16,6 +16,8 @@ REGEX_SEARCH = lambda path: re.compile(
     + r"$"
 )
 
+SCHEMA_TO_FAKER = {}
+
 
 def flatten(traversal, keys_only=True) -> Union[set, dict]:
     """

@@ -266,6 +266,9 @@ class Model:
         with open(filename, "rb") as file:
             self.traversal = pickle.load(file)
 
+    def fake_it(self):
+        return
+
     # def filter(self, **kwargs):
     #     if not kwargs:
     #         return self
