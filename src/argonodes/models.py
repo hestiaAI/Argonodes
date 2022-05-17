@@ -237,7 +237,7 @@ class Model:
             return True
         return False
 
-    def dump_traversal(self, filename=None, scheme="pickle") -> None:
+    def export_traversal(self, filename=None, scheme="pickle") -> None:
         """
         Dump the traversal in different format.
 
