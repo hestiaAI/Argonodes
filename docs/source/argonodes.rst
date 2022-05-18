@@ -1,77 +1,60 @@
-argonodes package
+Argonodes Modules
 =================
 
-Submodules
-----------
-
-argonodes.applies module
-------------------------
-
-.. automodule:: argonodes.applies
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-argonodes.default\_context module
----------------------------------
-
-.. automodule:: argonodes.default_context
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-argonodes.exporters module
---------------------------
-
-.. automodule:: argonodes.exporters
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-argonodes.filters module
-------------------------
-
-.. automodule:: argonodes.filters
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-argonodes.helpers module
-------------------------
-
-.. automodule:: argonodes.helpers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-argonodes.models module
------------------------
-
-.. automodule:: argonodes.models
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-argonodes.nodes module
-----------------------
-
-.. automodule:: argonodes.nodes
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-argonodes.parsers module
-------------------------
+1. Parsers: argonodes.parsers
+-----------------------------
 
 .. automodule:: argonodes.parsers
    :members:
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: argonodes
+
+2. Nodes: argonodes.nodes
+-------------------------
+
+.. automodule:: argonodes.nodes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+3. Appliers: argonodes.appliers
+-------------------------------
+
+.. automodule:: argonodes.appliers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+4. Models: argonodes.models
+---------------------------
+
+.. automodule:: argonodes.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+5. Filters: argonodes.filters
+-----------------------------
+
+.. automodule:: argonodes.filters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+6. Exporters: argonodes.exporters
+---------------------------------
+
+.. automodule:: argonodes.exporters
    :members:
    :undoc-members:
    :show-inheritance:
