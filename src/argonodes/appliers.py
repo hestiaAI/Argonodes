@@ -76,65 +76,63 @@ def make_traversal(node, rec=True) -> None:
     assert flatten(node.traversal) == node.get_paths()  # Move to testing in next iteration
 
 
-def apply_model(node, rec, model) -> None:
-    """
-    Apply a Model back to a Node, usually a Tree.
+class DistinctValues:
+    def __init__(self, sort="count", reverse=None):
+        self._data = defaultdict(lambda: {"description": "", "children": Counter(), "data": Counter()})
+        if sort not in ["key", "count"]:
+            raise ValueError("`sort` can be either `key` or `count`.")
+        self.sort = sort
+        self.reverse = reverse
 
-    :param node: A Node, usually a Tree.
-    :type node: Node
-    :param rec: If False, only current node is modified.
-    :type rec: bool
-    :param model: The Model to be applied.
-    :type Model:
-    """
-    flat = model.flatten()
+    def __call__(self, node, rec=True) -> None:
+        if not rec:
+            raise AssertionError("Distinct values on a single Node are not useful.")
 
-    def apply_to(node):
-        path = REGEX_PATH.sub("[*]", node.path)
-        info = flat[path]
-        node.descriptiveType = info["descriptiveType"]
-        node.unique = info["unique"]
-        node.default = info["default"]
-        node.description = info["description"]
-        node.choices = info["choices"]
-        node.regex = info["regex"]
+        def recur(node):
+            path = REGEX_PATH.sub("[*]", node.path)
 
-    def recur(node):
-        apply_to(node)
-        if node.children:
-            for children in node.children:
-                recur(children)
+            if hasattr(node, "data"):
+                if node.data:
+                    self._data[path]["data"][node.data] += 1
 
-    if rec:
+            if node.children:
+                for children in node.children:
+                    children_path = REGEX_PATH.sub("[*]", children.path)
+                    self._data[path]["children"][children_path] += 1
+                    recur(children)
+
         recur(node)
-    else:
-        apply_to(node)
 
+    @property
+    def data(self):
+        srt = 1 if self.sort == "count" else 0
+        rvrs = self.reverse or True if self.sort == "count" else False
 
-# def find_distinct_values(node, rec=True, result=None) -> None:
-#     if not rec:
-#         raise AssertionError("Distinct values on single node not useful.")
-#
-#     result = defaultdict(Counter)
-#
-#     def recur(node):
-#         path = REGEX_PATH.sub("[*]", node.path)
-#
-#         if hasattr(node, "data") and node.data:
-#             result[path][node.data] += 1
-#
-#         if node.children:
-#             for children in node.children:
-#                 children_path = REGEX_PATH.sub("[*]", children.path)
-#                 result[node.fieldName][f"children: {children_path}"] += 1
-#                 recur(children)
-#
-#     recur(node)
-#
-#     for k, v in result.items():
-#         print(k)
-#         print(v)
-#         break
-#     return
-#
-#     print(result)
+        return {
+            k: {
+                "description": v["description"],
+                "children": dict(sorted(v["children"].items(), key=lambda item: item[srt], reverse=rvrs)),
+                "data": dict(sorted(v["data"].items(), key=lambda item: item[srt], reverse=rvrs)),
+            }
+            for k, v in self._data.items()
+        }
+
+    @data.setter
+    def data(self, value):
+        raise AttributeError("Cannot set `data`.")
+
+    def sort(self, sort):
+        if sort not in ["key", "count"]:
+            raise ValueError("`sort` can be either `key` or `count`.")
+        self.sort = sort
+
+    def get_found_values(self):
+        return {k: dict(v["data"]) for k, v in self.data.items()}
+
+    def get_recurring_values(self, threshold=2):
+        return {k: {k2: v2 for k2, v2 in dict(v["data"]).items() if v2 >= threshold} for k, v in self.data.items()}
+
+    def to_list(self) -> list:
+        return [["path", "description", "possible_children", "possible_values"]] + [
+            [k, v["description"], list(set(v["children"])), list(set(v["data"]))] for k, v in self.data.items()
+        ]
