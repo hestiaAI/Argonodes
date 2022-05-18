@@ -14,26 +14,20 @@ import pickle
 from deepdiff import DeepDiff
 
 
-from .applies import apply_model
 from .default_context import DEFAULT_CONTEXT
 from .helpers import flatten, REGEX_PATH
-from .nodes import Tree
 
 
 class Model:
     """
     Model for a specific type of data.
-    Internal: Python Dict.
-    External: Either JSON or a String.
 
     :param name: Name of the Model.
     :type name: str, default None.
     :param context: Context for the JSON-LD export.
     :type context: dict, default None.
-    :param filenames: Filenames to be processed by the Model.
-    :type filenames: str or list[str], default None.
-    :param traversal: A potential existing traversal.
-    :type traversal: dict, default None.
+    :param trees: Trees to be processed by the Model.
+    :type trees: Tree or list[Tree], default None.
     """
 
     def __init__(self, name=None, context=None, trees=None):
@@ -58,6 +52,7 @@ class Model:
         # This will probably get me in purgatory or something.
         """
         Apply a Model back to a Node, usually a Tree.
+
         :param rec: If False, only current node is modified.
         :param node: A Node, usually a Tree.
         :param model: The Model to be applied.
@@ -242,36 +237,3 @@ class Model:
         """
         with open(filename, "rb") as file:
             self.traversal = pickle.load(file)
-
-    # def filter(self, **kwargs):
-    #     if not kwargs:
-    #         return self
-    #     def recur(traversal, filtr):
-    #         attr, op, value = filtr
-    #         for path, info in traversal.items():
-    #             if info["traversal"]:
-    #                 recur(info["traversal"], filtr)
-    #             if attr == "path":
-    #                 if not op(path, value):
-    #                     traversal.pop(path)
-    #             else:
-    #                 if hasattr(info, attr) and not op(info[attr], value):
-    #                     traversal.pop(path)
-    #     for attr_op, value in kwargs.items():
-    #         filtr = parse_op(attr_op), value
-    #         recur(self.traversal, filtr)
-    #     return self
-
-    # def _frame_and_context(self) -> dict:
-    #     frame_and_context = self.context.copy()
-    #     frame_and_context.update(self.frame)
-    #
-    #     return frame_and_context
-    #
-    # def export_model(self, text=True, filename=None) -> Optional[str]:
-    #     if text:
-    #         return json.dumps(self._frame_and_context())
-    #     elif filename:
-    #         with open(filename, "w", encoding="utf-8") as file:
-    #             json.dump(self._frame_and_context(), file, indent=4)
-    #         return
