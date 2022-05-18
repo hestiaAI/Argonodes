@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3. Appliers: argonodes.appliers &mdash; Argonodes 0.2.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. Models: argonodes.models" href="models.html" />
+    <link rel="prev" title="2. Nodes: argonodes.nodes" href="nodes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Argonodes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Technical documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="parsers.html">1. Parsers: argonodes.parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nodes.html">2. Nodes: argonodes.nodes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Appliers: argonodes.appliers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">4. Models: argonodes.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">5. Filters: argonodes.filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exporters.html">6. Exporters: argonodes.exporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../helpers.html">Argonodes Helpers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Argonodes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>3. Appliers: argonodes.appliers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/appliers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-argonodes.appliers">
+<span id="appliers-argonodes-appliers"></span><h1>3. Appliers: argonodes.appliers<a class="headerlink" href="#module-argonodes.appliers" title="Permalink to this headline"></a></h1>
+<p>Appliers are functions or objects passed as parameters to a Node to allow modifications, additions, or exploration on the data of the Node, and/or its children.</p>
+<p>The idea is identical to that of the Visitor pattern. There are two types of Appliers: Appliers that add/modify existing attributes in the Node, and Appliers that extract attributes from the Node. These Appliers are respectively functions and objects.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.appliers.</span></span><span class="sig-name descname"><span class="pre">DistinctValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'count'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.appliers.DistinctValues" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Standalone Applier to check all distinct values for Nodes.</p>
+<p>It is possible to sort the values by frequency or by path, in ascending or descending order. Once applied, this Applier keeps in memory the repetitions of values and children for the targeted Nodes. It is possible to retrieve them either with <cite>self.data</cite>, or with dedicated functions for more granularity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sort</strong> (str, either <cite>key</cite> or <cite>count</cite>.) – How to sort the gathered values.</p></li>
+<li><p><strong>reverse</strong> (<em>bool</em><em>, </em><em>default None.</em>) – Whether to reverse the sorting order or not.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#argonodes.appliers.DistinctValues.data" title="Permalink to this definition"></a></dt>
+<dd><p>Raw data. Immutable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Raw data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.get_found_values">
+<span class="sig-name descname"><span class="pre">get_found_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#argonodes.appliers.DistinctValues.get_found_values" title="Permalink to this definition"></a></dt>
+<dd><p>Return the values only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dictionary with the paths and the corresponding values.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.get_recurring_values">
+<span class="sig-name descname"><span class="pre">get_recurring_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#argonodes.appliers.DistinctValues.get_recurring_values" title="Permalink to this definition"></a></dt>
+<dd><p>Return the values only, filtered on a given threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em>, </em><em>default 2.</em>) – How many times the value should occur to be considered as “recurring”.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with the paths and the corresponding values, filtered on a given threshold.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.sort">
+<span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.appliers.DistinctValues.sort" title="Permalink to this definition"></a></dt>
+<dd><p>Change the sorting order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sort</strong> (str, either <cite>key</cite> or <cite>count</cite>.) – How to sort the gathered values.</p></li>
+<li><p><strong>reverse</strong> (<em>bool</em><em>, </em><em>default None.</em>) – Whether to reverse the sorting order or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.to_list">
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.appliers.DistinctValues.to_list" title="Permalink to this definition"></a></dt>
+<dd><p>Return a flattened version of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A flattened version of data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.appliers.FoundRegex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.appliers.</span></span><span class="sig-name descname"><span class="pre">FoundRegex</span></span><a class="headerlink" href="#argonodes.appliers.FoundRegex" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This standalone Applier will try to find a matching regex for each targeted Node.</p>
+<p>It will try to find a uniquely matching regex for each targeted Node, based on the recurring values of that one. A failure to do so will result in a list of potential regex that may cover all the found cases. It is possible to retrieve them with <cite>self.data</cite>.</p>
+<p>Note that this Applier makes use of another Applier, <cite>DistinctValues</cite>.</p>
+<p>Warning, it uses an external package that you should install first: <cite>pip install tdda</cite>.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="argonodes.appliers.FoundRegex.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#argonodes.appliers.FoundRegex.data" title="Permalink to this definition"></a></dt>
+<dd><p>Raw data. Immutable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Raw data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="argonodes.appliers.ignore_node">
+<span class="sig-prename descclassname"><span class="pre">argonodes.appliers.</span></span><span class="sig-name descname"><span class="pre">ignore_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.appliers.ignore_node" title="Permalink to this definition"></a></dt>
+<dd><p>Marks every targeted Node as “ignored” - subsequent functions shall take that into account for further actions (e.g., export).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> (<a class="reference internal" href="nodes.html#argonodes.nodes.Node" title="argonodes.nodes.Node"><em>Node</em></a>) – A given Node, usually a Tree.</p></li>
+<li><p><strong>rec</strong> (<em>bool</em><em>, </em><em>default True.</em>) – If True, the function shall be applied on all children.</p></li>
+<li><p><strong>paths</strong> (<em>List</em><em>[</em><em>str</em><em>] or </em><em>str.</em>) – What are the targeted paths.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="argonodes.appliers.make_traversal">
+<span class="sig-prename descclassname"><span class="pre">argonodes.appliers.</span></span><span class="sig-name descname"><span class="pre">make_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.appliers.make_traversal" title="Permalink to this definition"></a></dt>
+<dd><p>Create the base traversal of a Node, usually a Tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> (<a class="reference internal" href="nodes.html#argonodes.nodes.Node" title="argonodes.nodes.Node"><em>Node</em></a>) – A given Node, usually a Tree.</p></li>
+<li><p><strong>rec</strong> (<em>bool</em><em>, </em><em>default True.</em>) – Must be True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nodes.html" class="btn btn-neutral float-left" title="2. Nodes: argonodes.nodes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="models.html" class="btn btn-neutral float-right" title="4. Models: argonodes.models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, HestiaLabs.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
