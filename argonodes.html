@@ -330,41 +330,49 @@
 <p>They aim to describe, complete, and enhance the information of unknown data, so that the information related to the data can be re-applied to new data.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.models.Model">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.models.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filenames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traversal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.models.Model" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.models.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.models.Model" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Model for a specific type of data.
-Internal: Python Dict.
-External: Either JSON or a String.</p>
+<p>Model for a specific type of data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>trees</strong> (<a class="reference internal" href="#argonodes.nodes.Tree" title="argonodes.nodes.Tree"><em>Tree</em></a><em> or </em><em>list</em><em>[</em><a class="reference internal" href="#argonodes.nodes.Tree" title="argonodes.nodes.Tree"><em>Tree</em></a><em>]</em><em>, </em><em>default None.</em>) – Trees to be processed by the Model.</p></li>
 <li><p><strong>name</strong> (<em>str</em><em>, </em><em>default None.</em>) – Name of the Model.</p></li>
 <li><p><strong>context</strong> (<em>dict</em><em>, </em><em>default None.</em>) – Context for the JSON-LD export.</p></li>
-<li><p><strong>filenames</strong> (<em>str</em><em> or </em><em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>default None.</em>) – Filenames to be processed by the Model.</p></li>
-<li><p><strong>traversal</strong> (<em>dict</em><em>, </em><em>default None.</em>) – A potential existing traversal.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="argonodes.models.Model.add_files">
-<span class="sig-name descname"><span class="pre">add_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filenames</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#argonodes.models.Model" title="argonodes.models.Model"><span class="pre">argonodes.models.Model</span></a></span></span><a class="headerlink" href="#argonodes.models.Model.add_files" title="Permalink to this definition"></a></dt>
-<dd><p>Add files to parse into the model.</p>
+<dt class="sig sig-object py" id="argonodes.models.Model.add_traversal">
+<span class="sig-name descname"><span class="pre">add_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traversal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.models.Model.add_traversal" title="Permalink to this definition"></a></dt>
+<dd><p>Add a traversal to the Model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filenames</strong> (<em>str</em><em> or </em><em>list</em><em>[</em><em>str</em><em>]</em>) – File paths to add.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Self, for chaining.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#argonodes.models.Model" title="argonodes.models.Model">Model</a></p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traversal</strong> (<em>dict</em>) – The traversal, from a Tree.</p></li>
+<li><p><strong>apply</strong> (<em>bool</em>) – If True, will effectively be applied to the Model.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="argonodes.models.Model.dump_traversal">
-<span class="sig-name descname"><span class="pre">dump_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pickle'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.models.Model.dump_traversal" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="argonodes.models.Model.add_tree">
+<span class="sig-name descname"><span class="pre">add_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.models.Model.add_tree" title="Permalink to this definition"></a></dt>
+<dd><p>Add a Tree’s traversal to the Model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tree</strong> (<a class="reference internal" href="#argonodes.nodes.Tree" title="argonodes.nodes.Tree"><em>Tree</em></a>) – A Tree.</p></li>
+<li><p><strong>apply</strong> (<em>bool</em>) – If True, will effectively be applied to the Model.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.models.Model.export_traversal">
+<span class="sig-name descname"><span class="pre">export_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pickle'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.models.Model.export_traversal" title="Permalink to this definition"></a></dt>
 <dd><p>Dump the traversal in different format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -431,43 +439,6 @@ External: Either JSON or a String.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to a pickled format.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="argonodes.models.Model.process_files">
-<span class="sig-name descname"><span class="pre">process_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">apply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.models.Model.process_files" title="Permalink to this definition"></a></dt>
-<dd><p>Process each file and add to the model traversal.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>apply</strong> – If True, changes are directly applied to the model; else, changes are not applied.</p>
-</dd>
-<dt class="field-even">Rtype apply</dt>
-<dd class="field-even"><p>bool, default True.</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>List of changes.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[str, dict]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="argonodes.models.Model.remove_files">
-<span class="sig-name descname"><span class="pre">remove_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filenames</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#argonodes.models.Model" title="argonodes.models.Model"><span class="pre">argonodes.models.Model</span></a></span></span><a class="headerlink" href="#argonodes.models.Model.remove_files" title="Permalink to this definition"></a></dt>
-<dd><p>Remove files to parse into the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filenames</strong> (<em>str</em><em> or </em><em>list</em><em>[</em><em>str</em><em>]</em>) – File paths to remove.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Self, for chaining.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#argonodes.models.Model" title="argonodes.models.Model">Model</a></p>
 </dd>
 </dl>
 </dd></dl>
