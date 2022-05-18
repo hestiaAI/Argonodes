@@ -1,9 +1,13 @@
+"""
+Default context to be used when exporting Models in a JSON-LD format.
+"""
+
 DEFAULT_CONTEXT = {
     "@context": {
         "@vocab": "https://github.com/hestiaAI/Argonodes/wiki",
         "path": "https://github.com/hestiaAI/Argonodes/wiki/path",
         "foundType": "https://github.com/hestiaAI/Argonodes/wiki/foundType",
-        #    "descriptiveType": "@type",
+        "descriptiveType": "@type",
         "unique": "https://github.com/hestiaAI/Argonodes/wiki/unique",
         "default": "https://schema.org/defaultValue",
         "description": "https://schema.org/description",

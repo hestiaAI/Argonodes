@@ -10,8 +10,11 @@ from .helpers import flatten, REGEX_PATH
 def base_apply(node, rec=True, *args, **kwargs) -> None:
     """
     This base method is an example and should not be used.
+
     :param node: A given Node, usually a Tree.
+    :type node: Node
     :param rec: If True, the function shall be applied on all children.
+    :type rec: bool, default True.
     :param args: Add. args.
     :param kwargs: Add. kwargs.
     :return: Nothing, because applies should be chained.
@@ -37,8 +40,11 @@ def base_apply(node, rec=True, *args, **kwargs) -> None:
 def make_traversal(node, rec=True) -> None:
     """
     Create the base traversal of a Node, usually a Tree.
+
     :param node: A given Node, usually a Tree.
+    :type node: Node
     :param rec: Must be True.
+    :type rec: bool, default True.
     """
     if not rec:
         raise AssertionError("Cannot make traversal not recursively.")
