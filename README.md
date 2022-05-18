@@ -49,24 +49,31 @@ model = Model(name="My model").add_files(filename).process_files()
 Example:
 ```json
 {
-   "url": "https://example.com/me",
-   "user": "Jean-Michel",
-   "age": "42"
+   "url":"https://example.com/me",
+   "user":"Jean-Michel",
+   "age":"42"
 }
 ```
 - Pickle the model for archive.
 - Export to JSON.
    
    ```json
-   {'$.url': {'foundType': str,
-      'descriptiveType': "https://schema.org/url",
-      'unique': false,
-      'default': None,
-      'description': "URL to the personal page of the person.",
-      'example': ["https://domain.com/me"],
-      'regex': "https:\/\/domain\.com/[a-z]+",
-      'traversal': {}
-   },
+   {
+      "$.url":{
+         "foundType":"str",
+         "descriptiveType":"https://schema.org/url",
+         "unique":false,
+         "default":"None",
+         "description":"URL to the personal page of the person.",
+         "example":[
+            "https://domain.com/me"
+         ],
+         "regex":"https:\/\/domain\\.com/[a-z]+",
+         "traversal":{
+            
+         }
+      }
+   }
    ```
 - Export to JSON-LD frame (Soon ™️).
 - Export to Markdown.
@@ -101,6 +108,12 @@ We are in need of tests! Write them under the [`tests`](./tests/) folder.
 #### JSON & JSON paths
 - You can check that the JSON is valid by using [https://jsonformatter.curiousconcept.com/](https://jsonformatter.curiousconcept.com/).
 - You can check that the JSON paths are correct by using [https://jsonpathfinder.com/](https://jsonpathfinder.com/).
+
+### Documentation
+
+1. `cd docs/`
+2. `sphinx-apidoc -o source/ ../src/`
+3. `make html`
 
 ### Examples
 

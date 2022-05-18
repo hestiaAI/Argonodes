@@ -1,5 +1,7 @@
 """
-model.py is everything linked to a model or abstraction of one or multiple files.
+Models are an abstraction of data sources.
+
+They aim to describe, complete, and enhance the information of unknown data, so that the information related to the data can be re-applied to new data.
 """
 from __future__ import annotations
 
@@ -14,21 +16,33 @@ from deepdiff import DeepDiff
 
 from .default_context import DEFAULT_CONTEXT
 from .helpers import flatten, REGEX_PATH
-from .nodes import Tree
 
 
 class Model:
     """
     Model for a specific type of data.
-    Internal: Python Dict.
-    External: Either JSON or a String.
+
+    :param trees: Trees to be processed by the Model.
+    :type trees: Tree or list[Tree], default None.
+    :param name: Name of the Model.
+    :type name: str, default None.
+    :param context: Context for the JSON-LD export.
+    :type context: dict, default None.
     """
 
-    def __init__(self, name=None, context=None, filenames=None, traversal=None):
+    def __init__(self, trees=None, name=None, context=None):
         self.name = name
         self.context = context or DEFAULT_CONTEXT
-        self.filenames = filenames or []
-        self.traversal = traversal or {}
+        self.traversal = {}
+        self.changes = []
+        self.num_changes = 0
+
+        if trees:
+            if not isinstance(trees, list):
+                trees = [trees]
+
+            for tree in trees:
+                self.add_tree(tree)
 
     def __str__(self) -> str:
         return repr(self)
@@ -38,9 +52,9 @@ class Model:
 
     def __call__(self, node, rec=True):
         # This will probably get me in purgatory or something.
-        # node.apply(apply_model, self)
         """
         Apply a Model back to a Node, usually a Tree.
+
         :param rec: If False, only current node is modified.
         :param node: A Node, usually a Tree.
         :param model: The Model to be applied.
@@ -68,67 +82,42 @@ class Model:
         else:
             apply_to(node)
 
-    def add_files(self, filenames) -> Model:
+    def add_tree(self, tree, apply=True) -> None:
         """
-        Add files to parse into the model.
-        :param filenames: String or List[String], file paths.
-        :return: Self, for chaining.
+        Add a Tree's traversal to the Model.
+
+        :param tree: A Tree.
+        :type tree: Tree
+        :param apply: If True, will effectively be applied to the Model.
+        :type apply: bool
         """
-        if not isinstance(filenames, list):
-            filenames = [filenames]
+        self.add_traversal(tree.export_traversal(), apply=apply)
 
-        for filename in filenames:
-            try:
-                with open(filename, "r", encoding="utf-8"):  # This is for checking the file exists.
-                    self.filenames.append(filename)
-            except FileNotFoundError:
-                print(f"Warning: {filename} could not be opened.")
-
-        return self
-
-    def remove_files(self, filenames) -> Model:
+    def add_traversal(self, traversal, apply=True) -> None:
         """
-        Remove files to parse into the model.
-        :param filenames: String or List[String], file paths.
-        :return: Number of files still remaining.
-        """
-        if not isinstance(filenames, list):
-            filenames = [filenames]
+        Add a traversal to the Model.
 
-        for filename in filenames:
-            try:
-                self.filenames.remove(filename)
-            except ValueError:
-                print(f"Warning: {filename} was not found in the list.")
-
-        return self
-
-    def process_files(self, apply=True) -> list:
-        """
-        Process each file and add to the model traversal.
-        :param apply: If True, changes are directly applied to the model; else, changes are not applied.
-        :return: List of changes.
+        :param traversal: The traversal, from a Tree.
+        :type traversal: dict
+        :param apply: If True, will effectively be applied to the Model.
+        :type apply: bool
         """
         if apply:
             full_traversal = self.traversal
         else:
             full_traversal = self.traversal.copy()
-        changes = []
 
-        for filename in self.filenames:
-            with open(filename, "r", encoding="utf-8") as file:
-                json_data = json.load(file)
+        full_traversal.update(traversal)
+        self.num_changes += 1
 
-            traversal = Tree(json_data).export_traversal()
-            changes.append((filename, DeepDiff(full_traversal, traversal)))
-            full_traversal.update(traversal)
-
-        return changes
+        self.changes.append((self.num_changes, apply, DeepDiff(full_traversal, traversal)))
 
     def get_paths(self) -> set:
         """
         Returns the set of avalaible paths.
-        :return: Set[String], set of avalaible paths.
+
+        :return: Set of avalaible paths.
+        :rtype: set[str]
         """
 
         def recur(traversal):
@@ -141,8 +130,11 @@ class Model:
     def find_info(self, target) -> Optional[dict]:
         """
         Returns the given path, or the latest found element within the path.
-        :param path: String, a JSON path.
-        :return: Dict, the corresponding linked information in the traversal.
+
+        :param path: A JSON path.
+        :rtype path: str
+        :return: The corresponding linked information in the traversal.
+        :rtype: dict
         """
 
         def recur(target, traversal):
@@ -157,8 +149,11 @@ class Model:
     def to_list(self, headers=True) -> list:
         """
         Returns the model in the form of a list.
+
         :param headers: If the first line should be the headers.
-        :return: List[List].
+        :type headers: bool, default True.
+        :return: A nice little list representing the Model.
+        :rtype: list[list]
         """
         rtn = []
         if headers:
@@ -185,16 +180,22 @@ class Model:
     def flatten(self) -> dict:
         """
         Returns a flattened version of the model.
+
         :return: A dict of the model.
+        :rtype: dict
         """
         return flatten(self.traversal, keys_only=False)
 
     def set_attribute(self, path, **kwargs) -> bool:
         """
         Given a specific path, add more context to that path.
-        :param path: String, a valide path.
-        :param kwargs:
+
+        :param path: A valid path.
+        :type path: str
+        :param kwargs: The different information to add to that path.
+        :type kwargs: Keyworded, variable-length argument list.
         :return: True if the path was found and info added; False otherwise.
+        :rtype: bool
         """
         info = self.find_info(path)
         if info:
@@ -203,11 +204,14 @@ class Model:
             return True
         return False
 
-    def dump_traversal(self, filename=None, scheme="pickle") -> None:
+    def export_traversal(self, filename=None, scheme="pickle") -> None:
         """
         Dump the traversal in different format.
+
         :param filename: If None, will print in the given format.
+        :type filename: str, default None.
         :param scheme: Can be either `pickle`, `json`, `markdown`.
+        :type scheme: str, default "pickle".
         """
         if scheme == "pickle":
             if not filename:
@@ -249,40 +253,9 @@ class Model:
     def load_traversal(self, filename) -> None:
         """
         Load a format from a pickle.
+
         :param filename: Path to a pickled format.
+        :type filename: str
         """
         with open(filename, "rb") as file:
             self.traversal = pickle.load(file)
-
-    # def filter(self, **kwargs):
-    #     if not kwargs:
-    #         return self
-    #     def recur(traversal, filtr):
-    #         attr, op, value = filtr
-    #         for path, info in traversal.items():
-    #             if info["traversal"]:
-    #                 recur(info["traversal"], filtr)
-    #             if attr == "path":
-    #                 if not op(path, value):
-    #                     traversal.pop(path)
-    #             else:
-    #                 if hasattr(info, attr) and not op(info[attr], value):
-    #                     traversal.pop(path)
-    #     for attr_op, value in kwargs.items():
-    #         filtr = parse_op(attr_op), value
-    #         recur(self.traversal, filtr)
-    #     return self
-
-    # def _frame_and_context(self) -> dict:
-    #     frame_and_context = self.context.copy()
-    #     frame_and_context.update(self.frame)
-    #
-    #     return frame_and_context
-    #
-    # def export_model(self, text=True, filename=None) -> Optional[str]:
-    #     if text:
-    #         return json.dumps(self._frame_and_context())
-    #     elif filename:
-    #         with open(filename, "w", encoding="utf-8") as file:
-    #             json.dump(self._frame_and_context(), file, indent=4)
-    #         return

@@ -77,10 +77,13 @@ def flatten(traversal, keys_only=True) -> Union[set, dict]:
 #         return json.loads(recur(tree_traversal))
 
 
-def parse_path(path):
+def parse_path(path) -> list:
     """
     Parse a JSON path into a list.
-    :param path: String, a JSON path.
-    :return: List, parsed JSON path.
+
+    :param path: A JSON path.
+    :type path: str
+    :return: Parsed JSON path.
+    :rtype: list
     """
     return [r for r in re.split("\.|(\[\*\])", path) if r]
