@@ -1,3 +1,9 @@
+"""
+Appliers are functions or objects passed as parameters to a Node to allow modifications, additions, or exploration on the data of the Node, and/or its children.
+
+The idea is identical to that of the Visitor pattern. There are two types of Appliers: Appliers that add/modify existing attributes in the Node, and Appliers that extract attributes from the Node. These Appliers are respectively functions and objects.
+"""
+
 from __future__ import annotations
 
 
@@ -89,7 +95,18 @@ def make_traversal(node, rec=True) -> None:
 
 
 class DistinctValues:
-    def __init__(self, sort="count", reverse=None):
+    """
+    Standalone Applier to check all distinct values for Nodes.
+
+    It is possible to sort the values by frequency or by path, in ascending or descending order. Once applied, this Applier keeps in memory the repetitions of values and children for the targeted Nodes. It is possible to retrieve them either with `self.data`, or with dedicated functions for more granularity.
+
+    :param sort: How to sort the gathered values.
+    :type sort: str, either `key` or `count`.
+    :param reverse: Whether to reverse the sorting order or not.
+    :type reverse: bool, default None.
+    """
+
+    def __init__(self, sort="count", reverse=None) -> None:
         self._data = defaultdict(lambda: {"description": "", "children": Counter(), "data": Counter()})
         if sort not in ["key", "count"]:
             raise ValueError("`sort` can be either `key` or `count`.")
@@ -116,7 +133,7 @@ class DistinctValues:
         recur(node)
 
     @property
-    def data(self):
+    def data(self) -> dict:
         srt = 1 if self.sort == "count" else 0
         rvrs = self.reverse or True if self.sort == "count" else False
 
@@ -130,27 +147,66 @@ class DistinctValues:
         }
 
     @data.setter
-    def data(self, value):
+    def data(self, value) -> None:
         raise AttributeError("Cannot set `data`.")
 
-    def sort(self, sort):
+    def sort(self, sort, reverse=None) -> None:
+        """
+        Change the sorting order.
+
+        :param sort: How to sort the gathered values.
+        :type sort: str, either `key` or `count`.
+        :param reverse: Whether to reverse the sorting order or not.
+        :type reverse: bool, default None.
+        """
         if sort not in ["key", "count"]:
             raise ValueError("`sort` can be either `key` or `count`.")
         self.sort = sort
+        self.reverse = reverse
 
-    def get_found_values(self):
+    def get_found_values(self) -> dict:
+        """
+        Return the values only.
+
+        :return: A dictionary with the paths and the corresponding values.
+        :rtype: dict
+        """
         return {k: dict(v["data"]) for k, v in self.data.items()}
 
-    def get_recurring_values(self, threshold=2):
+    def get_recurring_values(self, threshold=2) -> dict:
+        """
+        Return the values only, filtered on a given threshold.
+
+        :param threshold: How many times the value should occur to be considered as "recurring".
+        :type threshold: int, default 2.
+        :return: A dictionary with the paths and the corresponding values, filtered on a given threshold.
+        :rtype: dict
+        """
         return {k: {k2: v2 for k2, v2 in dict(v["data"]).items() if v2 >= threshold} for k, v in self.data.items()}
 
     def to_list(self) -> list:
+        """
+        Return a flattened version of data.
+
+        :return: A flattened version of data.
+        :rtype: list
+        """
         return [["path", "description", "possible_children", "possible_values"]] + [
             [k, v["description"], list(set(v["children"])), list(set(v["data"]))] for k, v in self.data.items()
         ]
 
 
-def ignore_node(node, rec=False, paths=None):
+def ignore_node(node, rec=False, paths=None) -> None:
+    """
+    Marks every targeted Node as "ignored" - subsequent functions shall take that into account for further actions (e.g., export).
+
+    :param node: A given Node, usually a Tree.
+    :type node: Node
+    :param rec: If True, the function shall be applied on all children.
+    :type rec: bool, default True.
+    :param paths: What are the targeted paths.
+    :type paths: List[str] or str.
+    """
     if paths and not isinstance(paths, list):
         paths = [paths]
 
@@ -177,11 +233,21 @@ def ignore_node(node, rec=False, paths=None):
 
 
 class FoundRegex:
-    def __init__(self):
+    """
+    This standalone Applier will try to find a matching regex for each targeted Node.
+
+    It will try to find a uniquely matching regex for each targeted Node, based on the recurring values of that one. A failure to do so will result in a list of potential regex that may cover all the found cases. It is possible to retrieve them with `self.data`.
+
+    Note that this Applier makes use of another Applier, `DistinctValues`.
+
+    Warning, it uses an external package that you should install first: `pip install tdda`.
+    """
+
+    def __init__(self) -> None:
         self.distinct_values = DistinctValues()
         self._data = defaultdict(lambda: {"description": "", "data": [], "regex": None, "unique": True})
 
-    def __call__(self, node, rec=True):
+    def __call__(self, node, rec=True) -> None:
         from tdda.rexpy.rexpy import Extractor
 
         self.distinct_values(node, rec=rec)
@@ -208,9 +274,9 @@ class FoundRegex:
         return
 
     @property
-    def data(self):
+    def data(self) -> dict:
         return self._data
 
     @data.setter
-    def data(self, value):
+    def data(self, value) -> None:
         raise AttributeError("Cannot set `data`.")

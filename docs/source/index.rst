@@ -24,7 +24,12 @@ Argo\ `nodes <https://en.wikipedia.org/wiki/Node_(computer_science)>`__!
    :maxdepth: 2
    :caption: Technical documentation
 
-   argonodes
+   modules/parsers
+   modules/nodes
+   modules/appliers
+   modules/models
+   modules/filters
+   modules/exporters
    helpers
 
 Access the index: :ref:`genindex`
