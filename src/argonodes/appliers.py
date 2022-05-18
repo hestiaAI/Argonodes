@@ -2,6 +2,8 @@
 Appliers are functions or objects passed as parameters to a Node to allow modifications, additions, or exploration on the data of the Node, and/or its children.
 
 The idea is identical to that of the Visitor pattern. There are two types of Appliers: Appliers that add/modify existing attributes in the Node, and Appliers that extract attributes from the Node. These Appliers are respectively functions and objects.
+
+Basic usage: ``tree.apply(applier)``
 """
 
 from __future__ import annotations

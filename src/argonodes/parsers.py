@@ -1,7 +1,9 @@
 """
 Parsers are tools for converting data sources into a JSON format, usable by Argonodes.
 
-There are different Parsers depending on the original source. Basically, Parsers should implement the dunder `__call__`, that takes into account a parameter `data_in`, which corresponds to, well, the data to parse. That data may be either a string, or a File object.
+There are different Parsers depending on the original source. Basically, Parsers should implement the dunder ``__call__``, that takes into account a parameter ``data_in``, which corresponds to, well, the data to parse. That data may be either a string, or a File object.
+
+Basic usage: ``parser = Parser(); json_data = parser(data)``
 """
 from abc import ABC, abstractmethod
 from typing import Union

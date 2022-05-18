@@ -2,6 +2,8 @@
 Models are an abstraction of data sources.
 
 They aim to describe, complete, and enhance the information of unknown data, so that the information related to the data can be re-applied to new data.
+
+Basic usage = ``model = Model(tree)``
 """
 from __future__ import annotations
 
