@@ -2,14 +2,17 @@
 Nodes are the building block of the whole pipeline to augment data with semantics.
 
 With Nodes, data can be passed in JSON, which can be explored, described, and tagged, and the nodes can then be used to build data models.
+
+Basic usage: ``tree = Tree(json_data)``
 """
 from __future__ import annotations
 
 
 from typing import Union
+import uuid
 
 
-from .applies import make_traversal
+from .appliers import make_traversal
 from .helpers import REGEX_PATH, REGEX_SEARCH
 
 
@@ -227,6 +230,19 @@ class Node:
         else:
             return self
 
+    def delete(self, rec=False, remove=False):
+        if rec and self.children:
+            for children in self.children:
+                children.delete(rec, remove)
+
+        if remove:
+            self.parent.children.pop(self)
+        else:
+            blank_node = Node(None, fieldName=uuid.uuid4(), parent=self.parent)
+            blank_node.children += self.children
+            self.parent.children.append(blank_node)
+            self.parent.children.pop(self)
+
 
 class Tree(Node):
     """
@@ -235,6 +251,9 @@ class Tree(Node):
 
     def __init__(self, data):
         super().__init__(data, fieldName="$")
+
+    def delete(self, rec=False, remove=False):
+        raise AssertionError("Cannot delete Root node.")
 
 
 class NodeList(Node):
