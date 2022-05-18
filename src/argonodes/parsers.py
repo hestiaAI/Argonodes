@@ -6,12 +6,17 @@ There are different Parsers depending on the original source. Basically, Parsers
 Basic usage: ``parser = Parser(); json_data = parser(data)``
 """
 from abc import ABC, abstractmethod
+from io import StringIO
 from typing import Union
 import csv
 import json
 
 
 class Parser(ABC):
+    """
+    Abstraction for every Parser.
+    """
+
     def __str__(self) -> str:
         return repr(self)
 
@@ -20,10 +25,20 @@ class Parser(ABC):
 
     @abstractmethod
     def __call__(self, data_in) -> Union[dict, list]:
-        pass
+        if isinstance(data_in, str):
+            pass
+        else:
+            pass
 
 
 class JSONParser(Parser):
+    """
+    A default parser that will take JSON and produce JSON.
+
+    :param data_in: The data source.
+    :type data_in: str or File.
+    """
+
     def __call__(self, data_in):
         if isinstance(data_in, str):
             try:
@@ -37,12 +52,18 @@ class JSONParser(Parser):
                 raise ValueError("This is not a correct JSON file.")
 
 
-class InferParser(Parser):
-    pass
-
-
 class CSVParser(Parser):
+    """
+    CSV to JSON.
+
+    :param data_in: The data source.
+    :type data_in: str or File.
+    """
+
     def __call__(self, data_in, *args, **kwargs) -> list:
+        if isinstance(data_in, str):
+            data_in = StringIO(data_in)
+
         if not kwargs:
             dialect = csv.Sniffer().sniff(data_in.read(1024))
             data_in.seek(0)
@@ -53,13 +74,20 @@ class CSVParser(Parser):
         return [dict(row) for row in reader]
 
 
-class SGMLParser(Parser):
-    pass
+class XMLParser(Parser):
+    """
+    XML to JSON.
 
+    Warning, it uses an external package that you should install first: `pip install xmltodict`.
 
-class XMLParser(SGMLParser):
-    pass
+    :param data_in: The data source.
+    :type data_in: str or File.
+    """
 
+    def __call__(self, data_in, *args, **kwargs):
+        import xmltodict
 
-class HTMLParser(SGMLParser):
-    pass
+        if not isinstance(data_in, str):
+            data_in = data_in.read()
+
+        return json.dumps(xmltodict.parse(data_in))
