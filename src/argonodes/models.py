@@ -22,25 +22,27 @@ class Model:
     """
     Model for a specific type of data.
 
+    :param trees: Trees to be processed by the Model.
+    :type trees: Tree or list[Tree], default None.
     :param name: Name of the Model.
     :type name: str, default None.
     :param context: Context for the JSON-LD export.
     :type context: dict, default None.
-    :param trees: Trees to be processed by the Model.
-    :type trees: Tree or list[Tree], default None.
     """
 
-    def __init__(self, name=None, context=None, trees=None):
+    def __init__(self, trees=None, name=None, context=None):
         self.name = name
         self.context = context or DEFAULT_CONTEXT
         self.traversal = {}
         self.changes = []
+        self.num_changes = 0
 
-        if not isinstance(trees, list):
-            trees = [trees]
+        if trees:
+            if not isinstance(trees, list):
+                trees = [trees]
 
-        for tree in trees:
-            self.changes.append(self.add_traversal(tree.export_traversal(), name=f"#{len(self.changes)}"))
+            for tree in trees:
+                self.add_tree(tree)
 
     def __str__(self) -> str:
         return repr(self)
@@ -80,15 +82,35 @@ class Model:
         else:
             apply_to(node)
 
-    def add_traversal(self, traversal, name=None, apply=True):
+    def add_tree(self, tree, apply=True) -> None:
+        """
+        Add a Tree's traversal to the Model.
+
+        :param tree: A Tree.
+        :type tree: Tree
+        :param apply: If True, will effectively be applied to the Model.
+        :type apply: bool
+        """
+        self.add_traversal(tree.export_traversal(), apply=apply)
+
+    def add_traversal(self, traversal, apply=True) -> None:
+        """
+        Add a traversal to the Model.
+
+        :param traversal: The traversal, from a Tree.
+        :type traversal: dict
+        :param apply: If True, will effectively be applied to the Model.
+        :type apply: bool
+        """
         if apply:
             full_traversal = self.traversal
         else:
             full_traversal = self.traversal.copy()
 
         full_traversal.update(traversal)
+        self.num_changes += 1
 
-        return name, DeepDiff(full_traversal, traversal)
+        self.changes.append((self.num_changes, apply, DeepDiff(full_traversal, traversal)))
 
     def get_paths(self) -> set:
         """
