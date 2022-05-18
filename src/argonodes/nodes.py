@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Union
 
 
-from .applies import make_traversal
+from .appliers import make_traversal
 from .helpers import REGEX_PATH, REGEX_SEARCH
 
 
