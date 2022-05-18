@@ -174,3 +174,43 @@ def ignore_node(node, rec=False, paths=None):
         apply_to(node)
 
     return
+
+
+class FoundRegex:
+    def __init__(self):
+        self.distinct_values = DistinctValues()
+        self._data = defaultdict(lambda: {"description": "", "data": [], "regex": None, "unique": True})
+
+    def __call__(self, node, rec=True):
+        from tdda.rexpy.rexpy import Extractor
+
+        self.distinct_values(node, rec=rec)
+
+        for path, info in self.distinct_values.data.items():
+            try:
+                regex = Extractor({str(k): v for k, v in info["data"].items()}).results.rex
+
+                if len(regex) == 1:
+                    regex = regex[0]
+                    unique = True
+                else:
+                    unique = False
+
+                self.data[path] = {
+                    "description": info["description"],
+                    "data": info["data"],
+                    "regex": regex,
+                    "unique": unique,
+                }
+            except AttributeError:
+                continue
+
+        return
+
+    @property
+    def data(self):
+        return self._data
+
+    @data.setter
+    def data(self, value):
+        raise AttributeError("Cannot set `data`.")
