@@ -2,9 +2,10 @@ from __future__ import annotations
 
 
 from collections import Counter, defaultdict
+import uuid
 
 
-from .helpers import flatten, REGEX_PATH
+from .helpers import flatten, REGEX_PATH, REGEX_SEARCH
 
 
 def base_apply(node, rec=True, *args, **kwargs) -> None:
@@ -52,18 +53,29 @@ def make_traversal(node, rec=True) -> None:
     void = {}
 
     def recur(node, void) -> None:
+        ignored = hasattr(node, "ignore") and node.ignore
+
         path = REGEX_PATH.sub("[*]", node.path)
+        if ignored:
+            path = uuid.uuid5(uuid.NAMESPACE_URL, path)
+
         if path not in void:
-            void[path] = {
-                "foundType": node.foundType,
-                "descriptiveType": node.descriptiveType,
-                "unique": node.unique,
-                "default": node.default,
-                "description": node.description,
-                "choices": node.choices,
-                "regex": node.regex,
-                "traversal": {},
-            }
+            if ignored:
+                void[path] = {
+                    "traversal": {},
+                }
+            else:
+                void[path] = {
+                    "foundType": node.foundType,
+                    "descriptiveType": node.descriptiveType,
+                    "unique": node.unique,
+                    "default": node.default,
+                    "description": node.description,
+                    "choices": node.choices,
+                    "regex": node.regex,
+                    "traversal": {},
+                }
+
         if node.children:
             for children in node.children:
                 recur(children, void[path]["traversal"])
@@ -136,3 +148,29 @@ class DistinctValues:
         return [["path", "description", "possible_children", "possible_values"]] + [
             [k, v["description"], list(set(v["children"])), list(set(v["data"]))] for k, v in self.data.items()
         ]
+
+
+def ignore_node(node, rec=False, paths=None):
+    if paths and not isinstance(paths, list):
+        paths = [paths]
+
+    def apply_to(node):
+        if paths:
+            for path in paths:
+                if REGEX_SEARCH(path).match(node.path):
+                    node.ignore = True
+        else:
+            node.ignore = True
+
+    def recur(node):
+        apply_to(node)
+        if node.children:
+            for children in node.children:
+                recur(children)
+
+    if paths and rec:
+        recur(node)
+    else:
+        apply_to(node)
+
+    return

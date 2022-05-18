@@ -7,6 +7,7 @@ from __future__ import annotations
 
 
 from typing import Union
+import uuid
 
 
 from .appliers import make_traversal
@@ -227,6 +228,19 @@ class Node:
         else:
             return self
 
+    def delete(self, rec=False, remove=False):
+        if rec and self.children:
+            for children in self.children:
+                children.delete(rec, remove)
+
+        if remove:
+            self.parent.children.pop(self)
+        else:
+            blank_node = Node(None, fieldName=uuid.uuid4(), parent=self.parent)
+            blank_node.children += self.children
+            self.parent.children.append(blank_node)
+            self.parent.children.pop(self)
+
 
 class Tree(Node):
     """
@@ -235,6 +249,9 @@ class Tree(Node):
 
     def __init__(self, data):
         super().__init__(data, fieldName="$")
+
+    def delete(self, rec=False, remove=False):
+        raise AssertionError("Cannot delete Root node.")
 
 
 class NodeList(Node):
