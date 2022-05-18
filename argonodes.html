@@ -266,19 +266,35 @@
 </section>
 <section id="module-argonodes.appliers">
 <span id="appliers-argonodes-appliers"></span><h2>3. Appliers: argonodes.appliers<a class="headerlink" href="#module-argonodes.appliers" title="Permalink to this headline"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="argonodes.appliers.apply_model">
-<span class="sig-prename descclassname"><span class="pre">argonodes.appliers.</span></span><span class="sig-name descname"><span class="pre">apply_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.appliers.apply_model" title="Permalink to this definition"></a></dt>
-<dd><p>Apply a Model back to a Node, usually a Tree.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>node</strong> (<a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><em>Node</em></a>) – A Node, usually a Tree.</p></li>
-<li><p><strong>rec</strong> (<em>bool</em>) – If False, only current node is modified.</p></li>
-<li><p><strong>model</strong> – The Model to be applied.</p></li>
-</ul>
-</dd>
-</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.appliers.</span></span><span class="sig-name descname"><span class="pre">DistinctValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'count'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.appliers.DistinctValues" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#argonodes.appliers.DistinctValues.data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.get_found_values">
+<span class="sig-name descname"><span class="pre">get_found_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.appliers.DistinctValues.get_found_values" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.get_recurring_values">
+<span class="sig-name descname"><span class="pre">get_recurring_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.appliers.DistinctValues.get_recurring_values" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.sort">
+<span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sort</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.appliers.DistinctValues.sort" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.appliers.DistinctValues.to_list">
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.appliers.DistinctValues.to_list" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
