@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>argonodes package &mdash; Argonodes 0.2.1 documentation</title>
+  <title>Argonodes Modules &mdash; Argonodes 0.2.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +18,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="src" href="modules.html" /> 
+    <link rel="next" title="Argonodes Helpers" href="helpers.html" />
+    <link rel="prev" title="Welcome to Argonodes’s documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -36,37 +37,18 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Technical documentation</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">argonodes package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-argonodes.applies">argonodes.applies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-argonodes.default_context">argonodes.default_context module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-argonodes.exporters">argonodes.exporters module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-argonodes.filters">argonodes.filters module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-argonodes.helpers">argonodes.helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-argonodes.models">argonodes.models module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-argonodes.nodes">argonodes.nodes module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-argonodes.parsers">argonodes.parsers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-argonodes">Module contents</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Argonodes Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.parsers">1. Parsers: argonodes.parsers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.nodes">2. Nodes: argonodes.nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.appliers">3. Appliers: argonodes.appliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.models">4. Models: argonodes.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.filters">5. Filters: argonodes.filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.exporters">6. Exporters: argonodes.exporters</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">argonodes package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.applies">argonodes.applies module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.default_context">argonodes.default_context module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.exporters">argonodes.exporters module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.filters">argonodes.filters module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.helpers">argonodes.helpers module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.models">argonodes.models module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.nodes">argonodes.nodes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-argonodes.parsers">argonodes.parsers module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-argonodes">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="helpers.html">Argonodes Helpers</a></li>
 </ul>
 
         </div>
@@ -83,8 +65,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">src</a> &raquo;</li>
-      <li>argonodes package</li>
+      <li>Argonodes Modules</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/argonodes.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -94,16 +75,200 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="argonodes-package">
-<h1>argonodes package<a class="headerlink" href="#argonodes-package" title="Permalink to this headline"></a></h1>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+  <section id="argonodes-modules">
+<h1>Argonodes Modules<a class="headerlink" href="#argonodes-modules" title="Permalink to this headline"></a></h1>
+<section id="module-argonodes.parsers">
+<span id="parsers-argonodes-parsers"></span><h2>1. Parsers: argonodes.parsers<a class="headerlink" href="#module-argonodes.parsers" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.parsers.CSVParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">CSVParser</span></span><a class="headerlink" href="#argonodes.parsers.CSVParser" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.Parser</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.parsers.HTMLParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">HTMLParser</span></span><a class="headerlink" href="#argonodes.parsers.HTMLParser" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.SGMLParser" title="argonodes.parsers.SGMLParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.SGMLParser</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.parsers.InferParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">InferParser</span></span><a class="headerlink" href="#argonodes.parsers.InferParser" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.Parser</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.parsers.Parser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">Parser</span></span><a class="headerlink" href="#argonodes.parsers.Parser" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.parsers.SGMLParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">SGMLParser</span></span><a class="headerlink" href="#argonodes.parsers.SGMLParser" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.Parser</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.parsers.XMLParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">XMLParser</span></span><a class="headerlink" href="#argonodes.parsers.XMLParser" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.SGMLParser" title="argonodes.parsers.SGMLParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.SGMLParser</span></code></a></p>
+</dd></dl>
+
 </section>
-<section id="module-argonodes.applies">
-<span id="argonodes-applies-module"></span><h2>argonodes.applies module<a class="headerlink" href="#module-argonodes.applies" title="Permalink to this headline"></a></h2>
+<section id="module-argonodes.nodes">
+<span id="nodes-argonodes-nodes"></span><h2>2. Nodes: argonodes.nodes<a class="headerlink" href="#module-argonodes.nodes" title="Permalink to this headline"></a></h2>
+<p>Nodes are the building block of the whole pipeline to augment data with semantics.</p>
+<p>With Nodes, data can be passed in JSON, which can be explored, described, and tagged, and the nodes can then be used to build data models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.nodes.Node">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.Node" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A Node is a specific part of the JSON Tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Any</em>) – Whichever raw data the Node should contains.</p></li>
+<li><p><strong>fieldName</strong> (<em>String</em>) – The field name for that Node in the raw JSON data.</p></li>
+<li><p><strong>parent</strong> (<a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><em>Node</em></a><em>, </em><em>default None.</em>) – Facultative, parent for that Node.</p></li>
+<li><p><strong>process_traversal</strong> (<em>bool</em><em>, </em><em>default False.</em>) – Facultative, whether a traversal should be processed already or not.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.nodes.Node.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><span class="pre">argonodes.nodes.Node</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">object</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#argonodes.nodes.Node.apply" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a function that will be applied to the node and/or children, and potential arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fun</strong> (A function taking into parameters at least the <cite>node</cite> and the <cite>rec</cite> parameters.) – A Node function</p></li>
+<li><p><strong>rec</strong> (<em>bool</em><em>, </em><em>default True.</em>) – Should the function be applied recursively (all children) or not.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Self if the function does not return anything, else whatever the function returns.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node">Node</a> or None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.nodes.Node.export_traversal">
+<span class="sig-name descname"><span class="pre">export_traversal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.export_traversal" title="Permalink to this definition"></a></dt>
+<dd><p>Export the created traversal.</p>
+<p>If the traversal does not exist, it is created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The returned traversal.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.nodes.Node.get_attributes">
+<span class="sig-name descname"><span class="pre">get_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.get_attributes" title="Permalink to this definition"></a></dt>
+<dd><p>List of all attributes available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of all attributes available.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.nodes.Node.get_children_from_path">
+<span class="sig-name descname"><span class="pre">get_children_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.get_children_from_path" title="Permalink to this definition"></a></dt>
+<dd><p>Get all children for a given path.</p>
+<p>The path can either be a specific path, or use wildcards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>paths</strong> – A single JSONPath or a list of JSONPaths.</p>
+</dd>
+<dt class="field-even">Rtype paths</dt>
+<dd class="field-even"><p>list[str] or [str]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of all children for the paths.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node">Node</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.nodes.Node.get_paths">
+<span class="sig-name descname"><span class="pre">get_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.get_paths" title="Permalink to this definition"></a></dt>
+<dd><p>All paths linked to that Node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Set of avalaible paths.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>set[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.nodes.Node.get_paths_fancy">
+<span class="sig-name descname"><span class="pre">get_paths_fancy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.get_paths_fancy" title="Permalink to this definition"></a></dt>
+<dd><p>A printable and formatted list of Paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Fancy paths list.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.nodes.NodeDict">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">NodeDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.NodeDict" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.nodes.Node</span></code></a></p>
+<p>A NodeDict is a special Node that contains data in a dict.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.nodes.NodeList">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">NodeList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.NodeList" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.nodes.Node</span></code></a></p>
+<p>A NodeList is a special Node that contains data in a list.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.nodes.Root">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Root</span></span><a class="headerlink" href="#argonodes.nodes.Root" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Special type for the root of a Tree.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="argonodes.nodes.Tree">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.Tree" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.nodes.Node</span></code></a></p>
+<p>A Tree is a special Node with <cite>$</cite> as field name.</p>
+</dd></dl>
+
+</section>
+<section id="module-argonodes.appliers">
+<span id="appliers-argonodes-appliers"></span><h2>3. Appliers: argonodes.appliers<a class="headerlink" href="#module-argonodes.appliers" title="Permalink to this headline"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="argonodes.applies.apply_model">
-<span class="sig-prename descclassname"><span class="pre">argonodes.applies.</span></span><span class="sig-name descname"><span class="pre">apply_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.applies.apply_model" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="argonodes.appliers.apply_model">
+<span class="sig-prename descclassname"><span class="pre">argonodes.appliers.</span></span><span class="sig-name descname"><span class="pre">apply_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.appliers.apply_model" title="Permalink to this definition"></a></dt>
 <dd><p>Apply a Model back to a Node, usually a Tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -117,8 +282,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="argonodes.applies.base_apply">
-<span class="sig-prename descclassname"><span class="pre">argonodes.applies.</span></span><span class="sig-name descname"><span class="pre">base_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.applies.base_apply" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="argonodes.appliers.base_apply">
+<span class="sig-prename descclassname"><span class="pre">argonodes.appliers.</span></span><span class="sig-name descname"><span class="pre">base_apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.appliers.base_apply" title="Permalink to this definition"></a></dt>
 <dd><p>This base method is an example and should not be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -136,8 +301,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="argonodes.applies.make_traversal">
-<span class="sig-prename descclassname"><span class="pre">argonodes.applies.</span></span><span class="sig-name descname"><span class="pre">make_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.applies.make_traversal" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="argonodes.appliers.make_traversal">
+<span class="sig-prename descclassname"><span class="pre">argonodes.appliers.</span></span><span class="sig-name descname"><span class="pre">make_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.appliers.make_traversal" title="Permalink to this definition"></a></dt>
 <dd><p>Create the base traversal of a Node, usually a Tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -150,182 +315,8 @@
 </dd></dl>
 
 </section>
-<section id="module-argonodes.default_context">
-<span id="argonodes-default-context-module"></span><h2>argonodes.default_context module<a class="headerlink" href="#module-argonodes.default_context" title="Permalink to this headline"></a></h2>
-<p>Default context to be used when exporting Models in a JSON-LD format.</p>
-</section>
-<section id="module-argonodes.exporters">
-<span id="argonodes-exporters-module"></span><h2>argonodes.exporters module<a class="headerlink" href="#module-argonodes.exporters" title="Permalink to this headline"></a></h2>
-</section>
-<section id="module-argonodes.filters">
-<span id="argonodes-filters-module"></span><h2>argonodes.filters module<a class="headerlink" href="#module-argonodes.filters" title="Permalink to this headline"></a></h2>
-<p>Filters are elements to be applied on models or on Nodes to do a preliminary sorting.</p>
-<p>Filters can be used to sort on paths directly, or in a more granular way on the elements of each Node separately.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.filters.Filter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.filters.</span></span><span class="sig-name descname"><span class="pre">Filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Doc TODO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> – </p></li>
-<li><p><strong>params</strong> – </p></li>
-<li><p><strong>paths</strong> – </p></li>
-<li><p><strong>filters</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="argonodes.filters.Filter.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.add" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kwargs</strong> – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="argonodes.filters.Filter.add_paths">
-<span class="sig-name descname"><span class="pre">add_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.add_paths" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>paths</strong> – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="argonodes.filters.Filter.export_filter">
-<span class="sig-name descname"><span class="pre">export_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#argonodes.filters.Filter.export_filter" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="argonodes.filters.Filter.filter">
-<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.filter" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kwargs</strong> – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="argonodes.filters.Filter.import_filter">
-<span class="sig-name descname"><span class="pre">import_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.import_filter" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dct</strong> – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="argonodes.filters.Filter.select">
-<span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.select" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>paths</strong> – </p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="argonodes.filters.get_filters_from_kwargs">
-<span class="sig-prename descclassname"><span class="pre">argonodes.filters.</span></span><span class="sig-name descname"><span class="pre">get_filters_from_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.filters.get_filters_from_kwargs" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kwargs</strong> – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="argonodes.filters.parse_op">
-<span class="sig-prename descclassname"><span class="pre">argonodes.filters.</span></span><span class="sig-name descname"><span class="pre">parse_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.parse_op" title="Permalink to this definition"></a></dt>
-<dd><p>Parse an operation into the correct sub elements.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>string</strong> – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Couple attribute, function.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple(str, fun)</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-argonodes.helpers">
-<span id="argonodes-helpers-module"></span><h2>argonodes.helpers module<a class="headerlink" href="#module-argonodes.helpers" title="Permalink to this headline"></a></h2>
-<p>Multiple helpers and utils.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="argonodes.helpers.REGEX_SEARCH">
-<span class="sig-prename descclassname"><span class="pre">argonodes.helpers.</span></span><span class="sig-name descname"><span class="pre">REGEX_SEARCH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.helpers.REGEX_SEARCH" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="argonodes.helpers.flatten">
-<span class="sig-prename descclassname"><span class="pre">argonodes.helpers.</span></span><span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traversal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">set</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#argonodes.helpers.flatten" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>traversal</strong> – A given traversal, whether Node or Model.</p></li>
-<li><p><strong>keys_only</strong> – Whether only the keys are important or not.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Either a set of keys or a flatten dict.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="argonodes.helpers.parse_path">
-<span class="sig-prename descclassname"><span class="pre">argonodes.helpers.</span></span><span class="sig-name descname"><span class="pre">parse_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.helpers.parse_path" title="Permalink to this definition"></a></dt>
-<dd><p>Parse a JSON path into a list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – A JSON path.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Parsed JSON path.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 <section id="module-argonodes.models">
-<span id="argonodes-models-module"></span><h2>argonodes.models module<a class="headerlink" href="#module-argonodes.models" title="Permalink to this headline"></a></h2>
+<span id="models-argonodes-models"></span><h2>4. Models: argonodes.models<a class="headerlink" href="#module-argonodes.models" title="Permalink to this headline"></a></h2>
 <p>Models are an abstraction of data sources.</p>
 <p>They aim to describe, complete, and enhance the information of unknown data, so that the information related to the data can be re-applied to new data.</p>
 <dl class="py class">
@@ -483,53 +474,54 @@
 </dd></dl>
 
 </section>
-<section id="module-argonodes.nodes">
-<span id="argonodes-nodes-module"></span><h2>argonodes.nodes module<a class="headerlink" href="#module-argonodes.nodes" title="Permalink to this headline"></a></h2>
-<p>Nodes are the building block of the whole pipeline to augment data with semantics.</p>
-<p>With Nodes, data can be passed in JSON, which can be explored, described, and tagged, and the nodes can then be used to build data models.</p>
+<section id="module-argonodes.filters">
+<span id="filters-argonodes-filters"></span><h2>5. Filters: argonodes.filters<a class="headerlink" href="#module-argonodes.filters" title="Permalink to this headline"></a></h2>
+<p>Filters are elements to be applied on models or on Nodes to do a preliminary sorting.</p>
+<p>Filters can be used to sort on paths directly, or in a more granular way on the elements of each Node separately.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="argonodes.nodes.Node">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.Node" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="argonodes.filters.Filter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.filters.</span></span><span class="sig-name descname"><span class="pre">Filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A Node is a specific part of the JSON Tree.</p>
+<p>Doc TODO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>Any</em>) – Whichever raw data the Node should contains.</p></li>
-<li><p><strong>fieldName</strong> (<em>String</em>) – The field name for that Node in the raw JSON data.</p></li>
-<li><p><strong>parent</strong> (<a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><em>Node</em></a><em>, </em><em>default None.</em>) – Facultative, parent for that Node.</p></li>
-<li><p><strong>process_traversal</strong> (<em>bool</em><em>, </em><em>default False.</em>) – Facultative, whether a traversal should be processed already or not.</p></li>
+<li><p><strong>model</strong> – </p></li>
+<li><p><strong>params</strong> – </p></li>
+<li><p><strong>paths</strong> – </p></li>
+<li><p><strong>filters</strong> – </p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="argonodes.nodes.Node.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><span class="pre">argonodes.nodes.Node</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">object</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#argonodes.nodes.Node.apply" title="Permalink to this definition"></a></dt>
-<dd><p>Takes a function that will be applied to the node and/or children, and potential arguments.</p>
+<dt class="sig sig-object py" id="argonodes.filters.Filter.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.add" title="Permalink to this definition"></a></dt>
+<dd><p>Doc TODO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fun</strong> (A function taking into parameters at least the <cite>node</cite> and the <cite>rec</cite> parameters.) – A Node function</p></li>
-<li><p><strong>rec</strong> (<em>bool</em><em>, </em><em>default True.</em>) – Should the function be applied recursively (all children) or not.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Self if the function does not return anything, else whatever the function returns.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node">Node</a> or None.</p>
+<dd class="field-odd"><p><strong>kwargs</strong> – </p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="argonodes.nodes.Node.export_traversal">
-<span class="sig-name descname"><span class="pre">export_traversal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.export_traversal" title="Permalink to this definition"></a></dt>
-<dd><p>Export the created traversal.</p>
-<p>If the traversal does not exist, it is created.</p>
+<dt class="sig sig-object py" id="argonodes.filters.Filter.add_paths">
+<span class="sig-name descname"><span class="pre">add_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.add_paths" title="Permalink to this definition"></a></dt>
+<dd><p>Doc TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>paths</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.filters.Filter.export_filter">
+<span class="sig-name descname"><span class="pre">export_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#argonodes.filters.Filter.export_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Doc TODO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The returned traversal.</p>
+<dd class="field-odd"><p></p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>dict</p>
@@ -538,140 +530,77 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="argonodes.nodes.Node.get_attributes">
-<span class="sig-name descname"><span class="pre">get_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.get_attributes" title="Permalink to this definition"></a></dt>
-<dd><p>List of all attributes available.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>List of all attributes available.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="argonodes.nodes.Node.get_children_from_path">
-<span class="sig-name descname"><span class="pre">get_children_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.get_children_from_path" title="Permalink to this definition"></a></dt>
-<dd><p>Get all children for a given path.</p>
-<p>The path can either be a specific path, or use wildcards.</p>
+<dt class="sig sig-object py" id="argonodes.filters.Filter.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.filter" title="Permalink to this definition"></a></dt>
+<dd><p>Doc TODO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>paths</strong> – A single JSONPath or a list of JSONPaths.</p>
-</dd>
-<dt class="field-even">Rtype paths</dt>
-<dd class="field-even"><p>list[str] or [str]</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The list of all children for the paths.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node">Node</a>]</p>
+<dd class="field-odd"><p><strong>kwargs</strong> – </p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="argonodes.nodes.Node.get_paths">
-<span class="sig-name descname"><span class="pre">get_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.get_paths" title="Permalink to this definition"></a></dt>
-<dd><p>All paths linked to that Node.</p>
+<dt class="sig sig-object py" id="argonodes.filters.Filter.import_filter">
+<span class="sig-name descname"><span class="pre">import_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.import_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Doc TODO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Set of avalaible paths.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>set[str]</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dct</strong> – </p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="argonodes.nodes.Node.get_paths_fancy">
-<span class="sig-name descname"><span class="pre">get_paths_fancy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#argonodes.nodes.Node.get_paths_fancy" title="Permalink to this definition"></a></dt>
-<dd><p>A printable and formatted list of Paths.</p>
+<dt class="sig sig-object py" id="argonodes.filters.Filter.select">
+<span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.select" title="Permalink to this definition"></a></dt>
+<dd><p>Doc TODO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Fancy paths list.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>paths</strong> – </p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.nodes.NodeDict">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">NodeDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.NodeDict" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.nodes.Node</span></code></a></p>
-<p>A NodeDict is a special Node that contains data in a dict.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="argonodes.filters.get_filters_from_kwargs">
+<span class="sig-prename descclassname"><span class="pre">argonodes.filters.</span></span><span class="sig-name descname"><span class="pre">get_filters_from_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.filters.get_filters_from_kwargs" title="Permalink to this definition"></a></dt>
+<dd><p>Doc TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.nodes.NodeList">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">NodeList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.NodeList" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.nodes.Node</span></code></a></p>
-<p>A NodeList is a special Node that contains data in a list.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.nodes.Root">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Root</span></span><a class="headerlink" href="#argonodes.nodes.Root" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Special type for the root of a Tree.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.nodes.Tree">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.Tree" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.nodes.Node</span></code></a></p>
-<p>A Tree is a special Node with <cite>$</cite> as field name.</p>
-</dd></dl>
-
-</section>
-<section id="module-argonodes.parsers">
-<span id="argonodes-parsers-module"></span><h2>argonodes.parsers module<a class="headerlink" href="#module-argonodes.parsers" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.parsers.CSVParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">CSVParser</span></span><a class="headerlink" href="#argonodes.parsers.CSVParser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.Parser</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.parsers.HTMLParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">HTMLParser</span></span><a class="headerlink" href="#argonodes.parsers.HTMLParser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.SGMLParser" title="argonodes.parsers.SGMLParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.SGMLParser</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.parsers.InferParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">InferParser</span></span><a class="headerlink" href="#argonodes.parsers.InferParser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.Parser</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.parsers.Parser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">Parser</span></span><a class="headerlink" href="#argonodes.parsers.Parser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.parsers.SGMLParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">SGMLParser</span></span><a class="headerlink" href="#argonodes.parsers.SGMLParser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.Parser</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="argonodes.parsers.XMLParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">XMLParser</span></span><a class="headerlink" href="#argonodes.parsers.XMLParser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.SGMLParser" title="argonodes.parsers.SGMLParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.SGMLParser</span></code></a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="argonodes.filters.parse_op">
+<span class="sig-prename descclassname"><span class="pre">argonodes.filters.</span></span><span class="sig-name descname"><span class="pre">parse_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.parse_op" title="Permalink to this definition"></a></dt>
+<dd><p>Parse an operation into the correct sub elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Couple attribute, function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(str, fun)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
-<section id="module-argonodes">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-argonodes" title="Permalink to this headline"></a></h2>
+<section id="module-argonodes.exporters">
+<span id="exporters-argonodes-exporters"></span><h2>6. Exporters: argonodes.exporters<a class="headerlink" href="#module-argonodes.exporters" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 
@@ -679,7 +608,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-left" title="src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Argonodes’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="helpers.html" class="btn btn-neutral float-right" title="Argonodes Helpers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

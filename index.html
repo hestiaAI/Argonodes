@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="src" href="modules.html" /> 
+    <link rel="next" title="Argonodes Modules" href="argonodes.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -36,10 +36,10 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Technical documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">src</a></li>
-<li class="toctree-l1"><a class="reference internal" href="argonodes.html">argonodes package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="argonodes.html">Argonodes Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helpers.html">Argonodes Helpers</a></li>
 </ul>
 
         </div>
@@ -68,44 +68,129 @@
              
   <section id="welcome-to-argonodes-s-documentation">
 <h1>Welcome to Argonodes’s documentation!<a class="headerlink" href="#welcome-to-argonodes-s-documentation" title="Permalink to this headline"></a></h1>
+<p><a class="reference external" href="https://mybinder.org/v2/gh/hestiaAI/Argonodes/HEAD?labpath=examples%2Fnotebook%2FExample.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a> <img alt="example workflow" src="https://github.com/hestiaAI/Argonodes/actions/workflows/python-package.yml/badge.svg" /></p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h2>
+<p>This package aims to facilitate the analysis of large data sets from
+various sources. The main objective is to allow to efficiently augment
+datasets, and to create models of them, in the form of JSON-LD frames,
+to then transform the raw data into JSON-LD, with notably the
+augmentation of information with semantics.</p>
+<section id="why-the-name">
+<h3>Why the name?<a class="headerlink" href="#why-the-name" title="Permalink to this headline"></a></h3>
+<p>Because <a class="reference external" href="https://en.wikipedia.org/wiki/Jason">JSON</a> explores with
+Argo<a class="reference external" href="https://en.wikipedia.org/wiki/Node_(computer_science)">nodes</a>!</p>
 <p><strong>Argonodes</strong> (/ˈɑːrɡənəʊdz/) is a Python library to describe data and normlize it.</p>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Technical documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">src</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html">argonodes package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="argonodes.html">Argonodes Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.parsers">1. Parsers: argonodes.parsers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.nodes">2. Nodes: argonodes.nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.appliers">3. Appliers: argonodes.appliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.models">4. Models: argonodes.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.filters">5. Filters: argonodes.filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.exporters">6. Exporters: argonodes.exporters</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="argonodes.html">argonodes package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.applies">argonodes.applies module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.default_context">argonodes.default_context module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.exporters">argonodes.exporters module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.filters">argonodes.filters module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.helpers">argonodes.helpers module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.models">argonodes.models module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.nodes">argonodes.nodes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes.parsers">argonodes.parsers module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argonodes.html#module-argonodes">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helpers.html">Argonodes Helpers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#module-argonodes.default_context">argonodes.default_context module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#module-argonodes.helpers">argonodes.helpers module</a></li>
 </ul>
 </li>
 </ul>
 </div>
+<p>Access the index: <a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p>
 </section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline"></a></h3>
+<p>This project requires Python 3.7+</p>
+<ol class="arabic simple">
+<li><p>Clone that repository and cd into it.</p></li>
+<li><p>Create a virtual environment: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">venv</span> <span class="pre">./env</span></code></p></li>
+<li><p>Activate that virtual environment: <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">./env/bin/activate</span></code></p></li>
+<li><p>Install the package: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code></p></li>
+<li><p>Drink water, because it is important to stay hydrated.</p></li>
+</ol>
+</section>
+<section id="quickstart">
+<h3>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;/path/to/json/file.json&quot;</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">jsonfile</span><span class="p">:</span>
+    <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">jsonfile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="kn">from</span> <span class="nn">json_ld_semantics.semantics</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">json_ld_semantics.model</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;My model&quot;</span><span class="p">,</span> <span class="n">traversal</span><span class="o">=</span><span class="n">tree</span><span class="o">.</span><span class="n">export_traversal</span><span class="p">())</span>
+
+<span class="c1"># or</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;My model&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_files</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">process_files</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline"></a></h2>
+<p>To contribute, fork the project, and open a PR.</p>
+<section id="environment">
+<h3>Environment<a class="headerlink" href="#environment" title="Permalink to this headline"></a></h3>
+<ol class="arabic simple">
+<li><p>First, activate your venv, as explained in <a class="reference external" href="#usage">Usage</a>.</p></li>
+<li><p>Install dev requirements: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements/dev.txt</span></code>.</p></li>
+<li><p>Activate <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>: <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">install</span></code>.</p></li>
+</ol>
+<p>Notes:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p>You can run <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> independently:
+<code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">run</span> <span class="pre">--all-files</span></code>.</p></li>
+<li><p>If, for some reason, you need to commit without a check, use
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">--no-verify</span> <span class="pre">[...]</span></code>.</p></li>
+<li><p>You can check you code using <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pylint</span> <span class="pre">*.py</span></code>.</p></li>
 </ul>
+</section>
+<section id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this headline"></a></h3>
+<p>We are in need of tests! Write them under the <code class="docutils literal notranslate"><span class="pre">`tests</span></code> &lt;./tests/&gt;`__
+folder. #### JSON &amp; JSON paths - You can check that the JSON is valid by
+using <a class="reference external" href="https://jsonformatter.curiousconcept.com/">https://jsonformatter.curiousconcept.com/</a>. - You can check that
+the JSON paths are correct by using <a class="reference external" href="https://jsonpathfinder.com/">https://jsonpathfinder.com/</a>.</p>
+</section>
+<section id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline"></a></h3>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">docs/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sphinx-apidoc</span> <span class="pre">-o</span> <span class="pre">source/</span> <span class="pre">../src/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code></p></li>
+</ol>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h3>
+<ol class="arabic simple">
+<li><p>First, activate your venv, as explained in <a class="reference external" href="#usage">Usage</a>.</p></li>
+<li><p>Install examples requirements:
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements/examples.txt</span></code>.</p></li>
+</ol>
+<p>Notes: - If you are changing one of the <a class="reference external" href="./examples/">examples</a>, and
+want to keep track of the change:
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">update-index</span> <span class="pre">--no-assume-unchanged</span> <span class="pre">./examples/name_of_the_file</span></code>.
+- Else, please use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">update-index</span> <span class="pre">--assume-unchanged</span> <span class="pre">./examples/</span></code>.</p>
+</section>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-right" title="src" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="argonodes.html" class="btn btn-neutral float-right" title="Argonodes Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
