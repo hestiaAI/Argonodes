@@ -36,11 +36,17 @@ class Model:
     :type traversal: dict, default None.
     """
 
-    def __init__(self, name=None, context=None, filenames=None, traversal=None):
+    def __init__(self, name=None, context=None, trees=None):
         self.name = name
         self.context = context or DEFAULT_CONTEXT
-        self.filenames = filenames or []
-        self.traversal = traversal or {}
+        self.traversal = {}
+        self.changes = []
+
+        if not isinstance(trees, list):
+            trees = [trees]
+
+        for tree in trees:
+            self.changes.append(self.add_traversal(tree.export_traversal(), name=f"#{len(self.changes)}"))
 
     def __str__(self) -> str:
         return repr(self)
@@ -79,71 +85,15 @@ class Model:
         else:
             apply_to(node)
 
-    def add_files(self, filenames) -> Model:
-        """
-        Add files to parse into the model.
-
-        :param filenames: File paths to add.
-        :type filenames: str or list[str]
-        :return: Self, for chaining.
-        :rtype: Model
-        """
-        if not isinstance(filenames, list):
-            filenames = [filenames]
-
-        for filename in filenames:
-            try:
-                with open(filename, "r", encoding="utf-8"):  # This is for checking the file exists.
-                    self.filenames.append(filename)
-            except FileNotFoundError:
-                print(f"Warning: {filename} could not be opened.")
-
-        return self
-
-    def remove_files(self, filenames) -> Model:
-        """
-        Remove files to parse into the model.
-
-        :param filenames: File paths to remove.
-        :type filenames: str or list[str]
-        :return: Self, for chaining.
-        :rtype: Model
-        """
-        if not isinstance(filenames, list):
-            filenames = [filenames]
-
-        for filename in filenames:
-            try:
-                self.filenames.remove(filename)
-            except ValueError:
-                print(f"Warning: {filename} was not found in the list.")
-
-        return self
-
-    def process_files(self, apply=True) -> list:
-        """
-        Process each file and add to the model traversal.
-
-        :param apply: If True, changes are directly applied to the model; else, changes are not applied.
-        :rtype apply: bool, default True.
-        :return: List of changes.
-        :rtype: list[str, dict]
-        """
+    def add_traversal(self, traversal, name=None, apply=True):
         if apply:
             full_traversal = self.traversal
         else:
             full_traversal = self.traversal.copy()
-        changes = []
 
-        for filename in self.filenames:
-            with open(filename, "r", encoding="utf-8") as file:
-                json_data = json.load(file)
+        full_traversal.update(traversal)
 
-            traversal = Tree(json_data).export_traversal()
-            changes.append((filename, DeepDiff(full_traversal, traversal)))
-            full_traversal.update(traversal)
-
-        return changes
+        return name, DeepDiff(full_traversal, traversal)
 
     def get_paths(self) -> set:
         """
