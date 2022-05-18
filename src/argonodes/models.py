@@ -14,33 +14,35 @@ import pickle
 from deepdiff import DeepDiff
 
 
-from .applies import apply_model
 from .default_context import DEFAULT_CONTEXT
 from .helpers import flatten, REGEX_PATH
-from .nodes import Tree
 
 
 class Model:
     """
     Model for a specific type of data.
-    Internal: Python Dict.
-    External: Either JSON or a String.
 
+    :param trees: Trees to be processed by the Model.
+    :type trees: Tree or list[Tree], default None.
     :param name: Name of the Model.
     :type name: str, default None.
     :param context: Context for the JSON-LD export.
     :type context: dict, default None.
-    :param filenames: Filenames to be processed by the Model.
-    :type filenames: str or list[str], default None.
-    :param traversal: A potential existing traversal.
-    :type traversal: dict, default None.
     """
 
-    def __init__(self, name=None, context=None, filenames=None, traversal=None):
+    def __init__(self, trees=None, name=None, context=None):
         self.name = name
         self.context = context or DEFAULT_CONTEXT
-        self.filenames = filenames or []
-        self.traversal = traversal or {}
+        self.traversal = {}
+        self.changes = []
+        self.num_changes = 0
+
+        if trees:
+            if not isinstance(trees, list):
+                trees = [trees]
+
+            for tree in trees:
+                self.add_tree(tree)
 
     def __str__(self) -> str:
         return repr(self)
@@ -52,6 +54,7 @@ class Model:
         # This will probably get me in purgatory or something.
         """
         Apply a Model back to a Node, usually a Tree.
+
         :param rec: If False, only current node is modified.
         :param node: A Node, usually a Tree.
         :param model: The Model to be applied.
@@ -79,71 +82,35 @@ class Model:
         else:
             apply_to(node)
 
-    def add_files(self, filenames) -> Model:
+    def add_tree(self, tree, apply=True) -> None:
         """
-        Add files to parse into the model.
+        Add a Tree's traversal to the Model.
 
-        :param filenames: File paths to add.
-        :type filenames: str or list[str]
-        :return: Self, for chaining.
-        :rtype: Model
+        :param tree: A Tree.
+        :type tree: Tree
+        :param apply: If True, will effectively be applied to the Model.
+        :type apply: bool
         """
-        if not isinstance(filenames, list):
-            filenames = [filenames]
+        self.add_traversal(tree.export_traversal(), apply=apply)
 
-        for filename in filenames:
-            try:
-                with open(filename, "r", encoding="utf-8"):  # This is for checking the file exists.
-                    self.filenames.append(filename)
-            except FileNotFoundError:
-                print(f"Warning: {filename} could not be opened.")
-
-        return self
-
-    def remove_files(self, filenames) -> Model:
+    def add_traversal(self, traversal, apply=True) -> None:
         """
-        Remove files to parse into the model.
+        Add a traversal to the Model.
 
-        :param filenames: File paths to remove.
-        :type filenames: str or list[str]
-        :return: Self, for chaining.
-        :rtype: Model
-        """
-        if not isinstance(filenames, list):
-            filenames = [filenames]
-
-        for filename in filenames:
-            try:
-                self.filenames.remove(filename)
-            except ValueError:
-                print(f"Warning: {filename} was not found in the list.")
-
-        return self
-
-    def process_files(self, apply=True) -> list:
-        """
-        Process each file and add to the model traversal.
-
-        :param apply: If True, changes are directly applied to the model; else, changes are not applied.
-        :rtype apply: bool, default True.
-        :return: List of changes.
-        :rtype: list[str, dict]
+        :param traversal: The traversal, from a Tree.
+        :type traversal: dict
+        :param apply: If True, will effectively be applied to the Model.
+        :type apply: bool
         """
         if apply:
             full_traversal = self.traversal
         else:
             full_traversal = self.traversal.copy()
-        changes = []
 
-        for filename in self.filenames:
-            with open(filename, "r", encoding="utf-8") as file:
-                json_data = json.load(file)
+        full_traversal.update(traversal)
+        self.num_changes += 1
 
-            traversal = Tree(json_data).export_traversal()
-            changes.append((filename, DeepDiff(full_traversal, traversal)))
-            full_traversal.update(traversal)
-
-        return changes
+        self.changes.append((self.num_changes, apply, DeepDiff(full_traversal, traversal)))
 
     def get_paths(self) -> set:
         """
@@ -292,36 +259,3 @@ class Model:
         """
         with open(filename, "rb") as file:
             self.traversal = pickle.load(file)
-
-    # def filter(self, **kwargs):
-    #     if not kwargs:
-    #         return self
-    #     def recur(traversal, filtr):
-    #         attr, op, value = filtr
-    #         for path, info in traversal.items():
-    #             if info["traversal"]:
-    #                 recur(info["traversal"], filtr)
-    #             if attr == "path":
-    #                 if not op(path, value):
-    #                     traversal.pop(path)
-    #             else:
-    #                 if hasattr(info, attr) and not op(info[attr], value):
-    #                     traversal.pop(path)
-    #     for attr_op, value in kwargs.items():
-    #         filtr = parse_op(attr_op), value
-    #         recur(self.traversal, filtr)
-    #     return self
-
-    # def _frame_and_context(self) -> dict:
-    #     frame_and_context = self.context.copy()
-    #     frame_and_context.update(self.frame)
-    #
-    #     return frame_and_context
-    #
-    # def export_model(self, text=True, filename=None) -> Optional[str]:
-    #     if text:
-    #         return json.dumps(self._frame_and_context())
-    #     elif filename:
-    #         with open(filename, "w", encoding="utf-8") as file:
-    #             json.dump(self._frame_and_context(), file, indent=4)
-    #         return
