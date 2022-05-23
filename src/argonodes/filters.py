@@ -5,13 +5,11 @@ Filters can be used to sort on paths directly, or in a more granular way on the 
 
 Basic usage: ``filter = Filter(); model.apply(filter)   ``
 """
+from __future__ import annotations
+
 
 from operator import contains, eq, ge, gt, le, lt, ne
 from re import match
-
-
-from .helpers import REGEX_SEARCH
-from .nodes import Node
 
 
 LIST_ATTRIBUTES = [
@@ -30,8 +28,8 @@ LIST_OP = {
     "lt": lt,
     "lte": le,
     "contains": contains,
-    "startswith": lambda a, b: str(b).startswith(str(a)),
-    "endswith": lambda a, b: str(b).endswith(str(a)),
+    "startswith": lambda a, b: str(a).startswith(str(b)),
+    "endswith": lambda a, b: str(a).endswith(str(b)),
     "isnull": lambda a, _: not a,  # And not "a == None", because we want to check for empty strings as well.
     "regex": lambda a, b: match(b, a),
 }
@@ -110,30 +108,33 @@ class Filter:
 
     def __call__(self, model):
         def rec(traversal):
-            for path, info in traversal.items():
-                if "traversal" in info and info["traversal"]:
-                    rec(info["traversal"])
+            for path in list(traversal.keys()):
+                if "traversal" in traversal[path] and traversal[path]["traversal"]:
+                    rec(traversal[path]["traversal"])
 
-            for filtr in self.filters:
-                attr, op, value = filtr
+                if self.targets and path not in self.targets:
+                    continue
 
-                for path in list(traversal.keys()):
-                    if self.targets and path not in self.targets:
-                        continue
+                for filtr in self.filters:
+                    attr, op, value = filtr
 
                     if attr == "path":
                         if not op(path, value):
-                            del traversal[path]
-                        else:
-                            pass
-                            # ???
+                            if traversal[path]["traversal"]:
+                                temp = traversal[path]["traversal"]
+                                traversal[path].clear()
+                                traversal[path]["traversal"] = temp
+                            else:
+                                del traversal[path]
                     else:
                         info = traversal[path]
                         if attr in info and not op(info[attr], value):
-                            del traversal[path]
-                        else:
-                            pass
-                            # ???
+                            if traversal[path]["traversal"]:
+                                temp = traversal[path]["traversal"]
+                                traversal[path].clear()
+                                traversal[path]["traversal"] = temp
+                            else:
+                                del traversal[path]
 
         rec(model.traversal)
 
