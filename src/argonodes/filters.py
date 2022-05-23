@@ -111,38 +111,31 @@ class Filter:
                 if "traversal" in traversal[path] and traversal[path]["traversal"]:
                     rec(traversal[path]["traversal"])
 
+                # Keep information in the root part or not.
                 if path == "$" and keep_root:
                     continue
 
+                # Target specific paths or not.
                 if self.targets and path not in self.targets:
                     continue
 
                 for filtr in self.filters:
                     attr, op, value = filtr
 
-                    if attr == "path":
-                        if not op(path, value):
-                            if keep_paths:
-                                if traversal[path]["traversal"]:
-                                    temp = traversal[path]["traversal"]
-                                    traversal[path].clear()
-                                    traversal[path]["traversal"] = temp
-                                else:
-                                    del traversal[path]
+                    # Path is a special case, at it is used as a key.
+                    if (attr == "path" and not op(path, value)) or (
+                        attr in traversal[path] and not op(traversal[path][attr], value)
+                    ):
+                        # If we want to keep all paths, we only "clean" whatever is inside the Model.
+                        if keep_paths:
+                            if traversal[path]["traversal"]:
+                                temp = traversal[path]["traversal"]
+                                traversal[path].clear()
+                                traversal[path]["traversal"] = temp
                             else:
-                                pass
-                    else:
-                        info = traversal[path]
-                        if attr in info and not op(info[attr], value):
-                            if keep_paths:
-                                if traversal[path]["traversal"]:
-                                    temp = traversal[path]["traversal"]
-                                    traversal[path].clear()
-                                    traversal[path]["traversal"] = temp
-                                else:
-                                    del traversal[path]
-                            else:
-                                pass
+                                del traversal[path]
+                        else:
+                            pass  # TODO
 
         rec(model.traversal)
 
