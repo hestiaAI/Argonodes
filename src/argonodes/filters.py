@@ -5,12 +5,11 @@ Filters can be used to sort on paths directly, or in a more granular way on the 
 
 Basic usage: ``filter = Filter(); model.apply(filter)``
 """
+from __future__ import annotations
+
 
 from operator import contains, eq, ge, gt, le, lt, ne
 from re import match
-
-
-from .nodes import Node
 
 
 LIST_ATTRIBUTES = [
@@ -29,8 +28,8 @@ LIST_OP = {
     "lt": lt,
     "lte": le,
     "contains": contains,
-    "startswith": lambda a, b: str(b).startswith(str(a)),
-    "endswith": lambda a, b: str(b).endswith(str(a)),
+    "startswith": lambda a, b: str(a).startswith(str(b)),
+    "endswith": lambda a, b: str(a).endswith(str(b)),
     "isnull": lambda a, _: not a,  # And not "a == None", because we want to check for empty strings as well.
     "regex": lambda a, b: match(b, a),
 }
@@ -49,18 +48,18 @@ def parse_op(string):
     """
     Parse an operation into the correct sub elements.
 
-    :param string:
-    :type string:
+    :param string: `left__op`.
+    :type string: str
     :return: Couple attribute, function.
     :rtype: tuple(str, fun)
     """
     try:
         attribute, op = string.split("__")
     except ValueError:
-        raise ValueError("Usage: `parse_op('left__op')` or `parse_op('left__in__op')`.")
+        raise ValueError("Usage: `parse_op('left__op')``.")
 
     if attribute not in LIST_ATTRIBUTES:
-        raise ValueError(f"Attribute `{attribute}` is not supported.")
+        print(f"Warning: Attribute `{attribute}` is not a base attribute.")
 
     if op not in LIST_OP.keys():
         raise ValueError(f"Operation `{op}` is not supported.")
@@ -73,10 +72,11 @@ def parse_op(string):
 
 def get_filters_from_kwargs(kwargs) -> list:
     """
-    Doc TODO
+    Returns a complete list of filters.
 
-    :param kwargs:
-    :return:
+    :param kwargs: All the filters, in the form `left__op=value`.
+    :type kwargs: **dict
+    :return: List of filters.
     :rtype: list
     """
     rtn = []
@@ -87,92 +87,115 @@ def get_filters_from_kwargs(kwargs) -> list:
 
 class Filter:
     """
-    Doc TODO
+    Self-contained (set of) filter(s).
 
-    :param model:
-    :type model:
-    :param params:
-    :type params:
-    :param paths:
-    :type paths:
-    :param filters:
-    :type filters:
+    :param params: List of
+    :type params: dict, default None.
+    :param targets: If set, the filters will only be applied in the selected paths.
+    :type targets: list, default None.
+    :param kwargs: All applicable filters, in the form `left__op=value`.
+    :type kwargs: **dict
     """
 
-    def __init__(self, model, params=None, paths=None, **kwargs):
-        self.model = model
+    def __init__(self, params=None, targets=None, **kwargs):
         self.params = params or []
-        self.paths = paths or []
+        self.targets = targets or []
         self.filters = get_filters_from_kwargs(kwargs) or []
 
     def __repr__(self) -> list:
         return self.filters
 
+    def __call__(self, model, keep_paths=True, keep_root=True):
+        def rec(traversal):
+            for path in list(traversal.keys()):
+                if "traversal" in traversal[path] and traversal[path]["traversal"]:
+                    rec(traversal[path]["traversal"])
+
+                # Keep information in the root part or not.
+                if path == "$" and keep_root:
+                    continue
+
+                # Target specific paths or not.
+                if self.targets and path not in self.targets:
+                    continue
+
+                for filtr in self.filters:
+                    attr, op, value = filtr
+
+                    # Path is a special case, at it is used as a key.
+                    if (attr == "path" and not op(path, value)) or (
+                        attr in traversal[path] and not op(traversal[path][attr], value)
+                    ):
+                        # If we want to keep all paths, we only "clean" whatever is inside the Model.
+                        if keep_paths:
+                            if traversal[path]["traversal"]:
+                                temp = traversal[path]["traversal"]
+                                traversal[path].clear()
+                                traversal[path]["traversal"] = temp
+                            else:
+                                del traversal[path]
+                        else:
+                            pass  # TODO
+
+        rec(model.traversal)
+
+        return model
+
     def select(self, paths):
         """
-        Doc TODO
+        Add targets.
 
-        :param paths:
-        :type paths:
+        :param paths: Targeted paths.
+        :type paths: str or list[str].
         """
         self.add_paths(paths)
 
     def add_paths(self, paths):
         """
-        Doc TODO
+        Add targets.
 
-        :param paths:
-        :type paths:
+        :param paths: Targeted paths.
+        :type paths: str or list[str].
         """
         if not isinstance(paths, list):
             paths = [paths]
-        model_paths = self.model.get_paths()
-        for path in paths:
-            if path not in model_paths:
-                raise ValueError(f"Path `{path}` not found in that model.")
-            self.paths.append(path)
+
+        self.paths.append(paths)
 
     def filter(self, **kwargs):
         """
-        Doc TODO
+        Add filters.
 
-        :param kwargs:
-        :type kwargs:
+        :param kwargs: Filters to be added.
+        :type kwargs: **dict
         """
         self.add(**kwargs)
 
     def add(self, **kwargs):
         """
-        Doc TODO
+        Add filters.
 
-        :param kwargs:
-        :type kwargs:
+        :param kwargs: Filters to be added.
+        :type kwargs: **dict
         """
         self.filters += get_filters_from_kwargs(kwargs)
 
-    def __call__(self, node):
-        if not isinstance(node, Node):
-            raise ValueError("Should use type node.")
-
-        node.apply(self)
-
-        return node
-
     def import_filter(self, dct):
         """
-        Doc TODO
+        Import filters from a dict.
 
-        :param dct:
-        :type dict:
+        :param dct: Dictionary of filters.
+        :type dict: dict.
         """
+        self.params = dct["params"]
         self.paths = dct["paths"]
         self.filters = dct["filters"]
 
     def export_filter(self) -> dict:
         """
-        Doc TODO
+        Export filters to a dict.
 
-        :return:
-        :rtype: dict
+        :return: Dictionary of filters.
+        :rtype: dict.
         """
-        return {"paths": self.paths, "filters": self.filters}
+        return {"params": self.params, "paths": self.paths, "filters": self.filters}
