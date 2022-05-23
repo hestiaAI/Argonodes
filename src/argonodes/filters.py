@@ -194,6 +194,7 @@ class Filter:
         :param dct: Dictionary of filters.
         :type dict: dict.
         """
+        self.params = dct["params"]
         self.paths = dct["paths"]
         self.filters = dct["filters"]
 
@@ -204,4 +205,4 @@ class Filter:
         :return: Dictionary of filters.
         :rtype: dict.
         """
-        return {"paths": self.paths, "filters": self.filters}
+        return {"params": self.params, "paths": self.paths, "filters": self.filters}
