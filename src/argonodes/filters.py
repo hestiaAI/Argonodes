@@ -3,7 +3,7 @@ Filters are elements to be applied on models or on Nodes to do a preliminary sor
 
 Filters can be used to sort on paths directly, or in a more granular way on the elements of each Node separately.
 
-Basic usage: ``filter = Filter(); model.apply(filter)   ``
+Basic usage: ``filter = Filter(); model.apply(filter)``
 """
 from __future__ import annotations
 

@@ -261,3 +261,14 @@ class Model:
         """
         with open(filename, "rb") as file:
             self.traversal = pickle.load(file)
+
+    def apply(self, filtr) -> Model:
+        """
+        Apply a Filter to the Model.
+
+        :param filtr: The Filter.
+        :type filtr: Filter
+        :return: Self, for chaining.
+        :rtype: Model
+        """
+        return filtr(self)
