@@ -3,13 +3,14 @@ Filters are elements to be applied on models or on Nodes to do a preliminary sor
 
 Filters can be used to sort on paths directly, or in a more granular way on the elements of each Node separately.
 
-Basic usage: ``filter = Filter(); model.apply(filter)``
+Basic usage: ``filter = Filter(); model.apply(filter)   ``
 """
 
 from operator import contains, eq, ge, gt, le, lt, ne
 from re import match
 
 
+from .helpers import REGEX_SEARCH
 from .nodes import Node
 
 
@@ -60,7 +61,7 @@ def parse_op(string):
         raise ValueError("Usage: `parse_op('left__op')` or `parse_op('left__in__op')`.")
 
     if attribute not in LIST_ATTRIBUTES:
-        raise ValueError(f"Attribute `{attribute}` is not supported.")
+        print(f"Warning: Attribute `{attribute}` is not a base attribute.")
 
     if op not in LIST_OP.keys():
         raise ValueError(f"Operation `{op}` is not supported.")
@@ -99,14 +100,44 @@ class Filter:
     :type filters:
     """
 
-    def __init__(self, model, params=None, paths=None, **kwargs):
-        self.model = model
+    def __init__(self, params=None, targets=None, **kwargs):
         self.params = params or []
-        self.paths = paths or []
+        self.targets = targets or []
         self.filters = get_filters_from_kwargs(kwargs) or []
 
     def __repr__(self) -> list:
         return self.filters
+
+    def __call__(self, model):
+        def rec(traversal):
+            for path, info in traversal.items():
+                if "traversal" in info and info["traversal"]:
+                    rec(info["traversal"])
+
+            for filtr in self.filters:
+                attr, op, value = filtr
+
+                for path in list(traversal.keys()):
+                    if self.targets and path not in self.targets:
+                        continue
+
+                    if attr == "path":
+                        if not op(path, value):
+                            del traversal[path]
+                        else:
+                            pass
+                            # ???
+                    else:
+                        info = traversal[path]
+                        if attr in info and not op(info[attr], value):
+                            del traversal[path]
+                        else:
+                            pass
+                            # ???
+
+        rec(model.traversal)
+
+        return model
 
     def select(self, paths):
         """
@@ -126,11 +157,8 @@ class Filter:
         """
         if not isinstance(paths, list):
             paths = [paths]
-        model_paths = self.model.get_paths()
-        for path in paths:
-            if path not in model_paths:
-                raise ValueError(f"Path `{path}` not found in that model.")
-            self.paths.append(path)
+
+        self.paths.append(paths)
 
     def filter(self, **kwargs):
         """
@@ -149,14 +177,6 @@ class Filter:
         :type kwargs:
         """
         self.filters += get_filters_from_kwargs(kwargs)
-
-    def __call__(self, node):
-        if not isinstance(node, Node):
-            raise ValueError("Should use type node.")
-
-        node.apply(self)
-
-        return node
 
     def import_filter(self, dct):
         """
