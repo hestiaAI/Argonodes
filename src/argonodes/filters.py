@@ -48,15 +48,15 @@ def parse_op(string):
     """
     Parse an operation into the correct sub elements.
 
-    :param string:
-    :type string:
+    :param string: `left__op`.
+    :type string: str
     :return: Couple attribute, function.
     :rtype: tuple(str, fun)
     """
     try:
         attribute, op = string.split("__")
     except ValueError:
-        raise ValueError("Usage: `parse_op('left__op')` or `parse_op('left__in__op')`.")
+        raise ValueError("Usage: `parse_op('left__op')``.")
 
     if attribute not in LIST_ATTRIBUTES:
         print(f"Warning: Attribute `{attribute}` is not a base attribute.")
@@ -72,10 +72,11 @@ def parse_op(string):
 
 def get_filters_from_kwargs(kwargs) -> list:
     """
-    Doc TODO
+    Returns a complete list of filters.
 
-    :param kwargs:
-    :return:
+    :param kwargs: All the filters, in the form `left__op=value`.
+    :type kwargs: **dict
+    :return: List of filters.
     :rtype: list
     """
     rtn = []
@@ -86,16 +87,14 @@ def get_filters_from_kwargs(kwargs) -> list:
 
 class Filter:
     """
-    Doc TODO
+    Self-contained (set of) filter(s).
 
-    :param model:
-    :type model:
-    :param params:
-    :type params:
-    :param paths:
-    :type paths:
-    :param filters:
-    :type filters:
+    :param params: List of
+    :type params: dict, default None.
+    :param targets: If set, the filters will only be applied in the selected paths.
+    :type targets: list, default None.
+    :param kwargs: All applicable filters, in the form `left__op=value`.
+    :type kwargs: **dict
     """
 
     def __init__(self, params=None, targets=None, **kwargs):
@@ -151,19 +150,19 @@ class Filter:
 
     def select(self, paths):
         """
-        Doc TODO
+        Add targets.
 
-        :param paths:
-        :type paths:
+        :param paths: Targeted paths.
+        :type paths: str or list[str].
         """
         self.add_paths(paths)
 
     def add_paths(self, paths):
         """
-        Doc TODO
+        Add targets.
 
-        :param paths:
-        :type paths:
+        :param paths: Targeted paths.
+        :type paths: str or list[str].
         """
         if not isinstance(paths, list):
             paths = [paths]
@@ -172,37 +171,37 @@ class Filter:
 
     def filter(self, **kwargs):
         """
-        Doc TODO
+        Add filters.
 
-        :param kwargs:
-        :type kwargs:
+        :param kwargs: Filters to be added.
+        :type kwargs: **dict
         """
         self.add(**kwargs)
 
     def add(self, **kwargs):
         """
-        Doc TODO
+        Add filters.
 
-        :param kwargs:
-        :type kwargs:
+        :param kwargs: Filters to be added.
+        :type kwargs: **dict
         """
         self.filters += get_filters_from_kwargs(kwargs)
 
     def import_filter(self, dct):
         """
-        Doc TODO
+        Import filters from a dict.
 
-        :param dct:
-        :type dict:
+        :param dct: Dictionary of filters.
+        :type dict: dict.
         """
         self.paths = dct["paths"]
         self.filters = dct["filters"]
 
     def export_filter(self) -> dict:
         """
-        Doc TODO
+        Export filters to a dict.
 
-        :return:
-        :rtype: dict
+        :return: Dictionary of filters.
+        :rtype: dict.
         """
         return {"paths": self.paths, "filters": self.filters}
