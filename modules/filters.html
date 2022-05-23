@@ -79,26 +79,25 @@
 <p>Basic usage: <code class="docutils literal notranslate"><span class="pre">filter</span> <span class="pre">=</span> <span class="pre">Filter();</span> <span class="pre">model.apply(filter)</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.filters.Filter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.filters.</span></span><span class="sig-name descname"><span class="pre">Filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.filters.</span></span><span class="sig-name descname"><span class="pre">Filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Doc TODO</p>
+<p>Self-contained (set of) filter(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> – </p></li>
-<li><p><strong>params</strong> – </p></li>
-<li><p><strong>paths</strong> – </p></li>
-<li><p><strong>filters</strong> – </p></li>
+<li><p><strong>params</strong> (<em>dict</em><em>, </em><em>default None.</em>) – List of</p></li>
+<li><p><strong>targets</strong> (<em>list</em><em>, </em><em>default None.</em>) – If set, the filters will only be applied in the selected paths.</p></li>
+<li><p><strong>kwargs</strong> (<a href="#id1"><span class="problematic" id="id2">**</span></a>dict) – All applicable filters, in the form <cite>left__op=value</cite>.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.filters.Filter.add">
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.add" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
+<dd><p>Add filters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kwargs</strong> – </p>
+<dd class="field-odd"><p><strong>kwargs</strong> (<a href="#id3"><span class="problematic" id="id4">**</span></a>dict) – Filters to be added.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -106,10 +105,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.filters.Filter.add_paths">
 <span class="sig-name descname"><span class="pre">add_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.add_paths" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
+<dd><p>Add targets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>paths</strong> – </p>
+<dd class="field-odd"><p><strong>paths</strong> (<em>str</em><em> or </em><em>list</em><em>[</em><em>str</em><em>]</em><em>.</em>) – Targeted paths.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -117,13 +116,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.filters.Filter.export_filter">
 <span class="sig-name descname"><span class="pre">export_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#argonodes.filters.Filter.export_filter" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
+<dd><p>Export filters to a dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
+<dd class="field-odd"><p>Dictionary of filters.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dd class="field-even"><p>dict.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -131,10 +130,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.filters.Filter.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.filter" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
+<dd><p>Add filters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kwargs</strong> – </p>
+<dd class="field-odd"><p><strong>kwargs</strong> (<a href="#id5"><span class="problematic" id="id6">**</span></a>dict) – Filters to be added.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -142,10 +141,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.filters.Filter.import_filter">
 <span class="sig-name descname"><span class="pre">import_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.import_filter" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
+<dd><p>Import filters from a dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dct</strong> – </p>
+<dd class="field-odd"><p><strong>dct</strong> – Dictionary of filters.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -153,10 +152,10 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.filters.Filter.select">
 <span class="sig-name descname"><span class="pre">select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.filters.Filter.select" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
+<dd><p>Add targets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>paths</strong> – </p>
+<dd class="field-odd"><p><strong>paths</strong> (<em>str</em><em> or </em><em>list</em><em>[</em><em>str</em><em>]</em><em>.</em>) – Targeted paths.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -166,13 +165,13 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="argonodes.filters.get_filters_from_kwargs">
 <span class="sig-prename descclassname"><span class="pre">argonodes.filters.</span></span><span class="sig-name descname"><span class="pre">get_filters_from_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.filters.get_filters_from_kwargs" title="Permalink to this definition"></a></dt>
-<dd><p>Doc TODO</p>
+<dd><p>Returns a complete list of filters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kwargs</strong> – </p>
+<dd class="field-odd"><p><strong>kwargs</strong> (<a href="#id7"><span class="problematic" id="id8">**</span></a>dict) – All the filters, in the form <cite>left__op=value</cite>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dd class="field-even"><p>List of filters.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
@@ -186,7 +185,7 @@
 <dd><p>Parse an operation into the correct sub elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>string</strong> – </p>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – <cite>left__op</cite>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Couple attribute, function.</p>
