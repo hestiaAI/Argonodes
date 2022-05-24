@@ -26,7 +26,22 @@ class Root:
     """
 
     def __str__(self):
+        return repr(self)
+
+    def __repr__(self):
         return "RootNode"
+
+
+class NA:
+    """
+    Special type for Non-Applicable.
+    """
+
+    def __str__(self):
+        return repr(self)
+
+    def __repr__(self):
+        return "N/A"
 
 
 class Node:
@@ -175,8 +190,7 @@ class Node:
         :return: The returned traversal.
         :rtype: dict
         """
-        if not self.traversal:
-            self.apply(make_traversal)
+        self.apply(make_traversal)
 
         return self.traversal
 
@@ -251,6 +265,10 @@ class Tree(Node):
 
     def __init__(self, data):
         super().__init__(data, fieldName="$")
+        self.unique = NA
+        self.default = NA
+        self.choices = NA
+        self.regex = NA
 
     def delete(self, rec=False, remove=False):
         raise AssertionError("Cannot delete Root node.")
