@@ -17,6 +17,12 @@ REGEX_SEARCH = lambda path: re.compile(
 )
 
 
+ATTRS_NODE_ONLY = ["fieldName", "data", "parent", "children", "traversal"]
+ATTRS_EXPORT = ["path", "foundType", "descriptiveType", "unique", "default", "description", "choices", "regex"]
+ATTRS_MODEL_TO_NODE = ["descriptiveType", "unique", "default", "description", "choices", "regex"]
+ATTRS_MARKDOWN = ["path", "foundType", "descriptiveType", "description"]
+
+
 def flatten(traversal, keys_only=True) -> Union[set, dict]:
     """
     :param traversal: A given traversal, whether Node or Model.

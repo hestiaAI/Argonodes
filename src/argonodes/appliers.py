@@ -13,7 +13,7 @@ from collections import Counter, defaultdict
 import uuid
 
 
-from .helpers import flatten, REGEX_PATH, REGEX_SEARCH
+from .helpers import ATTRS_NODE_ONLY, flatten, REGEX_PATH, REGEX_SEARCH
 
 
 class DistinctValues:
@@ -207,16 +207,12 @@ def make_traversal(node, rec=True) -> None:
                     "traversal": {},
                 }
             else:
-                void[path] = {
-                    "foundType": node.foundType,
-                    "descriptiveType": node.descriptiveType,
-                    "unique": node.unique,
-                    "default": node.default,
-                    "description": node.description,
-                    "choices": node.choices,
-                    "regex": node.regex,
-                    "traversal": {},
-                }
+                temp = {}
+                for attr in node.get_attributes():
+                    if attr not in ATTRS_NODE_ONLY:
+                        temp[attr] = getattr(node, attr)
+                temp["traversal"] = {}
+                void[path] = temp
 
         if node.children:
             for children in node.children:

@@ -17,7 +17,7 @@ from deepdiff import DeepDiff
 
 
 from .default_context import DEFAULT_CONTEXT
-from .helpers import flatten, REGEX_PATH
+from .helpers import ATTRS_EXPORT, ATTRS_MARKDOWN, ATTRS_MODEL_TO_NODE, flatten, REGEX_PATH
 
 
 class Model:
@@ -66,12 +66,10 @@ class Model:
         def apply_to(node):
             path = REGEX_PATH.sub("[*]", node.path)
             info = flat[path]
-            node.descriptiveType = info["descriptiveType"]
-            node.unique = info["unique"]
-            node.default = info["default"]
-            node.description = info["description"]
-            node.choices = info["choices"]
-            node.regex = info["regex"]
+
+            for attr in info.keys():
+                if attr in ATTRS_MODEL_TO_NODE:
+                    setattr(node, attr, info[attr])
 
         def recur(node):
             apply_to(node)
@@ -159,20 +157,11 @@ class Model:
         """
         rtn = []
         if headers:
-            rtn.append(["path", "foundType", "descriptiveType", "unique", "default", "description", "choices", "regex"])
+            rtn.append(ATTRS_EXPORT)
 
         def recur(traversal):
             for path, info in traversal.items():
-                yield [
-                    path,
-                    info["foundType"],
-                    info["descriptiveType"],
-                    info["unique"],
-                    info["default"],
-                    info["description"],
-                    info["choices"],
-                    info["regex"],
-                ]
+                yield [path] + [info[attr] for attr in info.keys() if attr in ATTRS_EXPORT and attr != "path"]
                 yield from recur(info["traversal"])
 
         rtn += [r for r in recur(self.traversal)]
@@ -228,7 +217,7 @@ class Model:
                 print(json.dumps(self.traversal, indent=2, default=str))
         elif scheme == "markdown":
             headers, *liste = self.to_list()
-            to_keep = ["path", "foundType", "descriptiveType", "description"]
+            to_keep = ATTRS_MARKDOWN
             indexes = [headers.index(keep) for keep in to_keep]
 
             temp = []
