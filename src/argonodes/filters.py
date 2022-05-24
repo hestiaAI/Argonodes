@@ -12,6 +12,9 @@ from operator import contains, eq, ge, gt, le, lt, ne
 from re import match
 
 
+from src.argonodes.helpers import REGEX_SEARCH
+
+
 LIST_ATTRIBUTES = [
     "path",
     "data",
@@ -105,41 +108,75 @@ class Filter:
     def __repr__(self) -> list:
         return self.filters
 
-    def __call__(self, model, keep_paths=True, keep_root=True):
-        def rec(traversal):
-            for path in list(traversal.keys()):
-                if "traversal" in traversal[path] and traversal[path]["traversal"]:
-                    rec(traversal[path]["traversal"])
+    def __call__(self, target, keep_paths=True, keep_root=True):
+        from .models import Model
+        from .nodes import Node
+
+        if isinstance(target, Node):
+
+            def rec(node):
+                if node.children:
+                    for children in node.children:
+                        rec(children)
 
                 # Keep information in the root part or not.
-                if path == "$" and keep_root:
-                    continue
+                if node.path == "$" and keep_root:
+                    return
 
                 # Target specific paths or not.
-                if self.targets and path not in self.targets:
-                    continue
+                if self.targets:
+                    for target in self.targets:
+                        if not REGEX_SEARCH(target).match(node.path):
+                            return
 
                 for filtr in self.filters:
                     attr, op, value = filtr
 
                     # Path is a special case, at it is used as a key.
-                    if (attr == "path" and not op(path, value)) or (
-                        attr in traversal[path] and not op(traversal[path][attr], value)
+                    if (attr == "path" and not op(node.path, value)) or (
+                        hasattr(node, attr) and not op(getattr(node, attr), value)
                     ):
-                        # If we want to keep all paths, we only "clean" whatever is inside the Model.
-                        if keep_paths:
-                            if traversal[path]["traversal"]:
-                                temp = traversal[path]["traversal"]
-                                traversal[path].clear()
-                                traversal[path]["traversal"] = temp
+                        node.delete(remove=not keep_paths)
+
+            rec(target)
+        elif isinstance(target, Model):
+
+            def rec(traversal):
+                for path in list(traversal.keys()):
+                    if "traversal" in traversal[path] and traversal[path]["traversal"]:
+                        rec(traversal[path]["traversal"])
+
+                    # Keep information in the root part or not.
+                    if path == "$" and keep_root:
+                        continue
+
+                    # Target specific paths or not.
+                    if self.targets and path not in self.targets:
+                        continue
+
+                    for filtr in self.filters:
+                        attr, op, value = filtr
+
+                        # Path is a special case, at it is used as a key.
+                        if (attr == "path" and not op(path, value)) or (
+                            attr in traversal[path] and not op(traversal[path][attr], value)
+                        ):
+                            # If we want to keep all paths, we only "clean" whatever is inside the Model.
+                            if keep_paths:
+                                if traversal[path]["traversal"]:
+                                    temp = traversal[path]["traversal"]
+                                    traversal[path].clear()
+                                    traversal[path]["traversal"] = temp
+                                else:
+                                    del traversal[path]
                             else:
-                                del traversal[path]
-                        else:
-                            pass  # TODO
+                                pass  # TODO
 
-        rec(model.traversal)
+            rec(target.traversal)
+        else:
+            raise ValueError("`item` should be either a Node or a Model.")
 
-        return model
+        return target
 
     def select(self, paths):
         """
