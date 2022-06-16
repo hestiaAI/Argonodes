@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -73,14 +74,14 @@
            <div itemprop="articleBody">
              
   <section id="module-argonodes.parsers">
-<span id="parsers-argonodes-parsers"></span><h1>1. Parsers: argonodes.parsers<a class="headerlink" href="#module-argonodes.parsers" title="Permalink to this headline"></a></h1>
+<span id="parsers-argonodes-parsers"></span><h1>1. Parsers: argonodes.parsers<a class="headerlink" href="#module-argonodes.parsers" title="Permalink to this heading"></a></h1>
 <p>Parsers are tools for converting data sources into a JSON format, usable by Argonodes.</p>
 <p>There are different Parsers depending on the original source. Basically, Parsers should implement the dunder <code class="docutils literal notranslate"><span class="pre">__call__</span></code>, that takes into account a parameter <code class="docutils literal notranslate"><span class="pre">data_in</span></code>, which corresponds to, well, the data to parse. That data may be either a string, or a File object.</p>
 <p>Basic usage: <code class="docutils literal notranslate"><span class="pre">parser</span> <span class="pre">=</span> <span class="pre">Parser();</span> <span class="pre">json_data</span> <span class="pre">=</span> <span class="pre">parser(data)</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.parsers.CSVParser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">CSVParser</span></span><a class="headerlink" href="#argonodes.parsers.CSVParser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.Parser</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></a></p>
 <p>CSV to JSON.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -92,7 +93,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.parsers.JSONParser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">JSONParser</span></span><a class="headerlink" href="#argonodes.parsers.JSONParser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.Parser</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></a></p>
 <p>A default parser that will take JSON and produce JSON.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -104,14 +105,14 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.parsers.Parser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">Parser</span></span><a class="headerlink" href="#argonodes.parsers.Parser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Abstraction for every Parser.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.parsers.XMLParser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.parsers.</span></span><span class="sig-name descname"><span class="pre">XMLParser</span></span><a class="headerlink" href="#argonodes.parsers.XMLParser" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">argonodes.parsers.Parser</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#argonodes.parsers.Parser" title="argonodes.parsers.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></a></p>
 <p>XML to JSON.</p>
 <p>Warning, it uses an external package that you should install first: <cite>pip install xmltodict</cite>.</p>
 <dl class="field-list simple">
