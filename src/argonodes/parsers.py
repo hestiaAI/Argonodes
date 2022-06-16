@@ -91,3 +91,21 @@ class XMLParser(Parser):
             data_in = data_in.read()
 
         return json.dumps(xmltodict.parse(data_in))
+
+
+class JSParser(Parser):
+    pass
+
+
+class TwitterJSParser(JSParser):
+    """ """
+
+    def __call__(self, data_in):
+        if not isinstance(data_in, str):
+            data_in = data_in.read().split("\n")
+        else:
+            data_in = data_in.split("\n")
+
+        data_in[0] = "["  # Quick and dirty!
+
+        return json.loads("\n".join(data_in))
