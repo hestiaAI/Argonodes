@@ -12,7 +12,7 @@ from operator import contains, eq, ge, gt, le, lt, ne
 from re import match
 
 
-from src.argonodes.helpers import REGEX_SEARCH
+from .helpers import REGEX_SEARCH
 
 
 LIST_ATTRIBUTES = [
