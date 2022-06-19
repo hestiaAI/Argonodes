@@ -137,8 +137,10 @@ class ZIPParser:
 
                         trees.append(Tree(json_data, filename=filename))
                         if verbose or self.verbose:
-                            print(f"- {filename} added to the list.")
+                            print(f"- ✅ {filename} added to the list.")
                     except:
+                        if verbose or self.verbose:
+                            print(f"- ❌ {filename} NOT added to the list.")
                         continue
 
             return trees
