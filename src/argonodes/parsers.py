@@ -9,7 +9,11 @@ from abc import ABC, abstractmethod
 from io import StringIO
 from typing import Union
 import csv
+import io
 import json
+
+
+from .nodes import Tree
 
 
 class Parser(ABC):
@@ -109,3 +113,35 @@ class TwitterJSParser(JSParser):
         data_in[0] = "["  # Quick and dirty!
 
         return json.loads("\n".join(data_in))
+
+
+class ZIPParser:
+    def __init__(self, parser=None, verbose=False):
+        self.parser = parser()
+        self.verbose = verbose
+
+    def __call__(self, filename, verbose=False):
+        import zipfile
+
+        trees = []
+
+        try:
+            with zipfile.ZipFile(filename, mode="r") as archive:
+                for filename in archive.namelist():
+                    try:
+                        content = archive.read(filename).decode(encoding="utf-8")
+                        if self.parser:
+                            json_data = self.parser(content)
+                        else:
+                            json_data = json.loads(content)
+
+                        trees.append(Tree(json_data, filename=filename))
+                        if verbose or self.verbose:
+                            print(f"- {filename} added to the list.")
+                    except:
+                        continue
+
+            return trees
+
+        except zipfile.BadZipFile as error:
+            raise error

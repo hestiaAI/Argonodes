@@ -63,7 +63,7 @@ class Node:
 
     def __init__(self, data, fieldName, filename=None, parent=None, process_traversal=False) -> None:
         self.fieldName = fieldName
-        self.filename = os.path.basename(filename) if filename else None
+        self.filename = filename
         self.foundType = Root if self.fieldName == "$" else type(data)
         self.descriptiveType = None
         self.unique = None
