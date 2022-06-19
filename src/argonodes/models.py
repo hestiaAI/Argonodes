@@ -40,11 +40,11 @@ class Model:
         self.num_changes = 0
 
         if trees:
-            if not isinstance(trees, list):
-                trees = [trees]
-
-            for tree in trees:
-                self.add_tree(tree)
+            try:
+                for tree in trees:
+                    self.add_tree(tree)
+            except:
+                self.add_tree(trees)
 
     def __str__(self) -> str:
         return repr(self)
