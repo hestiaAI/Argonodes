@@ -9,7 +9,6 @@ from __future__ import annotations
 
 
 from typing import Union
-import os
 import uuid
 
 
@@ -270,6 +269,24 @@ class Node:
             blank_node.children += self.children
             self.parent.children.append(blank_node)
             self.parent.children.pop(self)
+
+    def set_attributes(self, path, **kwargs):
+        """
+        Given a specific path, add more context to that path.
+
+        :param path: A valid path.
+        :type path: str
+        :param kwargs: The different information to add to that path.
+        :type kwargs: Keyworded, variable-length argument list.
+        :return: True if the path was found and info added; False otherwise.
+        :rtype: bool
+        """
+        nodes = self.get_children_from_path(path)
+        if nodes:
+            for node in nodes:
+                for attr, value in kwargs.items():
+                    setattr(node, attr, value)
+        return nodes
 
 
 class Tree(Node):
