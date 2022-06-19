@@ -161,7 +161,16 @@ class Model:
 
         def recur(traversal):
             for path, info in traversal.items():
-                yield [path] + [info[attr] for attr in info.keys() if attr in ATTRS_EXPORT and attr != "path"]
+                temp = []
+                for attr in info.keys():
+                    if attr in ATTRS_EXPORT and attr != "path":
+                        if "<class " in str(info[attr]):
+                            temp.append(info[attr].__name__)
+                        else:
+                            temp.append(str(info[attr]))
+                yield [
+                    path
+                ] + temp  # [str(info[attr]) for attr in info.keys() if attr in ATTRS_EXPORT and attr != "path"]
                 yield from recur(info["traversal"])
 
         rtn += [r for r in recur(self.traversal)]
@@ -231,7 +240,7 @@ class Model:
                         cur_filename = next_filename
                         temp[cur_filename] = []
                     temp[cur_filename].append(
-                        f"| {' | '.join([f'`{tmp[0]}`', tmp[1].__name__, tmp[2] or '/', tmp[3] or '/'])} |"
+                        f"| {' | '.join([f'`{tmp[0]}`', tmp[1], tmp[2] or '/', tmp[3] or '/'])} |"
                     )
 
                 markdown = [f"## {self.name or 'Exported Model'}", ""]
