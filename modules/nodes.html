@@ -87,7 +87,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.nodes.Node">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.Node" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.Node" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A Node is a specific part of the JSON Tree.</p>
 <dl class="field-list simple">
@@ -95,6 +95,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>Any</em>) – Whichever raw data the Node should contains.</p></li>
 <li><p><strong>fieldName</strong> (<em>String</em>) – The field name for that Node in the raw JSON data.</p></li>
+<li><p><strong>filename</strong> (<em>String</em><em>, </em><em>default None.</em>) – Facultative, what file is the data from.</p></li>
 <li><p><strong>parent</strong> (<a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><em>Node</em></a><em>, </em><em>default None.</em>) – Facultative, parent for that Node.</p></li>
 <li><p><strong>process_traversal</strong> (<em>bool</em><em>, </em><em>default False.</em>) – Facultative, whether a traversal should be processed already or not.</p></li>
 </ul>
@@ -203,18 +204,38 @@
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.nodes.Node.set_attributes">
+<span class="sig-name descname"><span class="pre">set_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.Node.set_attributes" title="Permalink to this definition"></a></dt>
+<dd><p>Given a specific path, add more context to that path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – A valid path.</p></li>
+<li><p><strong>kwargs</strong> (<em>Keyworded</em><em>, </em><em>variable-length argument list.</em>) – The different information to add to that path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the path was found and info added; False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.nodes.NodeDict">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">NodeDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.NodeDict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">NodeDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.NodeDict" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
 <p>A NodeDict is a special Node that contains data in a dict.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.nodes.NodeList">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">NodeList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.NodeList" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">NodeList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_traversal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.NodeList" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
 <p>A NodeList is a special Node that contains data in a list.</p>
 </dd></dl>
@@ -228,7 +249,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.nodes.Tree">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.Tree" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.nodes.</span></span><span class="sig-name descname"><span class="pre">Tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.nodes.Tree" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#argonodes.nodes.Node" title="argonodes.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
 <p>A Tree is a special Node with <cite>$</cite> as field name.</p>
 <dl class="py method">
