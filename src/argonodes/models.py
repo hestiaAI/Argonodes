@@ -40,11 +40,11 @@ class Model:
         self.num_changes = 0
 
         if trees:
-            if not isinstance(trees, list):
-                trees = [trees]
-
-            for tree in trees:
-                self.add_tree(tree)
+            try:
+                for tree in trees:
+                    self.add_tree(tree)
+            except:
+                self.add_tree(trees)
 
     def __str__(self) -> str:
         return repr(self)
@@ -110,7 +110,7 @@ class Model:
         full_traversal.update(traversal)
         self.num_changes += 1
 
-        self.changes.append((self.num_changes, apply, DeepDiff(full_traversal, traversal)))
+        self.changes.append((self.num_changes, apply, DeepDiff(traversal, full_traversal)))
 
     def get_paths(self) -> set:
         """
@@ -161,7 +161,16 @@ class Model:
 
         def recur(traversal):
             for path, info in traversal.items():
-                yield [path] + [info[attr] for attr in info.keys() if attr in ATTRS_EXPORT and attr != "path"]
+                temp = []
+                for attr in info.keys():
+                    if attr in ATTRS_EXPORT and attr != "path":
+                        if "<class " in str(info[attr]):
+                            temp.append(info[attr].__name__)
+                        else:
+                            temp.append(str(info[attr]))
+                yield [
+                    path
+                ] + temp  # [str(info[attr]) for attr in info.keys() if attr in ATTRS_EXPORT and attr != "path"]
                 yield from recur(info["traversal"])
 
         rtn += [r for r in recur(self.traversal)]
@@ -177,7 +186,7 @@ class Model:
         """
         return flatten(self.traversal, keys_only=False)
 
-    def set_attribute(self, path, **kwargs) -> bool:
+    def set_attributes(self, path, **kwargs) -> bool:
         """
         Given a specific path, add more context to that path.
 
@@ -220,17 +229,42 @@ class Model:
             to_keep = ATTRS_MARKDOWN
             indexes = [headers.index(keep) for keep in to_keep]
 
-            temp = []
-            for l in liste:
-                tmp = [l[index] for index in indexes]
-                temp.append(f"| {' | '.join([f'`{tmp[0]}`', tmp[1].__name__, tmp[2] or '/', tmp[3] or '/'])} |")
+            if ":" in liste[0][0]:
+                cur_filename = ""
+                temp = {}
+                for l in liste:
+                    tmp = [l[index] for index in indexes]
+                    next_filename, path = tmp[0].split(":")
+                    tmp[0] = path
+                    if next_filename != cur_filename:
+                        cur_filename = next_filename
+                        temp[cur_filename] = []
+                    temp[cur_filename].append(
+                        f"| {' | '.join([f'`{tmp[0]}`', tmp[1], tmp[2] or '/', tmp[3] or '/'])} |"
+                    )
 
-            markdown = (
-                [f"## {self.name or 'Exported Model'}", ""]
-                + [f"| {' | '.join(to_keep)} |"]
-                + [f"{'|---' * len(to_keep)}|"]
-                + temp
-            )
+                markdown = [f"## {self.name or 'Exported Model'}", ""]
+
+                for next_filename, liste in temp.items():
+                    markdown += (
+                        [f"### `{next_filename}`", ""]
+                        + [f"| {' | '.join(to_keep)} |"]
+                        + [f"{'|---' * len(to_keep)}|"]
+                        + liste
+                        + [""]
+                    )
+            else:
+                temp = []
+                for l in liste:
+                    tmp = [l[index] for index in indexes]
+                    temp.append(f"| {' | '.join([f'`{tmp[0]}`', tmp[1].__name__, tmp[2] or '/', tmp[3] or '/'])} |")
+
+                markdown = (
+                    [f"## {self.name or 'Exported Model'}", ""]
+                    + [f"| {' | '.join(to_keep)} |"]
+                    + [f"{'|---' * len(to_keep)}|"]
+                    + temp
+                )
 
             if filename:
                 with open(filename, "w") as file:
