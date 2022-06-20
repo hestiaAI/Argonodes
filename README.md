@@ -21,6 +21,8 @@ This project requires Python 3.7+
 3. Activate that virtual environment: `source ./env/bin/activate`
 4. Install the package: `pip install -e .`
 5. Drink water, because it is important to stay hydrated.
+6. go the the example subdirectory: `cd examples/notebook/`
+7. launch a Jupyter lab with `jupyter notebook` and open the file `Example.ipynb`
 
 ### Quickstart
 
