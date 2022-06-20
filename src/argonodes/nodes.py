@@ -103,7 +103,7 @@ class Node:
             elif attr in ["data"] and getattr(self, attr):
                 rep += f"- {attr}: \"{str(getattr(self, attr))[:MAX_DATA]}{'...' if len(str(getattr(self, attr))) > MAX_DATA else ''}\" (length of {len(str(getattr(self, attr)))})\n"
             elif attr in ["foundType"]:
-                rep += f"- {attr}: {getattr(self, attr).__name__}\n"
+                rep += f"- {attr}: {getattr(self, attr) if isinstance(getattr(self, attr), _Root) else getattr(self, attr).__name__}\n"
             elif attr in ["parent"]:
                 rep += f"- {attr}: {getattr(self, attr).fieldName if getattr(self, attr) else None}\n"
             else:
