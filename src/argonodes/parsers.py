@@ -7,10 +7,12 @@ Basic usage: ``parser = Parser(); json_data = parser(data)``
 """
 from abc import ABC, abstractmethod
 from io import StringIO
+from json import JSONDecodeError
 from typing import Union
 import csv
-import io
 import json
+import os.path
+import re
 
 
 from .nodes import Tree
@@ -110,38 +112,75 @@ class TwitterJSParser(JSParser):
         else:
             data_in = data_in.split("\n")
 
-        data_in[0] = "["  # Quick and dirty!
+        if data_in:
+            if "[" in data_in[0]:
+                data_in[0] = "["
+                if len(data_in) == 1:
+                    data_in[0] += "]"
+            elif "{" in data_in[0]:
+                data_in[0] = "{"
+                if len(data_in) == 1:
+                    data_in[0] += "}"
+            else:
+                raise AttributeError("Not JSON compatible.")
 
         return json.loads("\n".join(data_in))
 
 
 class ZIPParser:
-    def __init__(self, parser=None, verbose=False):
+    def __init__(self, parser=None, regex=None, extension=None, mime=None, verbose=None):
         self.parser = parser()
-        self.verbose = verbose
+        self.regex = regex
+        self.extension = f".{extension}" if extension[0] != "." else extension
+        self.mime = mime
+        self.verbose = verbose or 0
 
-    def __call__(self, filename, verbose=False):
+    def __call__(self, filename):
         import zipfile
 
-        trees = []
+        trees = {}
 
         try:
             with zipfile.ZipFile(filename, mode="r") as archive:
+                total_files = len(archive.namelist())
                 for filename in archive.namelist():
                     try:
+                        if self.regex and not re.match(self.regex, filename):
+                            raise AssertionError("Regex not matching.")
+
+                        _, ext = os.path.splitext(filename)
+                        if self.extension and ext != self.extension:
+                            raise AssertionError("Wrong extension.")
+
+                        if self.mime and False:
+                            raise AssertionError("Wrong MIME type.")
+
                         content = archive.read(filename).decode(encoding="utf-8")
+
                         if self.parser:
                             json_data = self.parser(content)
                         else:
                             json_data = json.loads(content)
 
-                        trees.append(Tree(json_data, filename=filename))
-                        if verbose or self.verbose:
+                        trees[filename] = Tree(json_data, filename=filename)
+                        if self.verbose > 1:
                             print(f"- ✅ {filename} added to the list.")
-                    except:
-                        if verbose or self.verbose:
-                            print(f"- ❌ {filename} NOT added to the list.")
+                    except AssertionError as e:
+                        if self.verbose > 1:
+                            print(f"- ❌ {filename} NOT added to the list (AssertionError: {e}).")
                         continue
+                    except JSONDecodeError as e:
+                        if self.verbose > 0:
+                            print(
+                                f"- ❌ {filename} NOT added to the list (JSONDecodeError: {e}). ❗️ You may want to check the content of the file!"
+                            )
+                        continue
+
+            trees = dict(sorted(trees.items()))
+
+            if self.verbose > 0:
+                print(f"=> {len(trees)} Trees created from {total_files} folders and files:")
+                print("\n".join([f"- {filename}" for filename in trees.keys()]))
 
             return trees
 
