@@ -17,7 +17,7 @@ REGEX_SEARCH = lambda path: re.compile(
 )
 
 
-ATTRS_NODE_ONLY = ["fieldName", "data", "parent", "children", "traversal"]
+ATTRS_NODE_ONLY = ["fieldName", "data", "parent", "children", "traversal", "path", "_path"]
 ATTRS_EXPORT = ["path", "foundType", "descriptiveType", "unique", "default", "description", "choices", "regex"]
 ATTRS_MODEL_TO_NODE = ["descriptiveType", "unique", "default", "description", "choices", "regex"]
 ATTRS_MARKDOWN = ["path", "foundType", "descriptiveType", "description"]
