@@ -20,7 +20,7 @@ MAX_DATA = 128
 PROTECTED_ATTRS = ["fieldName", "filename", "data", "foundType", "parent", "children", "path"]
 
 
-class Root:
+class _Root:
     """
     Special type for the root of a Tree.
     """
@@ -32,7 +32,10 @@ class Root:
         return "RootNode"
 
 
-class NA:
+Root = _Root()
+
+
+class _NA:
     """
     Special type for Non-Applicable.
     """
@@ -42,6 +45,9 @@ class NA:
 
     def __repr__(self):
         return "N/A"
+
+
+NA = _NA()
 
 
 class Node:
