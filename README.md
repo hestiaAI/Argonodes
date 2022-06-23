@@ -16,6 +16,12 @@ Because [JSON](https://en.wikipedia.org/wiki/Jason) explores with Argo[nodes](ht
 
 This project requires Python 3.7+
 
+#### Directly in your project
+
+* Add `-e git+ssh://git@github.com/hestiaAI/Argonodes.git#egg=argonode` in your requirements.txt.
+
+#### Standalone
+
 1. Clone that repository and cd into it.
 2. Create a virtual environment: `python -m venv ./env`
 3. Activate that virtual environment: `source ./env/bin/activate`
