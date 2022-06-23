@@ -13,3 +13,10 @@ repos:
         entry: isort
         language: system
         types: [python]
+  - repo: local
+    hooks:
+      - id: bump2version
+        name: bump2version
+        entry: bash -c "bump2version --current-version $(grep -o 'version=\".*\"' setup.py | sed 's/version=\|\"//g') patch setup.py --allow-dirty; git add setup.py"
+        language: system
+        types: [python]
