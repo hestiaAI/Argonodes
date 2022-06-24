@@ -9,7 +9,9 @@ from __future__ import annotations
 
 
 from typing import Optional
+import csv
 import json
+import os
 import pickle
 
 
@@ -272,8 +274,19 @@ class Model:
                         file.write(f"{m}\n")
             else:
                 print("\n".join(markdown))
+        elif scheme == "csv":
+            if not filename:
+                raise ValueError("filename is missing.")
+
+            headers, *liste = self.to_list()
+
+            with open(filename, "w") as csvfile:
+                writer = csv.writer(csvfile)
+
+                writer.writerow(headers)
+                writer.writerows(liste)
         else:
-            raise ValueError("Incorrect format, please use 'pickle', 'json', 'markdown'.")
+            raise ValueError("Incorrect format, please use 'pickle', 'json', 'markdown', `csv.")
 
     def load_traversal(self, filename) -> None:
         """
@@ -282,8 +295,16 @@ class Model:
         :param filename: Path to a pickled format.
         :type filename: str
         """
-        with open(filename, "rb") as file:
-            self.traversal = pickle.load(file)
+        _, ext = os.path.splitext(filename)
+        if ext == ".csv":
+            with open(filename) as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    path = row.pop(path)
+                    self.set_attributes(path, **row)
+        else:
+            with open(filename, "rb") as file:
+                self.traversal = pickle.load(file)
 
     def apply(self, filtr) -> Model:
         """
