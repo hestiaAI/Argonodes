@@ -4,4 +4,5 @@ isort
 pre-commit
 pre-commit-hooks
 pylint
+bump2version
 -r ./docs.txt
