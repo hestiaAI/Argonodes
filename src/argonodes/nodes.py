@@ -265,11 +265,12 @@ class Node:
 
     def delete(self, rec=False, remove=False):
         """
-        balbalbalablablablabalabalblabalabla
+        Delete a node in the Tree.
 
-        :param rec:
-        :param remove:
-        :return:
+        :param rec: Should the removal be recursive or not.
+        :type rec: bool, default False.
+        :param remove: Should a "blank" node be put in lieu, or plain delete.
+        :type remove: bool, default False.
         """
         if rec and self.children:
             for children in self.children:
