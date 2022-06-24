@@ -128,6 +128,8 @@ class TwitterJSParser(JSParser):
 
 
 class ZIPParser:
+    """ """
+
     def __init__(self, parser=None, regex=None, extension=None, mime=None, verbose=None):
         self.parser = parser()
         self.regex = regex
