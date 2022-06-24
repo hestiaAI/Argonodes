@@ -66,9 +66,13 @@ Notes:
 We follow the [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow): all code contributions are submitted via a pull request towards the main branch.
 
 1. Fork the project or open a new branch.
-2. Manually bump minor version in `setup.py`.
+2. Manually bump the version in `setup.py`.
+  - Major if your changes are breaking.
+  - Minor if your changes are not breaking.
+  - Patch is made on a per-commit basis.
 3. Complete your modifications.
-4. Open a PR.
+4. Merge the master branch.
+5. Open a PR.
 
 Moreover:
 - When creating a new branch to fix an issue, please refer to the issue in the branch name, starting by its number (e.g., `42-loader-does-not-load`).
