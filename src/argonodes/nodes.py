@@ -264,6 +264,13 @@ class Node:
             return self
 
     def delete(self, rec=False, remove=False):
+        """
+        balbalbalablablablabalabalblabalabla
+
+        :param rec:
+        :param remove:
+        :return:
+        """
         if rec and self.children:
             for children in self.children:
                 children.delete(rec, remove)
