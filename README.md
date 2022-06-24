@@ -2,6 +2,16 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/hestiaAI/Argonodes/HEAD?labpath=examples%2Fnotebook%2FExample.ipynb) ![example workflow](https://github.com/hestiaAI/Argonodes/actions/workflows/python-package.yml/badge.svg)
 
+* [Introduction](#introduction)
+  + [Why the name?](#why-the-name-)
+* [Setup](#setup)
+  + [Quickstart: I directly want to use Argonodes](#quickstart--i-directly-want-to-use-argonodes)
+  + [Quickstart: I want to play with the examples of Argonodes](#quickstart--i-want-to-play-with-the-examples-of-argonodes)
+  + [Quickstart: I want to work on Argonodes](#quickstart--i-want-to-work-on-argonodes)
+* [Usage example](#usage-example)
+  + [Ugly working one liner](#ugly-working-one-liner)
+* [Contributing](#contributing)
+
 ## Introduction
 
 This package aims to facilitate the analysis of large data sets from various sources. The main objective is to allow to efficiently augment datasets, and to create models of them, in the form of JSON-LD frames, to then transform the raw data into JSON-LD, with notably the augmentation of information with semantics.
@@ -10,122 +20,82 @@ This package aims to facilitate the analysis of large data sets from various sou
 
 Because [JSON](https://en.wikipedia.org/wiki/Jason) explores with Argo[nodes](https://en.wikipedia.org/wiki/Node_(computer_science))!
 
-## Usage
+## Setup
 
-### Setup
+This project requires Python 3.7+.
 
-This project requires Python 3.7+
+### Quickstart: I directly want to use Argonodes
 
-#### Directly in your project
+> Note: In general, it is recommended to create a [virtual environment](https://docs.python.org/3/tutorial/venv.html) before using Python packages. You can use `python -m venv ./env` then `source ./env/bin/activate` if needed.
 
-* Add `-e git+ssh://git@github.com/hestiaAI/Argonodes.git#egg=argonode` in your requirements.txt.
+- You can simply use `pip install -e git+ssh://git@github.com/hestiaAI/Argonodes.git#egg=argonodes`. That's it.
+- You can also directly add `-e git+ssh://git@github.com/hestiaAI/Argonodes.git#egg=argonode` in the requirements.txt of your project.
 
-#### Standalone
+### Quickstart: I want to play with the examples of Argonodes
 
 1. Clone that repository and cd into it.
-2. Create a virtual environment: `python -m venv ./env`
-3. Activate that virtual environment: `source ./env/bin/activate`
-4. Install the package: `pip install -e .`
-5. Drink water, because it is important to stay hydrated.
+2. (If not done already) Create a virtual environment: `python -m venv ./env`
+3. (If not done already) Activate that virtual environment: `source ./env/bin/activate`
+4. Install what is needed: `pip install -r requirements/examples.txt`
+5. Go inside the examples directory: `cd examples`
+6. Drink water, because it is important to stay hydrated.
 
-### Quickstart
+### Quickstart: I want to work on Argonodes
 
-A worked example is available [here](./examples/notebook/Example.ipynb).
+> Note: Please read the [Contributing](#contributing) part!
+
+1. Clone that repository and cd into it.
+2. (If not done already) Create a virtual environment: `python -m venv ./env`
+3. (If not done already) Activate that virtual environment: `source ./env/bin/activate`
+4. Install what is needed: `pip install -r requirements/dev.txt`
+5. Activate pre-commits: `pre-commit install`
+6. Remember that you probably have a cup of tea or coffee getting cold.
+
+## Usage example
+
+You can find more information on how to use Argonodes in our [wiki](https://github.com/hestiaAI/Argonodes/wiki/General-usage-examples).
+
+A worked example is available [here](./examples/notebook/Example.ipynb). Make sure you followed the [Quickstart](#quickstart--i-want-to-play-with-the-examples-of-argonodes) if you want to play with it directly.
 
 ```python
 import json
 
 filename = "/path/to/json/file.json"
 
+# Load your raw data
 with open(filename, "r") as jsonfile:
     json_data = json.loads(jsonfile.read())
 
+# Create a Tree for exploration
 from json_ld_semantics.semantics import Tree
 tree = Tree(json_data)
 
-from json_ld_semantics.model import Model
-model = Model(name="My model", traversal=tree.export_traversal())
+# ... Do some work on the Tree
 
-# or
-model = Model(name="My model").add_files(filename).process_files()
+# Create a Model from the Tree
+from json_ld_semantics.models import Model
+model = Model(name="My model", trees=tree)
+
+# ... Do some work on the Model
+
+model.export_traversal(scheme="markdown")
 ```
 
-### Applications
+### Ugly working one liner
 
-Example:
-```json
-{
-   "url":"https://example.com/me",
-   "user":"Jean-Michel",
-   "age":"42"
-}
+```python
+# This will create a Model to play with directly from raw data.
+with open("input.json", "r") as json_file:
+    model = Model(Tree(json.load(json_file)))
 ```
-- Pickle the model for archive.
-- Export to JSON.
-   
-   ```json
-   {
-      "$.url":{
-         "foundType":"str",
-         "descriptiveType":"https://schema.org/url",
-         "unique":false,
-         "default":"None",
-         "description":"URL to the personal page of the person.",
-         "example":[
-            "https://domain.com/me"
-         ],
-         "regex":"https:\/\/domain\\.com/[a-z]+",
-         "traversal":{
-            
-         }
-      }
-   }
-   ```
-- Export to JSON-LD frame (Soon ™️).
-- Export to Markdown.
-
-   | path | foundType | descriptiveType | description                             |
-   |-----------|---|-----------------------------------------|---|
-   | `$` | Root      | https://schema.org/Person | A specific person.                      |
-   | `$.url` | str       | https://schema.org/url | URL to the personal page of the person. |
-   | `$.user` | str       | https://schema.org/name | Name of the person.                     |
-   | `$.age` | int       | https://example.org/Age | Age of the person.                      |
-- Export to SQL (Soon ™️).
 
 ## Contributing
 
-To contribute, fork the project, and open a PR.
+First of all, thank you for taking the time to help this project, it means a lot.
 
-### Environment
+Please read our [CONTRIBUTING](CONTRIBUTING.md) file, which contains guidelines, information on what you can do to help the project, and good practices to apply.
 
-1. First, activate your venv, as explained in [Usage](#usage).
-2. Install dev requirements: `pip install -r requirements/dev.txt`.
-3. Activate `pre-commit`: `pre-commit install`.
-
-Notes:
-
-- You can run `pre-commit` independently: `pre-commit run --all-files`.
-- If, for some reason, you need to commit without a check, use ` git commit --no-verify [...]`.
-- You can check you code using `python3 -m pylint *.py`.
-
-### Testing
-
-We are in need of tests! Write them under the [`tests`](./tests/) folder.
-#### JSON & JSON paths
-- You can check that the JSON is valid by using [https://jsonformatter.curiousconcept.com/](https://jsonformatter.curiousconcept.com/).
-- You can check that the JSON paths are correct by using [https://jsonpathfinder.com/](https://jsonpathfinder.com/).
-
-### Documentation
-
-1. `cd docs/`
-2. `sphinx-apidoc -o source/ ../src/`
-3. `make html`
-
-### Examples
-
-1. First, activate your venv, as explained in [Usage](#usage).
-2. Install examples requirements: `pip install -r requirements/examples.txt`.
-
-Notes:
-- If you are changing one of the [examples](./examples/), and want to keep track of the change: `git update-index --no-assume-unchanged ./examples/name_of_the_file`.
-- Else, please use `git update-index --assume-unchanged ./examples/`.
+To sum-up:
+* You know how to Python? You can help the project by [reviewing code](https://github.com/hestiaAI/Argonodes/pulls), [fixing bugs](https://github.com/hestiaAI/Argonodes/issues), and [adding features](https://github.com/hestiaAI/Argonodes/issues)!
+* You know how to data analysis? You can help the project by [providing insights about data sources](https://github.com/hestiaAI/Argonodes/wiki)!
+* No matter what you know, you can always report a bug or [ask for a feature](https://github.com/hestiaAI/Argonodes/issues), [discuss about the project](https://github.com/hestiaAI/Argonodes/discussions), or [get in touch](https://hestia.ai/en/#contact)!
