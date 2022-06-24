@@ -244,7 +244,7 @@ class Node:
                     for children in self.children:
                         yield from (r for r in children.get_children_from_path(targets))
 
-        return list(recur(paths))
+        return list(recur(paths)) or None
 
     def apply(self, fun, rec=True, *args, **kwargs) -> Union[Node, object]:
         """
