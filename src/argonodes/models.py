@@ -20,6 +20,7 @@ from deepdiff import DeepDiff
 
 from .default_context import DEFAULT_CONTEXT
 from .helpers import ATTRS_EXPORT, ATTRS_MARKDOWN, ATTRS_MODEL_TO_NODE, flatten, REGEX_PATH
+from .nodes import NA, Root
 
 
 class Model:
@@ -218,10 +219,16 @@ class Model:
         if scheme == "pickle":
             if not filename:
                 raise ValueError("filename is missing.")
+            _, ext = os.path.splitext(filename)
+            if ext != ".pickle":
+                filename += ".pickle"
             with open(filename, "wb") as file:
                 pickle.dump(self.traversal, file)
         elif scheme == "json":
             if filename:
+                _, ext = os.path.splitext(filename)
+                if ext != ".json":
+                    filename += ".json"
                 with open(filename, "w") as file:
                     json.dump(self.traversal, file, indent=2, default=str)
             else:
@@ -269,6 +276,9 @@ class Model:
                 )
 
             if filename:
+                _, ext = os.path.splitext(filename)
+                if ext != ".md":
+                    filename += ".md"
                 with open(filename, "w") as file:
                     for m in markdown:
                         file.write(f"{m}\n")
@@ -277,6 +287,9 @@ class Model:
         elif scheme == "csv":
             if not filename:
                 raise ValueError("filename is missing.")
+            _, ext = os.path.splitext(filename)
+            if ext != ".csv":
+                filename += ".csv"
 
             headers, *liste = self.to_list()
 
@@ -300,7 +313,14 @@ class Model:
             with open(filename) as csvfile:
                 reader = csv.DictReader(csvfile)
                 for row in reader:
-                    path = row.pop(path)
+                    path = row.pop("path")
+                    for k, v in row.items():
+                        if v == "RootNode":
+                            row[k] = Root
+                        if v == "N/A":
+                            row[k] = NA
+                        if v == "None":
+                            row[k] = None
                     self.set_attributes(path, **row)
         else:
             with open(filename, "rb") as file:
