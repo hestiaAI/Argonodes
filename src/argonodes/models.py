@@ -9,7 +9,9 @@ from __future__ import annotations
 
 
 from typing import Optional
+import csv
 import json
+import os
 import pickle
 
 
@@ -18,6 +20,7 @@ from deepdiff import DeepDiff
 
 from .default_context import DEFAULT_CONTEXT
 from .helpers import ATTRS_EXPORT, ATTRS_MARKDOWN, ATTRS_MODEL_TO_NODE, flatten, REGEX_PATH
+from .nodes import NA, Root
 
 
 class Model:
@@ -216,10 +219,16 @@ class Model:
         if scheme == "pickle":
             if not filename:
                 raise ValueError("filename is missing.")
+            _, ext = os.path.splitext(filename)
+            if ext != ".pickle":
+                filename += ".pickle"
             with open(filename, "wb") as file:
                 pickle.dump(self.traversal, file)
         elif scheme == "json":
             if filename:
+                _, ext = os.path.splitext(filename)
+                if ext != ".json":
+                    filename += ".json"
                 with open(filename, "w") as file:
                     json.dump(self.traversal, file, indent=2, default=str)
             else:
@@ -267,13 +276,30 @@ class Model:
                 )
 
             if filename:
+                _, ext = os.path.splitext(filename)
+                if ext != ".md":
+                    filename += ".md"
                 with open(filename, "w") as file:
                     for m in markdown:
                         file.write(f"{m}\n")
             else:
                 print("\n".join(markdown))
+        elif scheme == "csv":
+            if not filename:
+                raise ValueError("filename is missing.")
+            _, ext = os.path.splitext(filename)
+            if ext != ".csv":
+                filename += ".csv"
+
+            headers, *liste = self.to_list()
+
+            with open(filename, "w") as csvfile:
+                writer = csv.writer(csvfile)
+
+                writer.writerow(headers)
+                writer.writerows(liste)
         else:
-            raise ValueError("Incorrect format, please use 'pickle', 'json', 'markdown'.")
+            raise ValueError("Incorrect format, please use 'pickle', 'json', 'markdown', `csv.")
 
     def load_traversal(self, filename) -> None:
         """
@@ -282,8 +308,23 @@ class Model:
         :param filename: Path to a pickled format.
         :type filename: str
         """
-        with open(filename, "rb") as file:
-            self.traversal = pickle.load(file)
+        _, ext = os.path.splitext(filename)
+        if ext == ".csv":
+            with open(filename) as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    path = row.pop("path")
+                    for k, v in row.items():
+                        if v == "RootNode":
+                            row[k] = Root
+                        if v == "N/A":
+                            row[k] = NA
+                        if v == "None":
+                            row[k] = None
+                    self.set_attributes(path, **row)
+        else:
+            with open(filename, "rb") as file:
+                self.traversal = pickle.load(file)
 
     def apply(self, filtr) -> Model:
         """
