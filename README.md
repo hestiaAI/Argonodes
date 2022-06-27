@@ -1,6 +1,6 @@
 # Argonodes
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/hestiaAI/Argonodes/HEAD?labpath=examples%2Fnotebook%2FExample.ipynb) ![example workflow](https://github.com/hestiaAI/Argonodes/actions/workflows/python-package.yml/badge.svg)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/hestiaAI/Argonodes/HEAD?labpath=examples%2Fnotebook%2FExample.ipynb) ![example workflow](https://github.com/hestiaAI/Argonodes/actions/workflows/python-package.yml/badge.svg) [![Technical documentation](https://github.com/hestiaAI/Argonodes/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/hestiaAI/Argonodes/actions/workflows/gh-pages.yml)
 
 * [Introduction](#introduction)
   + [Why the name?](#why-the-name-)
