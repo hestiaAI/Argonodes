@@ -1,6 +1,6 @@
 # Source: https://blog.flozz.fr/2020/09/21/deployer-automatiquement-sur-github-pages-avec-github-actions/
 # Nom de notre workflow
-name: "Build and deploy Github pages"
+name: "Technical documentation"
 
 # Événements sur lesquels il doit être déclenché
 on:
