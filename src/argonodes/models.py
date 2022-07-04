@@ -335,4 +335,6 @@ class Model:
         :return: Self, for chaining.
         :rtype: Model
         """
-        return filtr(self)
+        filtr(self)
+
+        return self

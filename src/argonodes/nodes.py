@@ -8,7 +8,7 @@ Basic usage: ``tree = Tree(json_data)``
 from __future__ import annotations
 
 
-from typing import Union
+from typing import Any, Union
 import uuid
 
 
@@ -246,7 +246,7 @@ class Node:
 
         return list(recur(paths)) or None
 
-    def apply(self, fun, rec=True, *args, **kwargs) -> Union[Node, object]:
+    def apply(self, fun, rec=True, *args, **kwargs) -> Union[Node, Any]:
         """
         Takes a function that will be applied to the node and/or children, and potential arguments.
 
@@ -257,11 +257,7 @@ class Node:
         :return: Self if the function does not return anything, else whatever the function returns.
         :rtype: Node or None.
         """
-        rtr = fun(self, rec, *args, **kwargs)
-        if rtr:
-            return rtr
-        else:
-            return self
+        return fun(self, rec, *args, **kwargs) or self
 
     def delete(self, rec=False, remove=False):
         """
