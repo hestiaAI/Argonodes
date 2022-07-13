@@ -100,9 +100,10 @@ class Filter:
     :type kwargs: **dict
     """
 
-    def __init__(self, params=None, targets=None, **kwargs):
+    def __init__(self, params=None, targets=None, filenames=None, **kwargs):
         self.params = params or []
         self.targets = targets or []
+        self.filenames = filenames or []
         self.filters = get_filters_from_kwargs(kwargs) or []
 
     def __repr__(self) -> list:
@@ -172,7 +173,11 @@ class Filter:
                             else:
                                 pass  # TODO
 
-            rec(target.traversal)
+            for filename, traversal in target.traversal.items():
+                if self.filenames and filename not in self.filenames:
+                    continue
+
+                rec(traversal)
         else:
             raise ValueError("`item` should be either a Node or a Model.")
 
