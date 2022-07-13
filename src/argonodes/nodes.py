@@ -79,8 +79,7 @@ class Node:
         self.parent = parent
         self.traversal = {}
         self.children = []
-        self._path = self._set_path()
-        self.path = f"{self.filename}:{self._path}" if self.filename else self._path
+        self.path = self._set_path()
 
         self._process(data, process_traversal=process_traversal, filename=filename)
 
@@ -97,7 +96,7 @@ class Node:
             rep += f" with {len(self.get_paths())} path{'s' if len(self.get_paths()) != 1 else ''}"
         rep += "\n"
         for attr in self.get_attributes():
-            if attr in ["children", "traversal", "_path"]:
+            if attr in ["children", "traversal"]:
                 # Skip
                 continue
             elif attr in ["data"] and getattr(self, attr):
@@ -132,7 +131,7 @@ class Node:
         if not self.parent:
             return self.fieldName
         name = f".{self.fieldName}" if not REGEX_PATH.match(self.fieldName) else self.fieldName
-        return self.parent._path + name
+        return self.parent.path + name
 
     def get_paths(self) -> set:
         """
@@ -231,11 +230,6 @@ class Node:
         if not isinstance(paths, list):
             paths = [paths]
 
-        if self.filename:
-            for i, path in enumerate(paths):
-                if ":" not in path:
-                    paths[i] = f"{self.filename}:{path}"
-
         def recur(targets):
             for target in targets:
                 if REGEX_SEARCH(target).match(self.path):
@@ -244,7 +238,7 @@ class Node:
                     for children in self.children:
                         yield from (r for r in children.get_children_from_path(targets))
 
-        return list(recur(paths)) or None
+        return list(recur(paths))
 
     def apply(self, fun, rec=True, *args, **kwargs) -> Union[Node, Any]:
         """

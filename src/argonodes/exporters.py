@@ -5,3 +5,11 @@ In some cases, it may be necessary to export in formats that do not correspond t
 
 Basic usage: ``exporter = Exporter(); model.export(exporter)``
 """
+
+
+class JSONLDExporter:
+    def __init__(self):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        pass
