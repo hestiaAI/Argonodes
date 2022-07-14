@@ -145,3 +145,28 @@ class CSVExporter(Exporter):
             writer.writerow(headers)
             for filename, liste in listes.items():
                 writer.writerows([f"{filename or ''}:{liste[0]}"] + liste[1:])
+
+
+class JSONLDExporter(JSONExporter):
+    """
+    Exporter to JSON-LD.
+
+    :param filename: Filename where to export. If None, it will print the JSON-LD instead.
+    :type filename: str, default None.
+    """
+
+    EXT = ".jsonld"
+
+    def __init__(self, filename=None):
+        if filename:
+            super().__init__(filename)
+        else:
+            self.filename = None
+
+    def __call__(self, model):
+        jsonld = {}
+
+        if not model.context:
+            raise ValueError("No context found in the given Model.")
+
+        jsonld.update(model.context)
