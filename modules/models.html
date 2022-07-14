@@ -83,6 +83,8 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.models.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.models.Model" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Model for a specific type of data.</p>
+<p>If multiple files are used, the model will internally use the file names as key for traversals.
+Else, a default None key is used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -94,13 +96,14 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.models.Model.add_traversal">
-<span class="sig-name descname"><span class="pre">add_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traversal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.models.Model.add_traversal" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traversal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.models.Model.add_traversal" title="Permalink to this definition"></a></dt>
 <dd><p>Add a traversal to the Model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>traversal</strong> (<em>dict</em>) – The traversal, from a Tree.</p></li>
-<li><p><strong>apply</strong> (<em>bool</em>) – If True, will effectively be applied to the Model.</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>default None.</em>) – The filename, from a Tree.</p></li>
+<li><p><strong>apply</strong> (<em>bool</em><em>, </em><em>default True.</em>) – If True, will effectively be applied to the Model.</p></li>
 </ul>
 </dd>
 </dl>
@@ -153,20 +156,26 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.models.Model.find_info">
-<span class="sig-name descname"><span class="pre">find_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#argonodes.models.Model.find_info" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">find_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#argonodes.models.Model.find_info" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the given path, or the latest found element within the path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> – A JSON path.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – A JSON path.</p></li>
+<li><p><strong>filename</strong> – Filename.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Rtype path</dt>
+<dt class="field-even">Rtype target</dt>
 <dd class="field-even"><p>str</p>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The corresponding linked information in the traversal.</p>
+<dt class="field-odd">Rtype filename</dt>
+<dd class="field-odd"><p>str, default None.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The corresponding linked information in the traversal.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -187,7 +196,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.models.Model.get_paths">
-<span class="sig-name descname"><span class="pre">get_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#argonodes.models.Model.get_paths" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#argonodes.models.Model.get_paths" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the set of avalaible paths.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -212,12 +221,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.models.Model.set_attributes">
-<span class="sig-name descname"><span class="pre">set_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#argonodes.models.Model.set_attributes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#argonodes.models.Model.set_attributes" title="Permalink to this definition"></a></dt>
 <dd><p>Given a specific path, add more context to that path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>path</strong> (<em>str</em>) – A valid path.</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>default None.</em>) – A filename.</p></li>
 <li><p><strong>kwargs</strong> (<em>Keyworded</em><em>, </em><em>variable-length argument list.</em>) – The different information to add to that path.</p></li>
 </ul>
 </dd>
@@ -232,7 +242,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.models.Model.to_list">
-<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#argonodes.models.Model.to_list" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></span><a class="headerlink" href="#argonodes.models.Model.to_list" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the model in the form of a list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
