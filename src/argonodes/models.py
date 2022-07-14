@@ -220,24 +220,48 @@ class Model:
         return False
 
     def export_to_csv(self, filename):
+        """
+        Sugar for argonodes.exporters.CSVExporter.
+
+        :param filename: Filename where to export.
+        :type filename: str
+        """
         from .exporters import CSVExporter
 
         exporter = CSVExporter(filename)
         exporter(self)
 
     def export_to_pickle(self, filename):
+        """
+        Sugar for argonodes.exporters.PickleExporter.
+
+        :param filename: Filename where to export.
+        :type filename: str
+        """
         from .exporters import PickleExporter
 
         exporter = PickleExporter(filename)
         exporter(self)
 
     def export_to_markdown(self, filename=None):
+        """
+        Sugar for argonodes.exporters.MarkdownExporter.
+
+        :param filename: Filename where to export. If None, it will print the Markdown instead.
+        :type filename: str, default None.
+        """
         from .exporters import PickleExporter
 
         exporter = PickleExporter(filename)
         exporter(self)
 
     def import_from_csv(self, filename):
+        """
+        Import a Model from CSV.
+
+        :param filename: Filename where to import.
+        :type filename: str
+        """
         with open(filename) as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
@@ -254,6 +278,12 @@ class Model:
                 self.set_attributes(path, filename=filename, **row)
 
     def import_from_pickle(self, filename):
+        """
+        Import a Model from a Pickle.
+
+        :param filename: Filename where to import.
+        :type filename: str
+        """
         with open(filename, "rb") as file:
             self.traversal = pickle.load(file)
 

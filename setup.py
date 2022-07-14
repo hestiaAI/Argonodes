@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="argonodes",
-    version="2.0.2",
+    version="2.0.4",
     author="Hugo 'Stache' Hueber",
     author_email="hugo.hueber@hestia.ai",
     description="JSON-LD semantics helper for model generation and usage.",

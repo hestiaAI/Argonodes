@@ -16,6 +16,10 @@ from .helpers import ATTRS_MARKDOWN
 
 
 class Exporter(ABC):
+    """
+    Abstraction for every Exporter
+    """
+
     EXT = ""
 
     def __init__(self, filename):
@@ -33,6 +37,13 @@ class Exporter(ABC):
 
 
 class PickleExporter(Exporter):
+    """
+    Exporter to a Python Pickle.
+
+    :param filename: Filename where to export.
+    :type filename: str
+    """
+
     EXT = ".pickle"
 
     def __init__(self, filename):
@@ -44,6 +55,13 @@ class PickleExporter(Exporter):
 
 
 class JSONExporter(Exporter):
+    """
+    Exporter to JSON.
+
+    :param filename: Filename where to export. If None, it will print the JSON instead.
+    :type filename: str, default None.
+    """
+
     EXT = ".json"
 
     def __init__(self, filename=None):
@@ -61,6 +79,13 @@ class JSONExporter(Exporter):
 
 
 class MarkdownExporter(Exporter):
+    """
+    Exporter to Markdown.
+
+    :param filename: Filename where to export. If None, it will print the Markdown instead.
+    :type filename: str, default None.
+    """
+
     EXT = ".md"
 
     def __init__(self, filename=None):
@@ -99,6 +124,13 @@ class MarkdownExporter(Exporter):
 
 
 class CSVExporter(Exporter):
+    """
+    Exporter to a CSV.
+
+    :param filename: Filename where to export.
+    :type filename: str
+    """
+
     EXT = ".csv"
 
     def __init__(self, filename):
