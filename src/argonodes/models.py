@@ -9,10 +9,8 @@ from __future__ import annotations
 
 
 from collections import defaultdict
-from typing import Any, Generator, List, Optional, Set, Tuple
+from typing import Optional
 import csv
-import json
-import os
 import pickle
 
 
@@ -20,7 +18,7 @@ from deepdiff import DeepDiff
 
 
 from .default_context import DEFAULT_CONTEXT
-from .helpers import ATTRS_EXPORT, ATTRS_MARKDOWN, ATTRS_MODEL_TO_NODE, flatten, REGEX_PATH
+from .helpers import ATTRS_EXPORT, ATTRS_MODEL_TO_NODE, flatten, REGEX_PATH
 from .nodes import NA, Root
 
 
