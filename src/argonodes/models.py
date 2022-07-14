@@ -8,7 +8,8 @@ Basic usage = ``model = Model(tree)``
 from __future__ import annotations
 
 
-from typing import Optional
+from collections import defaultdict
+from typing import Any, Generator, List, Optional, Set, Tuple
 import csv
 import json
 import os
@@ -27,6 +28,9 @@ class Model:
     """
     Model for a specific type of data.
 
+    If multiple files are used, the model will internally use the file names as key for traversals.
+    Else, a default None key is used.
+
     :param trees: Trees to be processed by the Model.
     :type trees: Tree or list[Tree], default None.
     :param name: Name of the Model.
@@ -38,7 +42,7 @@ class Model:
     def __init__(self, trees=None, name=None, context=None):
         self.name = name
         self.context = context or DEFAULT_CONTEXT
-        self.traversal = {}
+        self.traversal = defaultdict(dict)
         self.changes = []
         self.num_changes = 0
 
@@ -64,7 +68,8 @@ class Model:
         :param node: A Node, usually a Tree.
         :param model: The Model to be applied.
         """
-        flat = self.flatten()
+        filename = node.filename
+        flat = flatten(self.traversal[filename], keys_only=False)
 
         def apply_to(node):
             path = REGEX_PATH.sub("[*]", node.path)
@@ -94,28 +99,31 @@ class Model:
         :param apply: If True, will effectively be applied to the Model.
         :type apply: bool
         """
-        self.add_traversal(tree.export_traversal(), apply=apply)
+        self.add_traversal(tree.export_traversal(), filename=tree.filename, apply=apply)
 
-    def add_traversal(self, traversal, apply=True) -> None:
+    def add_traversal(self, traversal, filename=None, apply=True) -> None:
         """
         Add a traversal to the Model.
 
         :param traversal: The traversal, from a Tree.
         :type traversal: dict
+        :param filename: The filename, from a Tree.
+        :type filename: str, default None.
         :param apply: If True, will effectively be applied to the Model.
-        :type apply: bool
+        :type apply: bool, default True.
         """
-        if apply:
-            full_traversal = self.traversal
-        else:
-            full_traversal = self.traversal.copy()
+        traversal_copy = self.traversal.copy()
 
-        full_traversal.update(traversal)
+        if apply:
+            self.traversal[filename].update(traversal)  # And yes, it works even when filename=None!
+            self.changes.append((self.num_changes, apply, DeepDiff(traversal_copy, self.traversal)))
+        else:
+            traversal_copy[filename].update(traversal)  # Tout pareil !
+            self.changes.append((self.num_changes, apply, DeepDiff(self.traversal, traversal_copy)))
+
         self.num_changes += 1
 
-        self.changes.append((self.num_changes, apply, DeepDiff(traversal, full_traversal)))
-
-    def get_paths(self) -> set:
+    def get_paths(self) -> dict:
         """
         Returns the set of avalaible paths.
 
@@ -128,14 +136,16 @@ class Model:
                 yield path
                 yield from recur(info["traversal"])
 
-        return set(recur(self.traversal))
+        return {filename: set(recur(traversal)) for filename, traversal in self.traversal.items()}
 
-    def find_info(self, target) -> Optional[dict]:
+    def find_info(self, target, filename=None) -> Optional[dict]:
         """
         Returns the given path, or the latest found element within the path.
 
-        :param path: A JSON path.
-        :rtype path: str
+        :param target: A JSON path.
+        :rtype target: str
+        :param filename: Filename.
+        :rtype filename: str, default None.
         :return: The corresponding linked information in the traversal.
         :rtype: dict
         """
@@ -147,9 +157,9 @@ class Model:
                 if info:
                     yield from (r for r in recur(target, info["traversal"]))
 
-        return next(recur(target, self.traversal))
+        return next(recur(target, self.traversal[filename]))
 
-    def to_list(self, headers=True) -> list:
+    def to_list(self, headers=True) -> tuple[list, dict] | dict:
         """
         Returns the model in the form of a list.
 
@@ -158,9 +168,6 @@ class Model:
         :return: A nice little list representing the Model.
         :rtype: list[list]
         """
-        rtn = []
-        if headers:
-            rtn.append(ATTRS_EXPORT)
 
         def recur(traversal):
             for path, info in traversal.items():
@@ -176,9 +183,12 @@ class Model:
                 ] + temp  # [str(info[attr]) for attr in info.keys() if attr in ATTRS_EXPORT and attr != "path"]
                 yield from recur(info["traversal"])
 
-        rtn += [r for r in recur(self.traversal)]
+        rtn = {filename: [r for r in recur(traversal)] for filename, traversal in self.traversal.items()}
 
-        return rtn
+        if headers:
+            return ATTRS_EXPORT, rtn
+        else:
+            return rtn
 
     def flatten(self) -> dict:
         """
@@ -187,26 +197,30 @@ class Model:
         :return: A dict of the model.
         :rtype: dict
         """
-        return flatten(self.traversal, keys_only=False)
+        return {filename: flatten(traversal, keys_only=False) for filename, traversal in self.traversal.items()}
 
-    def set_attributes(self, path, **kwargs) -> bool:
+    def set_attributes(self, path, filename=None, **kwargs) -> bool:
         """
         Given a specific path, add more context to that path.
 
         :param path: A valid path.
         :type path: str
+        :param filename: A filename.
+        :type filename: str, default None.
         :param kwargs: The different information to add to that path.
         :type kwargs: Keyworded, variable-length argument list.
         :return: True if the path was found and info added; False otherwise.
         :rtype: bool
         """
-        info = self.find_info(path)
+        info = self.find_info(path, filename)
         if info:
             for attr, value in kwargs.items():
                 info[attr] = value
             return True
         return False
 
+    # To rewrite lel
+    #
     def export_traversal(self, filename=None, scheme="pickle") -> None:
         """
         Dump the traversal in different format.
