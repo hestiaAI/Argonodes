@@ -30,7 +30,7 @@ class Parser(ABC):
         return self.__class__.__name__
 
     @abstractmethod
-    def __call__(self, data_in) -> Union[dict, list]:
+    def __call__(self, data_in):
         if isinstance(data_in, str):
             pass
         else:

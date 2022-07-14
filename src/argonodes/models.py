@@ -40,7 +40,7 @@ class Model:
     """
 
     def __init__(self, trees=None, name=None, context=None):
-        self.name = name
+        self.name = name or "Argonode Model"
         self.context = context or DEFAULT_CONTEXT
         self.traversal = defaultdict(dict)
         self.changes = []
@@ -219,126 +219,43 @@ class Model:
             return True
         return False
 
-    # To rewrite lel
-    #
-    def export_traversal(self, filename=None, scheme="pickle") -> None:
-        """
-        Dump the traversal in different format.
+    def export_to_csv(self, filename):
+        from .exporters import CSVExporter
 
-        :param filename: If None, will print in the given format.
-        :type filename: str, default None.
-        :param scheme: Can be either `pickle`, `json`, `markdown`.
-        :type scheme: str, default "pickle".
-        """
-        if scheme == "pickle":
-            if not filename:
-                raise ValueError("filename is missing.")
-            _, ext = os.path.splitext(filename)
-            if ext != ".pickle":
-                filename += ".pickle"
-            with open(filename, "wb") as file:
-                pickle.dump(self.traversal, file)
-        elif scheme == "json":
-            if filename:
-                _, ext = os.path.splitext(filename)
-                if ext != ".json":
-                    filename += ".json"
-                with open(filename, "w") as file:
-                    json.dump(self.traversal, file, indent=2, default=str)
-            else:
-                print(json.dumps(self.traversal, indent=2, default=str))
-        elif scheme == "markdown":
-            headers, *liste = self.to_list()
-            to_keep = ATTRS_MARKDOWN
-            indexes = [headers.index(keep) for keep in to_keep]
+        exporter = CSVExporter(filename)
+        exporter(self)
 
-            if ":" in liste[0][0]:
-                cur_filename = ""
-                temp = {}
-                for l in liste:
-                    tmp = [l[index] for index in indexes]
-                    next_filename, path = tmp[0].split(":")
-                    tmp[0] = path
-                    if next_filename != cur_filename:
-                        cur_filename = next_filename
-                        temp[cur_filename] = []
-                    temp[cur_filename].append(
-                        f"| {' | '.join([f'`{tmp[0]}`', tmp[1], tmp[2] or '/', tmp[3] or '/'])} |"
-                    )
+    def export_to_pickle(self, filename):
+        from .exporters import PickleExporter
 
-                markdown = [f"## {self.name or 'Exported Model'}", ""]
+        exporter = PickleExporter(filename)
+        exporter(self)
 
-                for next_filename, liste in temp.items():
-                    markdown += (
-                        [f"### `{next_filename}`", ""]
-                        + [f"| {' | '.join(to_keep)} |"]
-                        + [f"{'|---' * len(to_keep)}|"]
-                        + liste
-                        + [""]
-                    )
-            else:
-                temp = []
-                for l in liste:
-                    tmp = [l[index] for index in indexes]
-                    temp.append(f"| {' | '.join([f'`{tmp[0]}`', tmp[1].__name__, tmp[2] or '/', tmp[3] or '/'])} |")
+    def export_to_markdown(self, filename=None):
+        from .exporters import PickleExporter
 
-                markdown = (
-                    [f"## {self.name or 'Exported Model'}", ""]
-                    + [f"| {' | '.join(to_keep)} |"]
-                    + [f"{'|---' * len(to_keep)}|"]
-                    + temp
-                )
+        exporter = PickleExporter(filename)
+        exporter(self)
 
-            if filename:
-                _, ext = os.path.splitext(filename)
-                if ext != ".md":
-                    filename += ".md"
-                with open(filename, "w") as file:
-                    for m in markdown:
-                        file.write(f"{m}\n")
-            else:
-                print("\n".join(markdown))
-        elif scheme == "csv":
-            if not filename:
-                raise ValueError("filename is missing.")
-            _, ext = os.path.splitext(filename)
-            if ext != ".csv":
-                filename += ".csv"
+    def import_from_csv(self, filename):
+        with open(filename) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                filename, path = row.pop("path").split(":")
+                if filename == "":
+                    filename = None
+                for k, v in row.items():
+                    if v == "RootNode":
+                        row[k] = Root
+                    if v == "N/A":
+                        row[k] = NA
+                    if v == "None":
+                        row[k] = None
+                self.set_attributes(path, filename=filename, **row)
 
-            headers, *liste = self.to_list()
-
-            with open(filename, "w") as csvfile:
-                writer = csv.writer(csvfile)
-
-                writer.writerow(headers)
-                writer.writerows(liste)
-        else:
-            raise ValueError("Incorrect format, please use 'pickle', 'json', 'markdown', `csv.")
-
-    def load_traversal(self, filename) -> None:
-        """
-        Load a format from a pickle.
-
-        :param filename: Path to a pickled format.
-        :type filename: str
-        """
-        _, ext = os.path.splitext(filename)
-        if ext == ".csv":
-            with open(filename) as csvfile:
-                reader = csv.DictReader(csvfile)
-                for row in reader:
-                    path = row.pop("path")
-                    for k, v in row.items():
-                        if v == "RootNode":
-                            row[k] = Root
-                        if v == "N/A":
-                            row[k] = NA
-                        if v == "None":
-                            row[k] = None
-                    self.set_attributes(path, **row)
-        else:
-            with open(filename, "rb") as file:
-                self.traversal = pickle.load(file)
+    def import_from_pickle(self, filename):
+        with open(filename, "rb") as file:
+            self.traversal = pickle.load(file)
 
     def apply(self, filtr) -> Model:
         """
