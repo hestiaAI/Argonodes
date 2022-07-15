@@ -158,6 +158,12 @@ class JSONLDExporter(JSONExporter):
     """
 
     EXT = ".jsonld"
+    MODEL_CONTEXT = {
+        "fileName": "",  # TODO
+        "filePath": "",  # TODO
+        "fileFormat": "",  # TODO
+        "description": "https://schema.org/description",
+    }
 
     def __init__(self, filename=None):
         if filename:
@@ -166,13 +172,14 @@ class JSONLDExporter(JSONExporter):
             self.filename = None
 
     def __call__(self, model):
-        jsonld = {}
+        jsonld = {"@context": {}}
 
         if not model.context:
             raise ValueError("No context found in the given Model.")
 
         # Add context
-        jsonld.update(model.context)
+        jsonld["@context"].update(model.context)
+        jsonld["@context"].update(self.MODEL_CONTEXT)
 
         def recur(traversal, parent_path=""):
             for path, info in traversal.items():
