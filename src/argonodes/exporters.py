@@ -8,11 +8,13 @@ Basic usage: ``exporter = Exporter(); model.export(exporter)``
 from abc import ABC, abstractmethod
 import csv
 import json
+import mimetypes
 import os
 import pickle
 
 
-from .helpers import ATTRS_MARKDOWN
+from .helpers import ATTRS_EXPORT, ATTRS_MARKDOWN
+from .nodes import NA
 
 
 class Exporter(ABC):
@@ -169,4 +171,43 @@ class JSONLDExporter(JSONExporter):
         if not model.context:
             raise ValueError("No context found in the given Model.")
 
+        # Add context
         jsonld.update(model.context)
+
+        def recur(traversal, parent_path=""):
+            for path, info in traversal.items():
+                if info["descriptiveType"] == NA:
+                    if info["traversal"]:
+                        yield from (r for r in recur(info["traversal"]))
+                else:
+                    temp = {}
+                    for attr in ATTRS_EXPORT:
+                        temp[attr] = info[attr]
+                        temp["@type"] = info["descriptiveType"]
+
+                    del temp["descriptiveType"]
+                    temp["absolutePath"] = path
+                    temp["relativePath"] = path.replace(parent_path, "")
+
+                    if info["traversal"]:
+                        temp["contains"] = [r for r in recur(info["traversal"], parent_path=path)]
+                    yield temp
+
+        if len(model.traversal) >= 1:
+            jsonld["@graph"] = []
+            for filename, traversal in model.traversal.items():
+                temp = {
+                    "@type": "https://schema.org/DigitalDocument",
+                    "fileName": filename.split("/")[-1] if filename else None,
+                    "filePath": filename if filename else None,
+                    "fileFormat": mimetypes.types_map.get(f".{filename.split('.')[-1]}") or None if filename else None,
+                    "description": "",
+                    "contains": [r for r in recur(traversal)],
+                }
+                jsonld["@graph"].append(temp)
+
+        if self.filename:
+            with open(self.filename, "w") as file:
+                json.dump(jsonld, file, indent=2, default=str)
+        else:
+            print(json.dumps(jsonld, indent=2, default=str))
