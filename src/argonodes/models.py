@@ -171,7 +171,7 @@ class Model:
             for path, info in traversal.items():
                 temp = []
                 for attr in info.keys():
-                    if attr in ATTRS_EXPORT and attr != "path":
+                    if attr in ATTRS_EXPORT:
                         if "<class " in str(info[attr]):
                             temp.append(info[attr].__name__)
                         else:
@@ -184,7 +184,7 @@ class Model:
         rtn = {filename: [r for r in recur(traversal)] for filename, traversal in self.traversal.items()}
 
         if headers:
-            return ATTRS_EXPORT, rtn
+            return ["path"] + ATTRS_EXPORT, rtn
         else:
             return rtn
 
