@@ -197,8 +197,6 @@ class JSONLDExporter(JSONExporter):
                     temp["relativePath"] = path.replace(parent_path, "")
                     # TODO This is just dirty
                     temp["fieldName"] = path.split(".")[-1]
-                    if temp["fieldName"].endswith("[*]"):
-                        temp["fieldName"] = "[*]"
                     # End dirty
 
                     if info["traversal"]:
