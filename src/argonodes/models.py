@@ -9,10 +9,8 @@ from __future__ import annotations
 
 
 from collections import defaultdict
-from typing import Any, Generator, List, Optional, Set, Tuple
+from typing import Optional
 import csv
-import json
-import os
 import pickle
 
 
@@ -20,7 +18,7 @@ from deepdiff import DeepDiff
 
 
 from .default_context import DEFAULT_CONTEXT
-from .helpers import ATTRS_EXPORT, ATTRS_MARKDOWN, ATTRS_MODEL_TO_NODE, flatten, REGEX_PATH
+from .helpers import ATTRS_EXPORT, ATTRS_MODEL_TO_NODE, flatten, REGEX_PATH
 from .nodes import NA, Root
 
 
@@ -40,7 +38,7 @@ class Model:
     """
 
     def __init__(self, trees=None, name=None, context=None):
-        self.name = name
+        self.name = name or "Argonode Model"
         self.context = context or DEFAULT_CONTEXT
         self.traversal = defaultdict(dict)
         self.changes = []
@@ -157,7 +155,10 @@ class Model:
                 if info:
                     yield from (r for r in recur(target, info["traversal"]))
 
-        return next(recur(target, self.traversal[filename]))
+        try:
+            return next(recur(target, self.traversal[filename]))
+        except StopIteration:
+            return None
 
     def to_list(self, headers=True) -> tuple[list, dict] | dict:
         """
@@ -173,7 +174,7 @@ class Model:
             for path, info in traversal.items():
                 temp = []
                 for attr in info.keys():
-                    if attr in ATTRS_EXPORT and attr != "path":
+                    if attr in ATTRS_EXPORT:
                         if "<class " in str(info[attr]):
                             temp.append(info[attr].__name__)
                         else:
@@ -186,7 +187,7 @@ class Model:
         rtn = {filename: [r for r in recur(traversal)] for filename, traversal in self.traversal.items()}
 
         if headers:
-            return ATTRS_EXPORT, rtn
+            return ["path"] + ATTRS_EXPORT, rtn
         else:
             return rtn
 
@@ -199,7 +200,7 @@ class Model:
         """
         return {filename: flatten(traversal, keys_only=False) for filename, traversal in self.traversal.items()}
 
-    def set_attributes(self, path, filename=None, **kwargs) -> bool:
+    def set_attributes(self, path, filename=None, create=False, **kwargs) -> bool:
         """
         Given a specific path, add more context to that path.
 
@@ -207,138 +208,131 @@ class Model:
         :type path: str
         :param filename: A filename.
         :type filename: str, default None.
+        :param create: If the path does not exist, should it be created or not.
+        :type create: bool, default None.
         :param kwargs: The different information to add to that path.
         :type kwargs: Keyworded, variable-length argument list.
         :return: True if the path was found and info added; False otherwise.
         :rtype: bool
         """
         info = self.find_info(path, filename)
+
+        # If path does not exist and we want to create it
+        if not info and create:
+            # Quick Dirty Fix
+            temp = path.split(".")
+            temp1 = [temp[0]] + ["." + t for t in temp[1:]]
+
+            parts = []
+            for t in temp1:
+                if "[*]" in t:
+                    parts.append(t.split("[*]")[0])
+                    parts.append("[*]")
+                else:
+                    parts.append(t)
+
+            def recur(traversal, parts, previous=""):
+                if not parts:
+                    return
+
+                previous += parts[0]
+
+                if previous in traversal:
+                    recur(traversal[previous]["traversal"], parts[1:], previous)
+                else:
+                    traversal[previous] = {"traversal": {}}
+                    recur(traversal[previous]["traversal"], parts[1:], previous)
+
+            recur(self.traversal[filename], parts)
+            # End QDF
+
+            info = self.find_info(path, filename)
+
+        # If info or path created
         if info:
             for attr, value in kwargs.items():
                 info[attr] = value
             return True
+
         return False
 
-    # To rewrite lel
-    #
-    def export_traversal(self, filename=None, scheme="pickle") -> None:
+    def export(self, exporter):
         """
-        Dump the traversal in different format.
+        Sugar for argonodes.exporters.
 
-        :param filename: If None, will print in the given format.
-        :type filename: str, default None.
-        :param scheme: Can be either `pickle`, `json`, `markdown`.
-        :type scheme: str, default "pickle".
+        :param exporter: Exporter to be used.
+        :type exporter: argonodes.exporters.Exporter
         """
-        if scheme == "pickle":
-            if not filename:
-                raise ValueError("filename is missing.")
-            _, ext = os.path.splitext(filename)
-            if ext != ".pickle":
-                filename += ".pickle"
-            with open(filename, "wb") as file:
-                pickle.dump(self.traversal, file)
-        elif scheme == "json":
-            if filename:
-                _, ext = os.path.splitext(filename)
-                if ext != ".json":
-                    filename += ".json"
-                with open(filename, "w") as file:
-                    json.dump(self.traversal, file, indent=2, default=str)
-            else:
-                print(json.dumps(self.traversal, indent=2, default=str))
-        elif scheme == "markdown":
-            headers, *liste = self.to_list()
-            to_keep = ATTRS_MARKDOWN
-            indexes = [headers.index(keep) for keep in to_keep]
+        exporter(self)
 
-            if ":" in liste[0][0]:
-                cur_filename = ""
-                temp = {}
-                for l in liste:
-                    tmp = [l[index] for index in indexes]
-                    next_filename, path = tmp[0].split(":")
-                    tmp[0] = path
-                    if next_filename != cur_filename:
-                        cur_filename = next_filename
-                        temp[cur_filename] = []
-                    temp[cur_filename].append(
-                        f"| {' | '.join([f'`{tmp[0]}`', tmp[1], tmp[2] or '/', tmp[3] or '/'])} |"
-                    )
-
-                markdown = [f"## {self.name or 'Exported Model'}", ""]
-
-                for next_filename, liste in temp.items():
-                    markdown += (
-                        [f"### `{next_filename}`", ""]
-                        + [f"| {' | '.join(to_keep)} |"]
-                        + [f"{'|---' * len(to_keep)}|"]
-                        + liste
-                        + [""]
-                    )
-            else:
-                temp = []
-                for l in liste:
-                    tmp = [l[index] for index in indexes]
-                    temp.append(f"| {' | '.join([f'`{tmp[0]}`', tmp[1].__name__, tmp[2] or '/', tmp[3] or '/'])} |")
-
-                markdown = (
-                    [f"## {self.name or 'Exported Model'}", ""]
-                    + [f"| {' | '.join(to_keep)} |"]
-                    + [f"{'|---' * len(to_keep)}|"]
-                    + temp
-                )
-
-            if filename:
-                _, ext = os.path.splitext(filename)
-                if ext != ".md":
-                    filename += ".md"
-                with open(filename, "w") as file:
-                    for m in markdown:
-                        file.write(f"{m}\n")
-            else:
-                print("\n".join(markdown))
-        elif scheme == "csv":
-            if not filename:
-                raise ValueError("filename is missing.")
-            _, ext = os.path.splitext(filename)
-            if ext != ".csv":
-                filename += ".csv"
-
-            headers, *liste = self.to_list()
-
-            with open(filename, "w") as csvfile:
-                writer = csv.writer(csvfile)
-
-                writer.writerow(headers)
-                writer.writerows(liste)
-        else:
-            raise ValueError("Incorrect format, please use 'pickle', 'json', 'markdown', `csv.")
-
-    def load_traversal(self, filename) -> None:
+    def export_to_csv(self, filename):
         """
-        Load a format from a pickle.
+        Sugar for argonodes.exporters.CSVExporter.
 
-        :param filename: Path to a pickled format.
+        :param filename: Filename where to export.
         :type filename: str
         """
-        _, ext = os.path.splitext(filename)
-        if ext == ".csv":
-            with open(filename) as csvfile:
-                reader = csv.DictReader(csvfile)
-                for row in reader:
-                    path = row.pop("path")
-                    for k, v in row.items():
-                        if v == "RootNode":
-                            row[k] = Root
-                        if v == "N/A":
-                            row[k] = NA
-                        if v == "None":
-                            row[k] = None
-                    self.set_attributes(path, **row)
-        else:
-            with open(filename, "rb") as file:
-                self.traversal = pickle.load(file)
+        from .exporters import CSVExporter
+
+        exporter = CSVExporter(filename)
+        exporter(self)
+
+    def export_to_pickle(self, filename):
+        """
+        Sugar for argonodes.exporters.PickleExporter.
+
+        :param filename: Filename where to export.
+        :type filename: str
+        """
+        from .exporters import PickleExporter
+
+        exporter = PickleExporter(filename)
+        exporter(self)
+
+    def export_to_markdown(self, filename=None):
+        """
+        Sugar for argonodes.exporters.MarkdownExporter.
+
+        :param filename: Filename where to export. If None, it will print the Markdown instead.
+        :type filename: str, default None.
+        """
+        from .exporters import PickleExporter
+
+        exporter = PickleExporter(filename)
+        exporter(self)
+
+    def import_from_csv(self, filename):
+        """
+        Import a Model from CSV.
+
+        :param filename: Filename where to import.
+        :type filename: str
+        """
+        with open(filename) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                filename, path = row.pop("path").split(":")
+                if filename == "":
+                    filename = None
+                for k, v in row.items():
+                    if v == "RootNode":
+                        row[k] = Root
+                    if v == "N/A":
+                        row[k] = NA
+                    if v == "None":
+                        row[k] = None
+                if not self.set_attributes(path, filename=filename, create=True, **row):
+                    print(f"Path {filename}:{path} not existing, creating.")
+
+    def import_from_pickle(self, filename):
+        """
+        Import a Model from a Pickle.
+
+        :param filename: Filename where to import.
+        :type filename: str
+        """
+        with open(filename, "rb") as file:
+            self.traversal = pickle.load(file)
 
     def apply(self, filtr) -> Model:
         """
