@@ -141,15 +141,45 @@ Else, a default None key is used.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="argonodes.models.Model.export_traversal">
-<span class="sig-name descname"><span class="pre">export_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pickle'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.models.Model.export_traversal" title="Permalink to this definition"></a></dt>
-<dd><p>Dump the traversal in different format.</p>
+<dt class="sig sig-object py" id="argonodes.models.Model.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exporter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.models.Model.export" title="Permalink to this definition"></a></dt>
+<dd><p>Sugar for argonodes.exporters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>default None.</em>) – If None, will print in the given format.</p></li>
-<li><p><strong>scheme</strong> (<em>str</em><em>, </em><em>default &quot;pickle&quot;.</em>) – Can be either <cite>pickle</cite>, <cite>json</cite>, <cite>markdown</cite>.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>exporter</strong> (<a class="reference internal" href="exporters.html#argonodes.exporters.Exporter" title="argonodes.exporters.Exporter"><em>argonodes.exporters.Exporter</em></a>) – Exporter to be used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.models.Model.export_to_csv">
+<span class="sig-name descname"><span class="pre">export_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.models.Model.export_to_csv" title="Permalink to this definition"></a></dt>
+<dd><p>Sugar for argonodes.exporters.CSVExporter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename where to export.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.models.Model.export_to_markdown">
+<span class="sig-name descname"><span class="pre">export_to_markdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.models.Model.export_to_markdown" title="Permalink to this definition"></a></dt>
+<dd><p>Sugar for argonodes.exporters.MarkdownExporter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em>, </em><em>default None.</em>) – Filename where to export. If None, it will print the Markdown instead.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.models.Model.export_to_pickle">
+<span class="sig-name descname"><span class="pre">export_to_pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.models.Model.export_to_pickle" title="Permalink to this definition"></a></dt>
+<dd><p>Sugar for argonodes.exporters.PickleExporter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename where to export.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -209,25 +239,37 @@ Else, a default None key is used.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="argonodes.models.Model.load_traversal">
-<span class="sig-name descname"><span class="pre">load_traversal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#argonodes.models.Model.load_traversal" title="Permalink to this definition"></a></dt>
-<dd><p>Load a format from a pickle.</p>
+<dt class="sig sig-object py" id="argonodes.models.Model.import_from_csv">
+<span class="sig-name descname"><span class="pre">import_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.models.Model.import_from_csv" title="Permalink to this definition"></a></dt>
+<dd><p>Import a Model from CSV.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path to a pickled format.</p>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename where to import.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="argonodes.models.Model.import_from_pickle">
+<span class="sig-name descname"><span class="pre">import_from_pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.models.Model.import_from_pickle" title="Permalink to this definition"></a></dt>
+<dd><p>Import a Model from a Pickle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename where to import.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="argonodes.models.Model.set_attributes">
-<span class="sig-name descname"><span class="pre">set_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#argonodes.models.Model.set_attributes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#argonodes.models.Model.set_attributes" title="Permalink to this definition"></a></dt>
 <dd><p>Given a specific path, add more context to that path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>path</strong> (<em>str</em>) – A valid path.</p></li>
 <li><p><strong>filename</strong> (<em>str</em><em>, </em><em>default None.</em>) – A filename.</p></li>
+<li><p><strong>create</strong> (<em>bool</em><em>, </em><em>default None.</em>) – If the path does not exist, should it be created or not.</p></li>
 <li><p><strong>kwargs</strong> (<em>Keyworded</em><em>, </em><em>variable-length argument list.</em>) – The different information to add to that path.</p></li>
 </ul>
 </dd>
