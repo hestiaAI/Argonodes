@@ -155,7 +155,10 @@ class Model:
                 if info:
                     yield from (r for r in recur(target, info["traversal"]))
 
-        return next(recur(target, self.traversal[filename]))
+        try:
+            return next(recur(target, self.traversal[filename]))
+        except StopIteration:
+            return None
 
     def to_list(self, headers=True) -> tuple[list, dict] | dict:
         """
@@ -197,7 +200,7 @@ class Model:
         """
         return {filename: flatten(traversal, keys_only=False) for filename, traversal in self.traversal.items()}
 
-    def set_attributes(self, path, filename=None, **kwargs) -> bool:
+    def set_attributes(self, path, filename=None, create=False, **kwargs) -> bool:
         """
         Given a specific path, add more context to that path.
 
@@ -205,17 +208,62 @@ class Model:
         :type path: str
         :param filename: A filename.
         :type filename: str, default None.
+        :param create: If the path does not exist, should it be created or not.
+        :type create: bool, default None.
         :param kwargs: The different information to add to that path.
         :type kwargs: Keyworded, variable-length argument list.
         :return: True if the path was found and info added; False otherwise.
         :rtype: bool
         """
         info = self.find_info(path, filename)
+
+        # If path does not exist and we want to create it
+        if not info and create:
+            # Quick Dirty Fix
+            temp = path.split(".")
+            temp1 = [temp[0]] + ["." + t for t in temp[1:]]
+
+            parts = []
+            for t in temp1:
+                if "[*]" in t:
+                    parts.append(t.split("[*]")[0])
+                    parts.append("[*]")
+                else:
+                    parts.append(t)
+
+            def recur(traversal, parts, previous=""):
+                if not parts:
+                    return
+
+                previous += parts[0]
+
+                if previous in traversal:
+                    recur(traversal[previous]["traversal"], parts[1:], previous)
+                else:
+                    traversal[previous] = {"traversal": {}}
+                    recur(traversal[previous]["traversal"], parts[1:], previous)
+
+            recur(self.traversal[filename], parts)
+            # End QDF
+
+            info = self.find_info(path, filename)
+
+        # If info or path created
         if info:
             for attr, value in kwargs.items():
                 info[attr] = value
             return True
+
         return False
+
+    def export(self, exporter):
+        """
+        Sugar for argonodes.exporters.
+
+        :param exporter: Exporter to be used.
+        :type exporter: argonodes.exporters.Exporter
+        """
+        exporter(self)
 
     def export_to_csv(self, filename):
         """
@@ -273,7 +321,8 @@ class Model:
                         row[k] = NA
                     if v == "None":
                         row[k] = None
-                self.set_attributes(path, filename=filename, **row)
+                if not self.set_attributes(path, filename=filename, create=True, **row):
+                    print(f"Path {filename}:{path} not existing, creating.")
 
     def import_from_pickle(self, filename):
         """
