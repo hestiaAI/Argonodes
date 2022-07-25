@@ -146,7 +146,8 @@ class CSVExporter(Exporter):
 
             writer.writerow(headers)
             for filename, liste in listes.items():
-                writer.writerows([f"{filename or ''}:{liste[0]}"] + liste[1:])
+                for l in liste:
+                    writer.writerows([f"{filename or ''}:{l[0]}"] + l[1:])
 
 
 class JSONLDExporter(JSONExporter):
