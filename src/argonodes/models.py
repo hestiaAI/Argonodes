@@ -39,6 +39,7 @@ class Model:
 
     def __init__(self, trees=None, name=None, context=None):
         self.name = name or "Argonode Model"
+        self.description = ""
         self.context = context or DEFAULT_CONTEXT
         self.traversal = defaultdict(dict)
         self.changes = []

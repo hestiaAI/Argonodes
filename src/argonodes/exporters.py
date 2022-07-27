@@ -212,7 +212,7 @@ class JSONLDExporter(JSONExporter):
                     "fileName": filename.split("/")[-1] if filename else None,
                     "filePath": filename if filename else None,
                     "fileFormat": mimetypes.types_map.get(f".{filename.split('.')[-1]}") or None if filename else None,
-                    "description": "",
+                    "description": model.description,
                     "contains": [r for r in recur(traversal)],
                 }
                 jsonld["@graph"].append(temp)
