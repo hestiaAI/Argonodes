@@ -300,6 +300,7 @@ class Tree(Node):
 
     def __init__(self, data, filename=None):
         super().__init__(data, fieldName="$", filename=filename)
+        self.descriptiveType = NA
         self.unique = NA
         self.default = NA
         self.choices = NA
