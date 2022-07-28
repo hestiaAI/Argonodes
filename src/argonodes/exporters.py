@@ -158,14 +158,14 @@ class CSVExporter(Exporter):
     """
     Exporter to a CSV.
 
-    :param file: Filename where to export.
-    :type file: str
+    :param file_or_buf: File or buffer where to export. If None, it will print the CSV instead.
+    :type file_or_buf: str or io.StringIO, default None.
     """
 
     EXT = ".csv"
 
-    def __init__(self, file):
-        super().__init__(file)
+    def __init__(self, file_or_buf=None):
+        super().__init__(file_or_buf)
 
     def __call__(self, model):
         headers, listes = model.to_list()
@@ -179,10 +179,11 @@ class CSVExporter(Exporter):
                     for l in liste:
                         writer.writerows([f"{file or ''}:{l[0]}"] + l[1:])
         elif self.buf:
-            self.buf.write(headers)
-            for file, liste in listes.items():
-                for l in liste:
-                    self.buf.write([f"{file or ''}:{l[0]}"] + l[1:])
+            if isinstance(self.buf, io.StringIO):
+                self.buf.write(headers)
+                for file, liste in listes.items():
+                    for l in liste:
+                        self.buf.write([f"{file or ''}:{l[0]}"] + l[1:])
         else:
             print(headers)
             for file, liste in listes.items():
@@ -194,8 +195,8 @@ class JSONLDExporter(JSONExporter):
     """
     Exporter to JSON-LD.
 
-    :param file: Filename where to export. If None, it will print the JSON-LD instead.
-    :type file: str, default None.
+    :param file_or_buf: File or buffer where to export. If None, it will print the JSON-LD instead.
+    :type file_or_buf: str or io.StringIO, default None.
     """
 
     EXT = ".jsonld"
