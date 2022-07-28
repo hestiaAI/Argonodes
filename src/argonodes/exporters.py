@@ -7,6 +7,7 @@ Basic usage: ``exporter = Exporter(); model.export(exporter)``
 """
 from abc import ABC, abstractmethod
 import csv
+import io
 import json
 import mimetypes
 import os
@@ -24,58 +25,83 @@ class Exporter(ABC):
 
     EXT = ""
 
-    def __init__(self, filename):
-        _, ext = os.path.splitext(filename)
-        if ext != self.EXT:
-            filename += self.EXT
-            print(
-                f"Warning: {self.EXT} will automatically be added at the end of the file name.\nResult will thus be {filename}."
-            )
-        self.filename = filename
+    def __init__(self, file_or_buf=None):
+        self.filename = None
+        self.buf = None
+
+        if file_or_buf:
+            if isinstance(file_or_buf, str):
+                _, ext = os.path.splitext(file_or_buf)
+                if ext != self.EXT:
+                    file_or_buf += self.EXT
+                    print(
+                        f"Warning: {self.EXT} will automatically be added at the end of the file name.\nResult will thus be {file_or_buf}."
+                    )
+                self.filename = file_or_buf
+            elif isinstance(file_or_buf, io.IOBase):
+                self.buf = file_or_buf
+            else:
+                print(f"Not supported: {type(file_or_buf)}.")
 
     @abstractmethod
     def __call__(self, model):
-        pass
+        if self.filename:
+            with open(self.filename):
+                raise NotImplementedError
+        elif self.buf:
+            raise NotImplementedError
+        else:
+            raise NotImplementedError
 
 
 class PickleExporter(Exporter):
     """
     Exporter to a Python Pickle.
 
-    :param filename: Filename where to export.
-    :type filename: str
+    :param file_or_buf: File or buffer where to export.
+    :type file_or_buf: str or io.BytesIO
     """
 
     EXT = ".pickle"
 
-    def __init__(self, filename):
-        super().__init__(filename)
+    def __init__(self, file_or_buf):
+        super().__init__(file_or_buf)
 
     def __call__(self, model):
-        with open(self.filename, "wb") as file:
-            pickle.dump(model.traversal, file)
+        if self.filename:
+            with open(self.filename, "wb") as file:
+                pickle.dump(model.traversal, file)
+        elif self.buf:
+            if isinstance(self.buf, io.BytesIO):
+                pickle.dump(model.traversal, self.buf)
+            else:
+                raise AttributeError
+        else:
+            raise NotImplementedError
 
 
 class JSONExporter(Exporter):
     """
     Exporter to JSON.
 
-    :param filename: Filename where to export. If None, it will print the JSON instead.
-    :type filename: str, default None.
+    :param file_or_buf: File or buffer where to export. If None, it will print the JSON instead.
+    :type file_or_buf: str or io.StringIO, default None.
     """
 
     EXT = ".json"
 
-    def __init__(self, filename=None):
-        if filename:
-            super().__init__(filename)
-        else:
-            self.filename = None
+    def __init__(self, file_or_buf=None):
+        super().__init__(file_or_buf)
 
     def __call__(self, model):
         if self.filename:
             with open(self.filename, "w") as file:
                 json.dump(model.traversal, file, indent=2, default=str)
+        elif self.buf:
+            if isinstance(self.buf, io.StringIO):
+                json.dump(model.traversal, self.buf, indent=2, default=str)
+            else:
+                raise AttributeError
         else:
             print(json.dumps(model.traversal, indent=2, default=str))
 
@@ -84,17 +110,14 @@ class MarkdownExporter(Exporter):
     """
     Exporter to Markdown.
 
-    :param filename: Filename where to export. If None, it will print the Markdown instead.
-    :type filename: str, default None.
+    :param file_or_buf: File or buffer where to export. If None, it will print the JSON instead.
+    :type file_or_buf: str or io.StringIO, default None.
     """
 
     EXT = ".md"
 
-    def __init__(self, filename=None):
-        if filename:
-            super().__init__(filename)
-        else:
-            self.filename = None
+    def __init__(self, file_or_buf=None):
+        super().__init__(file_or_buf)
 
     def __call__(self, model):
         headers, listes = model.to_list()
@@ -121,6 +144,12 @@ class MarkdownExporter(Exporter):
             with open(self.filename, "w") as file:
                 for m in markdown:
                     file.write(f"{m}\n")
+        elif self.buf:
+            if isinstance(self.buf, io.StringIO):
+                for m in markdown:
+                    self.buf.write(f"{m}\n")
+            else:
+                raise AttributeError
         else:
             print("\n".join(markdown))
 
@@ -129,48 +158,56 @@ class CSVExporter(Exporter):
     """
     Exporter to a CSV.
 
-    :param filename: Filename where to export.
-    :type filename: str
+    :param file: Filename where to export.
+    :type file: str
     """
 
     EXT = ".csv"
 
-    def __init__(self, filename):
-        super().__init__(filename)
+    def __init__(self, file):
+        super().__init__(file)
 
     def __call__(self, model):
         headers, listes = model.to_list()
 
-        with open(self.filename, "w") as csvfile:
-            writer = csv.writer(csvfile)
+        if self.filename:
+            with open(self.filename, "w") as csvfile:
+                writer = csv.writer(csvfile)
 
-            writer.writerow(headers)
-            for filename, liste in listes.items():
+                writer.writerow(headers)
+                for file, liste in listes.items():
+                    for l in liste:
+                        writer.writerows([f"{file or ''}:{l[0]}"] + l[1:])
+        elif self.buf:
+            self.buf.write(headers)
+            for file, liste in listes.items():
                 for l in liste:
-                    writer.writerows([f"{filename or ''}:{l[0]}"] + l[1:])
+                    self.buf.write([f"{file or ''}:{l[0]}"] + l[1:])
+        else:
+            print(headers)
+            for file, liste in listes.items():
+                for l in liste:
+                    print([f"{file or ''}:{l[0]}"] + l[1:])
 
 
 class JSONLDExporter(JSONExporter):
     """
     Exporter to JSON-LD.
 
-    :param filename: Filename where to export. If None, it will print the JSON-LD instead.
-    :type filename: str, default None.
+    :param file: Filename where to export. If None, it will print the JSON-LD instead.
+    :type file: str, default None.
     """
 
     EXT = ".jsonld"
     MODEL_CONTEXT = {
-        "fileName": "",  # TODO
-        "filePath": "",  # TODO
-        "fileFormat": "",  # TODO
+        "fileName": "https://schema.org/name",
+        "filePath": "https://www.wikidata.org/wiki/Q817765",
+        "fileFormat": "https://schema.org/fileFormat",
         "description": "https://schema.org/description",
     }
 
-    def __init__(self, filename=None):
-        if filename:
-            super().__init__(filename)
-        else:
-            self.filename = None
+    def __init__(self, file_or_buf=None):
+        super().__init__(file_or_buf)
 
     def __call__(self, model):
         jsonld = {"@context": {}}
@@ -220,5 +257,10 @@ class JSONLDExporter(JSONExporter):
         if self.filename:
             with open(self.filename, "w") as file:
                 json.dump(jsonld, file, indent=2, default=str)
+        elif self.buf:
+            if isinstance(self.buf, io.StringIO):
+                json.dump(jsonld, self.buf, indent=2, default=str)
+            else:
+                raise AttributeError
         else:
             print(json.dumps(jsonld, indent=2, default=str))

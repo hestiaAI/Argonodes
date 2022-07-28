@@ -188,3 +188,15 @@ class ZIPParser:
 
         except zipfile.BadZipFile as error:
             raise error
+
+
+MIME_TO_PARSER = {
+    "text/csv": CSVParser,
+    "application/json": JSONParser,
+    "application/javascript": TwitterJSParser,
+    "application/x-javascript": TwitterJSParser,
+    "application/x-rar-compressed": None,
+    "application/zip": ZIPParser,
+    "application/x-zip-compressed": ZIPParser,
+    "multipart/x-zip": ZIPParser,
+}
