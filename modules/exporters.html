@@ -80,12 +80,12 @@
 <p>Basic usage: <code class="docutils literal notranslate"><span class="pre">exporter</span> <span class="pre">=</span> <span class="pre">Exporter();</span> <span class="pre">model.export(exporter)</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.exporters.CSVExporter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">CSVExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.CSVExporter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">CSVExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_or_buf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.CSVExporter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#argonodes.exporters.Exporter" title="argonodes.exporters.Exporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exporter</span></code></a></p>
 <p>Exporter to a CSV.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename where to export.</p>
+<dd class="field-odd"><p><strong>file_or_buf</strong> (<em>str</em><em> or </em><em>io.StringIO</em><em>, </em><em>default None.</em>) – File or buffer where to export. If None, it will print the CSV instead.</p>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -97,7 +97,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.exporters.Exporter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">Exporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.Exporter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">Exporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_or_buf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.Exporter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Abstraction for every Exporter</p>
 <dl class="py attribute">
@@ -109,12 +109,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.exporters.JSONExporter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">JSONExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.JSONExporter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">JSONExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_or_buf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.JSONExporter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#argonodes.exporters.Exporter" title="argonodes.exporters.Exporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exporter</span></code></a></p>
 <p>Exporter to JSON.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em>, </em><em>default None.</em>) – Filename where to export. If None, it will print the JSON instead.</p>
+<dd class="field-odd"><p><strong>file_or_buf</strong> (<em>str</em><em> or </em><em>io.StringIO</em><em>, </em><em>default None.</em>) – File or buffer where to export. If None, it will print the JSON instead.</p>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -126,12 +126,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.exporters.JSONLDExporter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">JSONLDExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.JSONLDExporter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">JSONLDExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_or_buf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.JSONLDExporter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#argonodes.exporters.JSONExporter" title="argonodes.exporters.JSONExporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">JSONExporter</span></code></a></p>
 <p>Exporter to JSON-LD.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em>, </em><em>default None.</em>) – Filename where to export. If None, it will print the JSON-LD instead.</p>
+<dd class="field-odd"><p><strong>file_or_buf</strong> (<em>str</em><em> or </em><em>io.StringIO</em><em>, </em><em>default None.</em>) – File or buffer where to export. If None, it will print the JSON-LD instead.</p>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -141,19 +141,19 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="argonodes.exporters.JSONLDExporter.MODEL_CONTEXT">
-<span class="sig-name descname"><span class="pre">MODEL_CONTEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'https://schema.org/description',</span> <span class="pre">'fileFormat':</span> <span class="pre">'',</span> <span class="pre">'fileName':</span> <span class="pre">'',</span> <span class="pre">'filePath':</span> <span class="pre">''}</span></em><a class="headerlink" href="#argonodes.exporters.JSONLDExporter.MODEL_CONTEXT" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">MODEL_CONTEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'https://schema.org/description',</span> <span class="pre">'fileFormat':</span> <span class="pre">'https://schema.org/fileFormat',</span> <span class="pre">'fileName':</span> <span class="pre">'https://schema.org/name',</span> <span class="pre">'filePath':</span> <span class="pre">'https://www.wikidata.org/wiki/Q817765'}</span></em><a class="headerlink" href="#argonodes.exporters.JSONLDExporter.MODEL_CONTEXT" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.exporters.MarkdownExporter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">MarkdownExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.MarkdownExporter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">MarkdownExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_or_buf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.MarkdownExporter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#argonodes.exporters.Exporter" title="argonodes.exporters.Exporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exporter</span></code></a></p>
 <p>Exporter to Markdown.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em>, </em><em>default None.</em>) – Filename where to export. If None, it will print the Markdown instead.</p>
+<dd class="field-odd"><p><strong>file_or_buf</strong> (<em>str</em><em> or </em><em>io.StringIO</em><em>, </em><em>default None.</em>) – File or buffer where to export. If None, it will print the JSON instead.</p>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -165,12 +165,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="argonodes.exporters.PickleExporter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">PickleExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.PickleExporter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">argonodes.exporters.</span></span><span class="sig-name descname"><span class="pre">PickleExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_or_buf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#argonodes.exporters.PickleExporter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#argonodes.exporters.Exporter" title="argonodes.exporters.Exporter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exporter</span></code></a></p>
 <p>Exporter to a Python Pickle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename where to export.</p>
+<dd class="field-odd"><p><strong>file_or_buf</strong> (<em>str</em><em> or </em><em>io.BytesIO</em>) – File or buffer where to export.</p>
 </dd>
 </dl>
 <dl class="py attribute">
